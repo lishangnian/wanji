@@ -1,0 +1,312 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/activity_main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/collect_roads_background">
+
+
+    <com.amap.api.maps.MapView
+        android:id="@+id/map"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:layout_below="@+id/top_title_panel"
+        android:layout_toEndOf="@+id/left_menu_panel"
+        android:layout_toRightOf="@+id/left_menu_panel"></com.amap.api.maps.MapView>
+
+    <!--上面的标题logo层-->
+    <LinearLayout
+        android:id="@+id/top_title_panel"
+        android:layout_width="match_parent"
+        android:layout_height="80px"
+        android:background="@color/titleColorBackgroundWhite"
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
+
+        <!--android:layout_width="195px"-->
+        <!--android:layout_height="40px"-->
+        <ImageView
+            android:layout_width="50px"
+            android:layout_height="40px"
+            android:layout_marginLeft="20px"
+            android:layout_marginRight="30px"
+            android:src="@drawable/company_logo" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="36px"
+            android:gravity="center_vertical"
+            android:text="自动扫地车"
+            android:textColor="@color/titleColorDarkBlue"
+            android:textSize="32px" />
+
+        <include
+            layout="@layout/head_show_layout"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="300px" />
+
+    </LinearLayout>
+
+
+    <!--左侧菜单层-->
+    <RelativeLayout
+        android:id="@+id/left_menu_panel"
+        android:layout_width="120px"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="90px"
+        android:background="@drawable/index_left_menu"
+        android:orientation="vertical">
+
+        <ImageButton
+            android:id="@+id/connect_img_btn"
+            android:layout_width="45px"
+            android:layout_height="45px"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="10px"
+            android:background="#fcf9f2"
+            android:scaleType="fitEnd"
+            android:src="@drawable/not_connect" />
+
+        <ImageView
+            android:id="@+id/auto_drive_img"
+            android:layout_width="45px"
+            android:layout_height="45px"
+            android:layout_below="@+id/connect_txt"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="10px"
+            android:src="@drawable/no_auto_drive" />
+
+        <LinearLayout
+            android:id="@+id/collect_tab"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/start_end_radio_group"
+            android:layout_marginTop="10px"
+            android:gravity="center_horizontal"
+            android:orientation="vertical">
+
+            <ImageButton
+                android:id="@+id/collect_map_img_btn"
+                android:layout_width="45px"
+                android:layout_height="43px"
+                android:layout_centerHorizontal="true"
+                android:background="#fcf9f2"
+                android:scaleType="fitEnd"
+                android:src="@drawable/collect_map_no_check" />
+
+            <TextView
+                android:id="@+id/collect_map_txt"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/collect_map_img_btn"
+                android:layout_marginTop="5px"
+                android:gravity="center"
+                android:includeFontPadding="false"
+                android:paddingBottom="0px"
+                android:paddingTop="0px"
+                android:text="地图采集"
+                android:textColor="@color/noCheckColorGray"
+                android:textSize="18px" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/reload_tab"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/collect_tab"
+            android:layout_marginTop="10px"
+            android:gravity="center_horizontal"
+            android:orientation="vertical">
+
+            <ImageButton
+                android:id="@+id/reload_img_btn"
+                android:layout_width="45px"
+                android:layout_height="45px"
+                android:layout_centerHorizontal="true"
+                android:background="#fcf9f2"
+                android:scaleType="fitEnd"
+                android:src="@drawable/reload_no_check" />
+
+            <TextView
+                android:id="@+id/reload_txt"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/reload_img_btn"
+                android:layout_marginTop="5px"
+                android:gravity="center"
+                android:includeFontPadding="false"
+                android:paddingBottom="0px"
+                android:paddingTop="0px"
+                android:text="刷新"
+                android:textColor="@color/noCheckColorGray"
+                android:textSize="18px" />
+        </LinearLayout>
+        <!--出发与结束-->
+        <LinearLayout
+            android:id="@+id/delete_road_tab"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/reload_tab"
+            android:layout_marginTop="10px"
+            android:gravity="center_horizontal"
+            android:orientation="vertical">
+
+            <ImageButton
+                android:id="@+id/delete_road_img_btn"
+                android:layout_width="45px"
+                android:layout_height="45px"
+                android:layout_centerHorizontal="true"
+                android:background="#fcf9f2"
+                android:scaleType="fitEnd"
+                android:src="@drawable/delete_map_no_check" />
+
+            <TextView
+                android:id="@+id/delete_road_txt"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/delete_road_img_btn"
+                android:layout_marginTop="10px"
+                android:gravity="center"
+                android:includeFontPadding="false"
+                android:paddingBottom="0px"
+                android:paddingTop="0px"
+                android:text="删除轨迹"
+                android:textColor="@color/noCheckColorGray"
+                android:textSize="18px" />
+        </LinearLayout>
+        <!--地图采集-->
+        <RadioGroup
+            android:id="@+id/start_end_radio_group"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/auto_dive_txt"
+            android:layout_marginTop="20px">
+
+            <RadioButton
+                android:id="@+id/go_radio_btn"
+                android:layout_width="110px"
+                android:layout_height="50px"
+                android:layout_gravity="center"
+                android:background="@drawable/radio_btn"
+                android:button="@null"
+                android:text="出发"
+                android:textAlignment="center"
+                android:textColor="@color/noCheckColorGray"
+                android:textSize="22px" />
+
+            <RadioButton
+                android:id="@+id/end_radio_btn"
+                android:layout_width="110px"
+                android:layout_height="50px"
+                android:layout_gravity="center"
+                android:layout_marginTop="10px"
+                android:background="@drawable/radio_btn"
+                android:button="@null"
+                android:checked="true"
+                android:text="结束"
+                android:textAlignment="center"
+                android:textColor="@color/pureColorBackgroundWhite"
+                android:textSize="22px" />
+
+        </RadioGroup>
+        <!--刷新-->
+        <TextView
+            android:id="@+id/connect_txt"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/connect_img_btn"
+            android:layout_marginTop="5px"
+            android:gravity="center"
+            android:includeFontPadding="false"
+            android:text="@string/connect_off_line"
+            android:textColor="#627288"
+            android:textSize="18px" />
+
+        <!--删除轨迹-->
+        <TextView
+            android:id="@+id/auto_dive_txt"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/auto_drive_img"
+            android:layout_marginTop="5px"
+            android:gravity="center"
+            android:includeFontPadding="false"
+            android:paddingBottom="0px"
+            android:paddingTop="0px"
+            android:text="驾驶状态"
+            android:textColor="@color/checkColorBlue"
+            android:textSize="18px" />
+
+    </RelativeLayout>
+
+
+    <!--右侧菜单层-->
+    <!--#060610      #33A1C9-->
+    <RelativeLayout
+        android:id="@+id/right_menu_panel"
+        android:layout_width="120px"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_marginTop="120px"
+        android:background="@drawable/index_right_menu"
+        android:orientation="vertical">
+
+        <ImageButton
+            android:id="@+id/broom_img_btn"
+            android:layout_width="50px"
+            android:layout_height="50px"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="20px"
+            android:background="#fcf9f2"
+            android:scaleType="fitEnd"
+            android:src="@drawable/broom" />
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/broom_img_btn"
+                android:id="@+id/clean_txt"
+                android:text="清扫"
+                android:gravity="center"
+                android:layout_marginTop="5px"
+                android:includeFontPadding="false"
+                android:paddingBottom="0px"
+                android:paddingTop="0px"
+                android:textSize="18px"
+                android:textColor="@color/colorPrimary"
+                ></TextView>
+
+        <ImageButton
+            android:id="@+id/garbage_img_btn"
+            android:layout_width="50px"
+            android:layout_height="50px"
+            android:layout_below="@+id/clean_txt"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="15px"
+            android:background="#fcf9f2"
+            android:scaleType="fitEnd"
+            android:src="@drawable/garbage_box" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/garbage_img_btn"
+            android:id="@+id/clean_garbage"
+            android:text="清扫"
+            android:gravity="center"
+            android:layout_marginTop="5px"
+            android:includeFontPadding="false"
+            android:paddingBottom="0px"
+            android:layout_marginBottom="10px"
+            android:paddingTop="0px"
+            android:textSize="18px"
+            android:textColor="@color/colorPrimary"
+            ></TextView>
+
+    </RelativeLayout>
+
+
+</RelativeLayout>

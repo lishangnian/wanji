@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="540px"
+    android:layout_height="300px"
+    android:orientation="vertical"
+    android:gravity="center_horizontal"
+    android:background="@android:color/transparent"
+    >
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="185px"
+        android:orientation="vertical"
+        android:gravity="center_vertical"
+        android:background="@drawable/popup_conform_first_half"
+        >
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="确认删除此轨迹？"
+            android:textColor="@color/titleColorDarkBlue"
+            android:textSize="32px"
+            android:textAlignment="center"
+            />
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="115px"
+        android:background="@drawable/popup_conform_second_half"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        >
+        <Button
+            android:layout_width="136px"
+            android:layout_height="56px"
+            android:layout_marginLeft="90px"
+            android:background="@drawable/popup_conform_button"
+            android:text="确认"
+            android:textColor="@color/pureColorBackgroundWhite"
+            android:textSize="24px"
+            />
+
+
+        <Button
+            android:layout_width="136px"
+            android:layout_height="56px"
+            android:layout_marginLeft="82px"
+            android:background="@drawable/popup_cancel_button"
+            android:text="取消"
+            android:textColor="@color/noCheckColorGray"
+            android:textSize="24px"
+            />
+
+    </LinearLayout>
+
+
+</LinearLayout>

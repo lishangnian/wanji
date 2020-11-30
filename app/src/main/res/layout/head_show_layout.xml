@@ -1,0 +1,266 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="match_parent"
+    android:orientation="horizontal"
+    android:gravity="center">
+    <Button
+        android:id="@+id/clean_enable_btn"
+        android:layout_width="50px"
+        android:layout_height="30px"
+        android:background="@drawable/clean_enable_false"
+        android:gravity="center"
+        android:layout_centerHorizontal="true"
+        android:textAlignment="center"
+        android:layout_marginBottom="5px"
+        >
+    </Button>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="20px"
+        android:gravity="center"
+        android:orientation="vertical">
+        <ImageButton
+            android:id="@+id/broom_img_btn"
+            android:layout_width="30px"
+            android:layout_height="30px"
+            android:layout_below="@+id/clean_enable_btn"
+            android:background="#fcf9f2"
+            android:scaleType="fitCenter"
+            android:src="@drawable/broom" />
+
+        <TextView
+            android:id="@+id/clean_txt"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5px"
+            android:gravity="center"
+            android:includeFontPadding="false"
+            android:text="清扫"
+            android:textColor="@color/noCheckColorGray"
+            android:textSize="16px"/>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="100px"
+        android:layout_marginLeft="20px"
+        android:gravity="center"
+        android:orientation="vertical">
+
+        <ImageButton
+            android:id="@+id/garbage_img_btn"
+            android:layout_width="30px"
+            android:layout_height="30px"
+            android:layout_below="@+id/clean_txt"
+            android:layout_centerHorizontal="true"
+            android:background="#fcf9f2"
+            android:scaleType="fitCenter"
+            android:src="@drawable/garbage_box" />
+        <TextView
+            android:id="@+id/clean_garbage"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5px"
+            android:gravity="center"
+            android:includeFontPadding="false"
+            android:text="倾倒"
+            android:textColor="@color/noCheckColorGray"
+            android:textSize="16px"/>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="100px"
+        android:layout_marginLeft="20px"
+        android:gravity="center"
+        android:orientation="vertical">
+
+        <ImageView
+            android:layout_width="30px"
+            android:layout_height="28px"
+            android:layout_centerHorizontal="true"
+            android:id="@+id/auto_drive_img"
+            android:background="#fcf9f2"
+            android:scaleType="fitEnd"
+            android:src="@drawable/no_auto_drive" />
+
+        <TextView
+            android:id="@+id/auto_dive_txt"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5px"
+            android:includeFontPadding="false"
+            android:text="驾驶状态"
+            android:textColor="@color/noCheckColorGray"
+            android:textSize="16px" />
+    </LinearLayout>
+
+
+    <!--速度Km/H-->
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="100px"
+        android:layout_marginLeft="20px"
+        android:gravity="center"
+        android:orientation="vertical">
+
+        <ImageButton
+            android:layout_width="30px"
+            android:layout_height="28px"
+            android:id="@+id/speed_panel_img"
+            android:layout_centerHorizontal="true"
+            android:background="#fcf9f2"
+            android:scaleType="fitEnd"
+            android:src="@drawable/speed_panel0" />
+
+        <TextView
+            android:id="@+id/speed_txt"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5px"
+            android:includeFontPadding="false"
+            android:text="00Km/h"
+            android:textColor="@color/noCheckColorGray"
+            android:textSize="16px" />
+    </LinearLayout>
+    <!--电量-->
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="80px"
+        android:layout_marginLeft="20px"
+        android:gravity="center"
+        android:orientation="vertical">
+
+        <ImageButton
+            android:id="@+id/battery_img_btn"
+            android:layout_width="30px"
+            android:layout_height="28px"
+            android:layout_centerHorizontal="true"
+            android:background="#fcf9f2"
+            android:scaleType="fitEnd"
+            android:src="@drawable/battery_img" />
+
+        <TextView
+            android:id="@+id/battery_txt"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5px"
+            android:includeFontPadding="false"
+            android:text="0%"
+            android:textColor="@color/noCheckColorGray"
+            android:textSize="16px" />
+    </LinearLayout>
+    <!--前灯-->
+    <LinearLayout
+        android:id="@+id/frontlight_layout"
+        android:layout_width="wrap_content"
+        android:layout_height="80px"
+        android:layout_marginLeft="20px"
+        android:gravity="center"
+        android:orientation="vertical">
+
+        <ImageButton
+            android:id="@+id/front_light_img_btn"
+            android:layout_width="30px"
+            android:layout_height="28px"
+            android:layout_centerHorizontal="true"
+            android:background="#fcf9f2"
+            android:scaleType="fitEnd"
+            android:src="@drawable/voltage" />
+
+        <TextView
+            android:id="@+id/voltage_txt"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5px"
+            android:includeFontPadding="false"
+            android:text="0V"
+            android:textColor="@color/noCheckColorGray"
+            android:textSize="16px" />
+    </LinearLayout>
+    <!--GPS-->
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="80px"
+        android:layout_marginLeft="20px"
+        android:gravity="center"
+        android:orientation="vertical">
+
+        <ImageView
+            android:id="@+id/gps_img"
+            android:layout_width="30px"
+            android:layout_height="28px"
+            android:layout_centerHorizontal="true"
+            android:background="#fcf9f2"
+            android:scaleType="fitEnd"
+            android:src="@drawable/gps1" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5px"
+            android:includeFontPadding="false"
+            android:text="北斗"
+            android:textColor="@color/noCheckColorGray"
+            android:textSize="16px" />
+    </LinearLayout>
+
+    <!--障碍物-->
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="100px"
+        android:layout_marginLeft="20px"
+        android:gravity="center"
+        android:orientation="vertical">
+
+        <ImageView
+            android:id="@+id/obstacle_img"
+            android:layout_width="30px"
+            android:layout_height="28px"
+            android:layout_centerHorizontal="true"
+            android:background="#fcf9f2"
+            android:scaleType="fitEnd"
+            android:src="@drawable/obstacle_no" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5px"
+            android:includeFontPadding="false"
+            android:text="障碍物"
+            android:textColor="@color/noCheckColorGray"
+            android:textSize="16px" />
+    </LinearLayout>
+    <!--尾灯-->
+<!--    <LinearLayout-->
+<!--        android:id="@+id/backlight_layout"-->
+<!--        android:layout_width="wrap_content"-->
+<!--        android:layout_height="80px"-->
+<!--        android:layout_marginLeft="30px"-->
+<!--        android:gravity="center"-->
+<!--        android:orientation="vertical">-->
+
+<!--        <ImageButton-->
+<!--            android:id="@+id/tail_light_img_btn"-->
+<!--            android:layout_width="30px"-->
+<!--            android:layout_height="28px"-->
+<!--            android:layout_centerHorizontal="true"-->
+<!--            android:background="#fcf9f2"-->
+<!--            android:scaleType="fitEnd"-->
+<!--            android:src="@drawable/tail_light_no_check" />-->
+
+<!--        <TextView-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:layout_marginTop="5px"-->
+<!--            android:includeFontPadding="false"-->
+<!--            android:text="@string/tail_light"-->
+<!--            android:textColor="@color/noCheckColorGray"-->
+<!--            android:textSize="16px" />-->
+<!--    </LinearLayout>-->
+</LinearLayout>

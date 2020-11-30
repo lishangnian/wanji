@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <item>
+        <!--档位数字显示选中时的背景-->
+        <shape android:shape="rectangle">
+            <!-- 填充的颜色 -->
+            <solid android:color="@color/checkColorBlue" />
+            <!-- 边框的颜色 ：不能和窗口背景色一样-->
+            <!--<stroke android:width="1px" android:color="#94a6b8" />-->
+            <!-- 设置按钮的四个角为弧形 -->
+            <!-- android:radius 弧形的半径 -->
+            <corners android:radius="38px" />
+        </shape>
+    </item>
+</selector>

@@ -1,0 +1,45 @@
+<resources>
+    <string name="app_name">扫地僧</string>
+    <string name="animate">Animate</string>
+
+    <string name="connect_off_line">未连接</string>
+    <string name="connect_try">连接中</string>
+    <string name="connect_success">已连接</string>
+
+    <string name="touch_alarm">一键报警</string>
+    <string name="remove_alarm">解除报警</string>
+    <string name="alarm_light">警灯</string>
+    <string name="alarm_whistle">警笛</string>
+    <string name="front_light">前灯</string>
+    <string name="tail_light">尾灯</string>
+
+    <string name="title_control">遥控器</string>
+
+    <!-- offlinemap -->
+    <string name="beijing">"北京"</string>
+    <string name="start">"开始"</string>
+    <string name="pause">"暂停"</string>
+    <string name="stop">"停止"</string>
+    <string name="remove">"删除"</string>
+    <string name="update">"更新"</string>
+    <string name="logo_position">logo位置</string>
+    <string name="bottom_left">左下</string>
+    <string name="bottom_center">底部居中</string>
+    <string name="bottom_right">右下</string>
+    <string name="center_right">右中</string>
+    <string name="map_screenshot">地图截屏</string>
+    <string name="error_network">搜索失败,请检查网络连接！</string>
+    <string name="error_key">key验证无效！</string>
+    <string name="error_other">未知错误，请稍后重试!错误码为</string>
+    <string name="no_result">对不起，没有搜索到相关数据！</string>
+    <string name="province">省</string>
+    <string name="city">市</string>
+    <string name="district">区/县</string>
+
+
+    <drawable name="btn_pressed">#535353</drawable>
+    <drawable name="btn_normal">#33A1C9</drawable>
+
+
+
+</resources>

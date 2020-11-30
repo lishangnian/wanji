@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/activity_main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    android:orientation="vertical"
+
+    android:background="#1f1d28"
+    tools:context=".load"> //    android:background="#c5cae9"
+
+    <!--<ImageView-->
+    <!--android:layout_width="80dp"-->
+    <!--android:layout_height="80dp"-->
+    <!--android:layout_marginTop="30dp"-->
+    <!--android:layout_gravity="center_horizontal"-->
+    <!--android:src="@drawable/zzb"/>-->
+
+    <aps.ui.circleImageView
+        android:layout_width="80dp"
+        android:layout_height="80dp"
+        android:layout_marginTop="30dp"
+        android:layout_gravity="center_horizontal"
+
+        />
+
+    <TextView android:id="@+id/tv_ros"
+        android:layout_marginTop="20dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Connect to Car"
+        android:textStyle="italic"
+        android:typeface="monospace"
+        android:layout_gravity="center_horizontal"
+        android:textColor="#bfbfbf"
+        android:textSize="25sp"/>
+
+    <EditText android:id="@+id/et_ip"
+        android:layout_width="260dp"
+        android:layout_gravity="center"
+        android:layout_height="40dp"
+        android:layout_marginTop="50dp"
+        android:layout_marginBottom="40dp"
+        android:background="#afafaf"
+        android:text="192.168.1.102"
+        android:hint="Master IP"/>
+
+    <EditText android:id="@+id/et_port"
+        android:layout_width="260dp"
+        android:layout_gravity="center"
+        android:layout_height="40dp"
+        android:text="9090"
+        android:background="#afafaf"
+        android:hint="Port, default 9090"/>
+
+    <Button android:id="@+id/btn_connect"
+        android:layout_width="260dp"
+        android:layout_gravity="center"
+        android:layout_height="40dp"
+        android:layout_marginTop="50dp"
+        android:text="Connect"
+        android:textColor="#ffffff"
+        android:background="#1E88E5"/>
+</LinearLayout>

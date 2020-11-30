@@ -1,0 +1,30 @@
+<resources>
+
+    <!-- Base application theme. -->
+    <style name="AppTheme" parent="Theme.AppCompat">
+        <!-- Customize your theme here. -->
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorAccent">@color/colorAccent</item>
+    </style>
+
+
+    <!--自定义耗时对话框-->
+    <style name="CustomProgressDialog" parent="Theme.AppCompat.Dialog">
+        <!--此属性控制悬浮窗背景是否变暗-->
+        <item name="android:backgroundDimEnabled">false</item>
+        <item name="android:windowBackground">@android:color/transparent</item>
+    </style>
+
+    <style name="SpeedPickerStyle" parent="Base.Theme.AppCompat">
+            <item name="android:textSize">30dp</item>
+
+    </style>
+
+    <style name="SwitchAppearance" parent="@style/Base.TextAppearance.AppCompat.Widget.Switch">
+        <item name="android:textSize">30dp</item>
+        <item name="android:textColor">@color/white</item>
+
+    </style>
+
+</resources>

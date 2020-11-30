@@ -1,0 +1,325 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/activity_collect_roads"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/collect_roads_background">
+
+    <!--返回按钮与标题-->
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="20px"
+        android:layout_marginTop="10px"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:textAlignment="center">
+
+        <ImageButton
+            android:id="@+id/back_in_collect_img_btn"
+            android:layout_width="50px"
+            android:layout_height="50px"
+            android:layout_marginLeft="35px"
+            android:background="@drawable/img_button_circle"
+            android:padding="0dp"
+            android:scaleType="fitXY"
+            android:src="@drawable/back_btn_img" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="24px"
+            android:includeFontPadding="false"
+            android:text="地图采集"
+            android:textColor="@color/titleColorDarkBlue"
+            android:textSize="28px" />
+
+    </LinearLayout>
+    <!--速度选择按钮-->
+    <LinearLayout
+        android:layout_width="260px"
+        android:layout_height="60px"
+        android:layout_marginLeft="100px"
+        android:layout_marginTop="90px"
+        android:background="@drawable/collect_roads_speed_select_backg"
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="10px"
+            android:gravity="center_vertical"
+            android:text="速度(km/h)"
+            android:textColor="@color/pureColorBackgroundWhite"
+            android:textSize="22px" />
+
+        <Button
+            android:id="@+id/speed_click_select_btn"
+            android:layout_width="100px"
+            android:layout_height="50px"
+            android:layout_marginLeft="17px"
+            android:background="@drawable/collect_roads_speed_btn_back"
+            android:gravity="bottom"
+            android:text="00"
+            android:textAlignment="center"
+            android:textColor="@color/checkColorBlue"
+            android:textSize="36px" />
+
+
+    </LinearLayout>
+
+    <!--采集地图时的文字提示-->
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="400px"
+        android:layout_marginTop="100px"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:id="@+id/roads_collecting_tag_layout"
+        android:visibility="invisible"
+        >
+        <ImageView
+            android:layout_width="22px"
+            android:layout_height="22px"
+            android:src="@drawable/funnel_collecting"
+            android:scaleType="fitXY"
+            android:padding="0dp"
+            />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="12px"
+            android:text="地图采集中…"
+            android:textColor="@color/titleColorDarkBlue"
+            android:textSize="28px"
+
+            />
+    </LinearLayout>
+
+    <!--    设置是否为站点  0 ：不采集       1:倾倒垃圾点       2:车库停车点-->
+    <RadioGroup
+        android:id="@+id/station_radio_group"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="90px"
+        android:layout_marginLeft="400px"
+        android:orientation="horizontal"
+        >
+
+        <RadioButton
+            android:id="@+id/pathproperty_default_rbtn"
+            android:layout_width="100px"
+            android:layout_height="70px"
+            android:layout_gravity="center"
+            android:background="@drawable/radio_btn"
+            android:button="@null"
+            android:checked="true"
+            android:text="默认"
+            android:textAlignment="center"
+            android:textColor="@color/pureColorBackgroundWhite"
+            android:textSize="22px" />
+
+        <RadioButton
+            android:id="@+id/path_dump_rbtn"
+            android:layout_width="100px"
+            android:layout_height="70px"
+            android:layout_marginLeft="10px"
+            android:layout_gravity="center"
+            android:background="@drawable/radio_btn"
+            android:button="@null"
+            android:text="倾倒"
+            android:textAlignment="center"
+            android:textColor="@color/noCheckColorGray"
+            android:textSize="22px" />
+
+        <RadioButton
+            android:id="@+id/station_stop_rbtn"
+            android:layout_width="100px"
+            android:layout_height="70px"
+            android:layout_marginLeft="10px"
+            android:layout_gravity="center"
+            android:background="@drawable/radio_btn"
+            android:button="@null"
+            android:text="车库"
+            android:textAlignment="center"
+            android:textColor="@color/noCheckColorGray"
+            android:textSize="22px" />
+
+    </RadioGroup>
+
+    <!--选择是否为站点按钮-->
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="60px"
+        android:layout_marginTop="100px"
+        android:layout_marginLeft="670px"
+        android:gravity="center_horizontal"
+        android:orientation="horizontal"
+        android:background="@drawable/collect_roads_speed_select_backg"
+        >
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="20px"
+            android:text="是否清扫:"
+            android:textSize="22px"
+            android:gravity="center"
+            android:textColor="@color/pureColorBackgroundWhite"
+            />
+        <Button
+            android:layout_width="60px"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="20px"
+            android:id="@+id/switch_clean_btn"
+            android:text="否"
+            android:textSize="22px"
+            android:background="@color/colorBlack"
+            android:textColor="@color/pureColorBackgroundWhite"
+            android:layout_marginRight="20px"
+            />
+    </LinearLayout>
+
+    <!--右侧电量与速度显示-->
+    <LinearLayout
+        android:layout_width="70px"
+        android:layout_height="190px"
+        android:layout_alignParentRight="true"
+        android:layout_marginTop="100px"
+        android:gravity="center_horizontal"
+        android:orientation="vertical">
+
+        <ImageView
+            android:layout_width="48px"
+            android:layout_height="24px"
+            android:layout_marginTop="20px"
+            android:padding="0dp"
+            android:scaleType="fitXY"
+            android:src="@drawable/battery_img" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10px"
+            android:includeFontPadding="false"
+            android:text="00%"
+            android:textAlignment="center"
+            android:textColor="@color/checkColorBlue"
+            android:textSize="18px"
+            android:id="@+id/battery_in_collect"
+            />
+
+
+        <ImageView
+            android:layout_width="48px"
+            android:layout_height="28px"
+            android:layout_marginTop="20px"
+            android:id="@+id/car_status_in_collect"
+            android:padding="0dp"
+            android:scaleType="fitXY"
+            android:src="@drawable/car_status_default" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10px"
+            android:includeFontPadding="false"
+            android:text="车状态"
+            android:textAlignment="center"
+            android:textColor="@color/checkColorBlue"
+            android:textSize="18px" />
+
+    </LinearLayout>
+
+
+
+
+    <!--路径类型选择
+        marginLeft 165 158
+    -->
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="90px"
+        android:layout_marginTop="210px">
+
+        <!--文档标注 按钮宽高为310x408-->
+        <RadioGroup
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            >
+
+            <RadioButton
+                android:layout_width="160px"
+                android:layout_height="210px"
+                android:background="@drawable/single_lane_default"
+                android:id="@+id/roads_type_single_rb"
+                android:button="@null"
+                />
+            <RadioButton
+                android:layout_width="160px"
+                android:layout_height="210px"
+                android:layout_marginLeft="30px"
+                android:background="@drawable/left_lane_default"
+                android:id="@+id/roads_type_left_rb"
+                android:button="@null"
+                />
+            <RadioButton
+                android:layout_width="160px"
+                android:layout_height="210px"
+                android:layout_marginLeft="30px"
+                android:background="@drawable/middle_lane_default"
+                android:id="@+id/roads_type_middle_rb"
+                android:button="@null"
+                />
+            <RadioButton
+                android:layout_width="160px"
+                android:layout_height="210px"
+                android:layout_marginLeft="30px"
+                android:background="@drawable/right_lane_default"
+                android:id="@+id/roads_type_right_rb"
+                android:button="@null"
+                />
+
+        </RadioGroup>
+
+
+    </LinearLayout>
+
+
+    <!--路径开始采集 结束采集按钮-->
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_marginLeft="260px"
+        android:layout_marginBottom="80px"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:padding="0dp">
+
+        <Button
+            android:layout_width="200px"
+            android:layout_height="60px"
+            android:background="@drawable/button_start_end_collect_btn_dft"
+            android:textSize="28px"
+            android:textColor="@color/checkColorBlue"
+            android:text="开始采集"
+            android:id="@+id/start_collect_btn"
+            />
+
+        <Button
+            android:layout_width="200px"
+            android:layout_height="60px"
+            android:layout_marginLeft="60px"
+            android:background="@drawable/button_start_end_collect_btn_dft"
+            android:textSize="32px"
+            android:textColor="@color/checkColorBlue"
+            android:text="结束采集"
+            android:id="@+id/end_collect_btn"
+            />
+
+    </LinearLayout>
+</RelativeLayout>
