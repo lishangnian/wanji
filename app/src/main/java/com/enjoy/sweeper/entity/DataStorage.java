@@ -12,6 +12,8 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.TreeMap;
+import java.util.TreeSet;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.locks.Lock;
@@ -31,6 +33,8 @@ public class DataStorage {
 
 
     public static volatile int stopgo = 0; //无效、出发、停止 0 1 2
+    public static volatile long stopGoTimeStamp = System.currentTimeMillis(); //用户点击stogo出发或结束按钮时标记时间戳
+
     public static int mapNum = 1;   //map序号
     public static String requestMapName = "0"; //请求指定map路径的名字
 
@@ -48,6 +52,8 @@ public class DataStorage {
     public static volatile int collectPathValid = 0; //道路是否有效   0----有效   1-----无效
     private static volatile int collectSelectedAreaNo = 1; //默认是1
 
+    public static volatile int collectAreaSpinnerPosition = 0;   //园区下拉框的的选择位置，用于保持
+
     public static void setCollectArea(String areaName) {
         String numStr = ConstantsUtil.getNumStrFromStr(areaName);
         collectSelectedAreaNo = Integer.parseInt(numStr);
@@ -55,6 +61,10 @@ public class DataStorage {
 
     public static String getCollectSelectedArea() {
         return "yuanqu" + collectSelectedAreaNo;
+
+    }
+    public static int getCollectSelectedAreaNo() {
+        return collectSelectedAreaNo;
 
     }
 
@@ -214,10 +224,14 @@ public class DataStorage {
      */
     public static List<String> getMapAreaList() {
         List<String> areaList = new ArrayList<>();
+        Set<String> numTreeSet = new TreeSet<>();
         for (Map.Entry<String, List<String>> entry : areaAndListMap.entrySet()) {
             String area = entry.getKey();
             String areaNumStr = ConstantsUtil.getNumStrFromStr(area);
-            areaList.add("园区" + areaNumStr);
+            numTreeSet.add(areaNumStr);
+        }
+        for(String str: numTreeSet){
+            areaList.add("园区" + str);
         }
         return areaList;
     }
@@ -225,14 +239,18 @@ public class DataStorage {
     public static List<String> getMapAreaListForCollectMap() {
         List<String> areaList = new ArrayList<>();
         int maxAreaNum = 0;
+        Set<String> numTreeSet = new TreeSet<>();
         for (Map.Entry<String, List<String>> entry : areaAndListMap.entrySet()) {
             String area = entry.getKey();
             String areaNumStr = ConstantsUtil.getNumStrFromStr(area);
-            areaList.add("园区" + areaNumStr);
+            numTreeSet.add(areaNumStr);
             int areaNum = Integer.parseInt(areaNumStr);
             if (areaNum > maxAreaNum) {
                 maxAreaNum = areaNum;
             }
+        }
+        for (String str : numTreeSet) {
+            areaList.add("园区" + str);
         }
         //添加新增的
         maxAreaNum++;
@@ -245,11 +263,15 @@ public class DataStorage {
         List<String> resultList = new ArrayList<>();
         String areaName = getSelectAreaName(); //选择当前选中的区域
         List<String> nameList = areaAndListMap.get(areaName); //获取区域中所有路径
+        Set<String> numStrSet = new TreeSet();
         if (nameList != null) {
             for (String name : nameList) {
                 String numStr = ConstantsUtil.getNumStrFromStr(name);
-                resultList.add("清扫" + numStr);
+                numStrSet.add(numStr);
             }
+        }
+        for (String str : numStrSet) {  //给道路按照数字排序
+            resultList.add("清扫" + str);
         }
         return resultList;
     }

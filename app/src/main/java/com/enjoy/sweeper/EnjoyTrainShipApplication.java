@@ -128,8 +128,10 @@ public class EnjoyTrainShipApplication extends Application {
 
 
         new ConnectThread().start();
-        new PageThread().start();
+        SystemClock.sleep(3000); //连接需要2秒
         new SubscribeThread().start();
+        SystemClock.sleep(2000);
+        new PageThread().start();
         new MediaPlayScanThread().start();
     }
 
@@ -184,7 +186,7 @@ public class EnjoyTrainShipApplication extends Application {
         @Override
         public void run() {
             while (true) {
-                SystemClock.sleep(500);
+                SystemClock.sleep(1000);
                 if (!Global.connectFlag) {
                     continue;
                 }
@@ -452,7 +454,7 @@ public class EnjoyTrainShipApplication extends Application {
                         long timeStamp = Long.valueOf(jsonObj.get("timestamp").toString());
                         Log.i(TAG, "behaviorDecision time cost = " + (System.currentTimeMillis() - timeStamp) + "ms");
                         JSONArray jsonObsArray = (JSONArray) jsonObj.get("obs");
-                        int carWorkMode = Integer.parseInt(jsonObj.get("carworkmode").toString());// 获取工作模式 1,清扫       2,去车库       3,去垃圾站
+                        int carWorkMode = Integer.parseInt(jsonObj.get("carworkmode").toString());// 获取工作模式 1,清扫    2,去车库   3,去垃圾站
                         DataStorage.setCarWorkMode(carWorkMode);
 
                         //获取是否报警
@@ -467,7 +469,7 @@ public class EnjoyTrainShipApplication extends Application {
 
                         int obsClass = 0;
                         if (jsonObsArray == null || jsonObsArray.size() == 0) { //没有障碍物
-                            obsClass = -1;
+                            obsClass = 0;
                         } else {
                             for (int i = 0; i < jsonObsArray.size(); i++) {
                                 JSONObject jn = (JSONObject) jsonObsArray.get(i);

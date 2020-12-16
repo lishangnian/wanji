@@ -70,15 +70,6 @@
             android:scaleType="fitEnd"
             android:src="@drawable/not_connect" />
 
-<!--        <ImageView-->
-<!--            android:id="@+id/auto_drive_img"-->
-<!--            android:layout_width="45px"-->
-<!--            android:layout_height="45px"-->
-<!--            android:layout_below="@+id/connect_txt"-->
-<!--            android:layout_centerHorizontal="true"-->
-<!--            android:layout_marginTop="10px"-->
-<!--            android:src="@drawable/no_auto_drive" />-->
-
         <LinearLayout
             android:id="@+id/collect_tab"
             android:layout_width="match_parent"
@@ -179,31 +170,32 @@
                 android:textSize="18px" />
         </LinearLayout>
         <!--地图采集-->
+
+        <Button
+            android:id="@+id/go_pause_btn"
+            android:layout_width="110px"
+            android:layout_height="50px"
+            android:layout_below="@+id/connect_txt"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="20px"
+            android:textSize="22px"
+            android:background="@drawable/button_activ_switch"
+            android:gravity="center"
+            android:shadowColor="@color/noCheckColorGray"
+            android:text="暂停"
+            android:textColor="@color/colorDeepBlack"></Button>
+
         <RadioGroup
             android:id="@+id/start_end_radio_group"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/connect_txt"
-            android:layout_marginTop="20px">
-
-            <RadioButton
-                android:id="@+id/default_radio_btn"
-                android:layout_width="110px"
-                android:layout_height="50px"
-                android:layout_gravity="center"
-                android:background="@drawable/radio_btn"
-                android:button="@null"
-                android:text="无效"
-                android:textAlignment="center"
-                android:checked="true"
-                android:textColor="@color/pureColorBackgroundWhite"
-                android:textSize="22px" />
+            android:layout_below="@+id/go_pause_btn"
+            android:layout_marginTop="10px">
 
             <RadioButton
                 android:id="@+id/go_radio_btn"
                 android:layout_width="110px"
                 android:layout_height="50px"
-                android:layout_marginTop="10px"
                 android:layout_gravity="center"
                 android:background="@drawable/radio_btn"
                 android:button="@null"
@@ -238,22 +230,6 @@
             android:text="@string/connect_off_line"
             android:textColor="#627288"
             android:textSize="18px" />
-
-
-<!--        <TextView-->
-<!--            android:id="@+id/auto_dive_txt"-->
-<!--            android:layout_width="match_parent"-->
-<!--            android:layout_height="wrap_content"-->
-<!--            android:layout_below="@+id/auto_drive_img"-->
-<!--            android:layout_marginTop="5px"-->
-<!--            android:gravity="center"-->
-<!--            android:includeFontPadding="false"-->
-<!--            android:paddingBottom="0px"-->
-<!--            android:paddingTop="0px"-->
-<!--            android:text="驾驶状态"-->
-<!--            android:textColor="@color/checkColorBlue"-->
-<!--            android:textSize="18px" />-->
-
     </RelativeLayout>
 
 
@@ -268,76 +244,13 @@
         android:background="@drawable/index_right_menu"
         android:orientation="vertical">
 
-<!--
-        <RadioGroup
-            android:id="@+id/work_mode_radio_group"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/work_mode_txt"
-            android:layout_marginTop="20px">
-
-            <RadioButton
-                android:id="@+id/go_clean_btn"
-                android:layout_width="110px"
-                android:layout_height="50px"
-                android:layout_gravity="center"
-                android:background="@drawable/radio_btn"
-                android:button="@null"
-                android:text="清扫"
-                android:textAlignment="center"
-                android:textColor="@color/colorDeepBlack"
-                android:textSize="22px" />
-
-            <RadioButton
-                android:id="@+id/go_garbagestation_btn"
-                android:layout_width="110px"
-                android:layout_height="50px"
-                android:layout_marginTop="20px"
-                android:layout_gravity="center"
-                android:background="@drawable/radio_btn"
-                android:button="@null"
-                android:text="回站"
-                android:textAlignment="center"
-                android:textColor="@color/colorDeepBlack"
-                android:textSize="22px" />
-
-            <RadioButton
-                android:id="@+id/go_garage_btn"
-                android:layout_width="110px"
-                android:layout_height="50px"
-                android:layout_gravity="center"
-                android:layout_marginTop="20px"
-                android:background="@drawable/radio_btn"
-                android:button="@null"
-                android:text="回库"
-                android:textAlignment="center"
-                android:textColor="@color/colorDeepBlack"
-                android:textSize="22px" />
-
-            <RadioButton
-                android:id="@+id/go_pause_btn"
-                android:layout_width="110px"
-                android:layout_height="50px"
-                android:layout_gravity="center"
-                android:layout_marginTop="20px"
-                android:background="@drawable/radio_btn"
-                android:button="@null"
-                android:text="暂停"
-                android:textAlignment="center"
-                android:textColor="@color/colorDeepBlack"
-                android:textSize="22px" />
-
-        </RadioGroup>
--->
-
-
         <Button
             android:id="@+id/go_clean_btn"
-            android:layout_width="75px"
-            android:layout_height="47px"
+            android:layout_width="110px"
+            android:layout_height="50px"
             android:layout_below="@+id/work_mode_txt"
             android:layout_centerHorizontal="true"
-            android:layout_marginTop="20px"
+            android:layout_marginTop="30px"
             android:background="@drawable/button_activ_switch"
             android:gravity="center"
             android:shadowColor="@color/noCheckColorGray"
@@ -346,11 +259,11 @@
 
         <Button
             android:id="@+id/go_garbagestation_btn"
-            android:layout_width="75px"
-            android:layout_height="47px"
+            android:layout_width="110px"
+            android:layout_height="50px"
             android:layout_below="@+id/go_clean_btn"
             android:layout_centerHorizontal="true"
-            android:layout_marginTop="20px"
+            android:layout_marginTop="30px"
             android:background="@drawable/button_activ_switch"
             android:gravity="center"
             android:shadowColor="@color/noCheckColorGray"
@@ -359,12 +272,11 @@
 
         <Button
             android:id="@+id/go_garage_btn"
-            android:layout_width="75px"
-            android:layout_height="47px"
+            android:layout_width="110px"
+            android:layout_height="50px"
             android:layout_below="@+id/go_garbagestation_btn"
             android:layout_centerHorizontal="true"
-            android:layout_marginBottom="10px"
-            android:layout_marginTop="20px"
+            android:layout_marginTop="30px"
             android:background="@drawable/button_activ_switch"
             android:gravity="center"
             android:shadowColor="@color/noCheckColorGray"
@@ -373,24 +285,10 @@
 
 
         <Button
-            android:id="@+id/go_pause_btn"
-            android:layout_width="75px"
-            android:layout_height="47px"
-            android:layout_below="@+id/go_garage_btn"
-            android:layout_centerHorizontal="true"
-            android:layout_marginBottom="10px"
-            android:layout_marginTop="20px"
-            android:background="@drawable/button_activ_switch"
-            android:gravity="center"
-            android:shadowColor="@color/noCheckColorGray"
-            android:text="暂停"
-            android:textColor="@color/colorDeepBlack"></Button>
-
-        <Button
             android:id="@+id/presentation_btn"
-            android:layout_width="75px"
-            android:layout_height="47px"
-            android:layout_below="@+id/go_pause_btn"
+            android:layout_width="110px"
+            android:layout_height="50px"
+            android:layout_below="@+id/go_garage_btn"
             android:layout_centerHorizontal="true"
             android:layout_marginBottom="10px"
             android:layout_marginTop="20px"
@@ -407,7 +305,7 @@
             android:layout_centerHorizontal="true"
             android:layout_gravity="center_horizontal"
             android:layout_marginLeft="10px"
-            android:layout_marginTop="20px"
+            android:layout_marginTop="30px"
             android:background="@drawable/sys_enable_pressed"
             android:text="等待中.."
             android:textAlignment="center"

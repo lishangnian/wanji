@@ -432,6 +432,10 @@ public class CollectRoadsActivity extends Activity {
 
                 endCollectBtn.setBackground(getResources().getDrawable(R.drawable.button_start_end_collect_btn_dft));
                 endCollectBtn.setTextColor(getResources().getColor(R.color.noCheckColorGray));
+
+                //记录选择区域Spinner的position
+                int selectAreaSpinnerPosition = collectAreaSpinner.getSelectedItemPosition();
+                DataStorage.collectAreaSpinnerPosition = selectAreaSpinnerPosition;
             }
         });
 
@@ -608,6 +612,11 @@ public class CollectRoadsActivity extends Activity {
                 //下拉风格
                 collectAreaAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                 collectAreaSpinner.setAdapter(collectAreaAdapter);
+
+                //设置区域为上次所选的
+                //Spinner中position是从0开始的，0--1  1--2
+                collectAreaSpinner.setSelection(DataStorage.collectAreaSpinnerPosition, true);
+
                 break;
 
         }
@@ -629,6 +638,7 @@ public class CollectRoadsActivity extends Activity {
                 sweepEnableImgBtn.setEnabled(false);
             }
         }
+
         forwardRadioBtn.setEnabled(collectComponentEnable);
         backRadioBtn.setEnabled(collectComponentEnable);
         pathDefaultRadioBtn.setEnabled(collectComponentEnable);

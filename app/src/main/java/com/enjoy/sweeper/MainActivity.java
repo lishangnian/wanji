@@ -84,7 +84,7 @@ public class MainActivity extends Activity implements LocationSource, AMapLocati
     private OnLocationChangedListener mListener;
     private LocationManagerProxy mAMapLocationManager;
 
-    private RadioButton endRaBtn, goRaBtn, defaultRaBtn;
+    private RadioButton endRaBtn, goRaBtn; //defaultRaBtn
     private TextView speedText, batteryText, voltageTxt, connectTxt, workModeTxt;
     //  连接  采集地图 遥控器  删除轨迹 重载
     private ImageButton connectBtn, collectRoads, controlImgBtn, deleteImgBtn, resetImgBtn, broomImgBtn, garbageImgBtn,
@@ -585,23 +585,24 @@ public class MainActivity extends Activity implements LocationSource, AMapLocati
         //结束按钮  //出发按钮 radioButton
         endRaBtn = findViewById(R.id.end_radio_btn);
         goRaBtn = findViewById(R.id.go_radio_btn);
-        defaultRaBtn = findViewById(R.id.default_radio_btn);
-        //底色改变
-        defaultRaBtn.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean b) {
-                if (b) {
-                    DataStorage.stopgo = 0;
-                    defaultRaBtn.setTextColor(getResources().getColor(R.color.pureColorBackgroundWhite));
-                } else {
-                    defaultRaBtn.setTextColor(getResources().getColor(R.color.noCheckColorGray));
-                }
-            }
-        });
+//        defaultRaBtn = findViewById(R.id.default_radio_btn);
+//        //底色改变
+//        defaultRaBtn.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+//            @Override
+//            public void onCheckedChanged(CompoundButton buttonView, boolean b) {
+//                if (b) {
+//                    DataStorage.stopgo = 0;
+//                    defaultRaBtn.setTextColor(getResources().getColor(R.color.pureColorBackgroundWhite));
+//                } else {
+//                    defaultRaBtn.setTextColor(getResources().getColor(R.color.noCheckColorGray));
+//                }
+//            }
+//        });
         goRaBtn.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
                 if (b) {
+                    DataStorage.stopGoTimeStamp = System.currentTimeMillis();
                     DataStorage.stopgo = 1;
                     goRaBtn.setTextColor(getResources().getColor(R.color.pureColorBackgroundWhite));
                 } else {
@@ -613,6 +614,7 @@ public class MainActivity extends Activity implements LocationSource, AMapLocati
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
                 if (b) {
+                    DataStorage.stopGoTimeStamp = System.currentTimeMillis();
                     DataStorage.stopgo = 2;
                     endRaBtn.setTextColor(getResources().getColor(R.color.pureColorBackgroundWhite));
                 } else {
@@ -752,6 +754,22 @@ public class MainActivity extends Activity implements LocationSource, AMapLocati
                     connectBtn.setImageDrawable(getResources().getDrawable(R.drawable.not_connect));
                     connectTxt.setText(getResources().getText(R.string.connect_off_line));
                 }
+
+                //更新出发结束按钮的反馈
+                if (System.currentTimeMillis() - 2000 > DataStorage.stopGoTimeStamp) {
+
+                    if (DataStorage.stopgo == 1 && DataStorage.driverStatus > 0) {
+                        //DataStorage.stopgo  1--出发  2--结束     车反馈为自驾状态，则发送的出发命令变为默认
+                        goRaBtn.setChecked(false);
+                        endRaBtn.setChecked(false);
+                        DataStorage.stopgo = 0;
+                    } else if (DataStorage.stopgo == 2 && DataStorage.driverStatus == 0) {
+                        endRaBtn.setChecked(false);
+                        goRaBtn.setChecked(false);
+                        DataStorage.stopgo = 0;
+                    }
+                }
+
                 //障碍物
                 if (!Global.connectFlag) {
                     obs_img.setImageResource(R.drawable.obstacle_no);
@@ -763,17 +781,25 @@ public class MainActivity extends Activity implements LocationSource, AMapLocati
                     }
                 }
 
-
                 //文字显示工作模式
                 //0--未知等待中 1,清扫       2,去车库       3,去垃圾站
                 if (0 == DataStorage.getCarWorkMode()) {
                     workModeTxt.setText("等待中..");
                 } else if (1 == DataStorage.getCarWorkMode()) {
                     workModeTxt.setText("清扫中..");
+                    if (goCleanBtn.isActivated()) { //如果清扫按钮是被点击选中的，就触发点击，取消显示
+                        goCleanBtn.performClick();
+                    }
                 } else if (2 == DataStorage.getCarWorkMode()) {
                     workModeTxt.setText("回车库..");
+                    if (goGarageBtn.isActivated()) {
+                        goGarageBtn.performClick();
+                    }
                 } else {
                     workModeTxt.setText("去垃圾站");
+                    if (goGarbagestationBtn.isActivated()) {
+                        goGarbagestationBtn.performClick();
+                    }
                 }
 
                 //  GPS显示
@@ -825,7 +851,7 @@ public class MainActivity extends Activity implements LocationSource, AMapLocati
                             garbageImgBtn.setImageDrawable(getResources().getDrawable(R.drawable.garbage_box));
                         }
                     } else {
-                        garbageImgBtn.setImageDrawable(getResources().getDrawable(R.drawable.garbage_box));
+                        garbageImgBtn.setImageDrawable(getResources().getDrawable(R.drawable.garbage_box0));
                     }
                 }
 
@@ -1016,10 +1042,10 @@ public class MainActivity extends Activity implements LocationSource, AMapLocati
 
 //        初始化出发停止按钮
         if (DataStorage.stopgo == 0) {
-            defaultRaBtn.setChecked(true);
+//            defaultRaBtn.setChecked(true);
         } else if (DataStorage.stopgo == 1) {
             goRaBtn.setChecked(true);
-        } else {
+        } else {  //DataStorage.stopgo==2
             endRaBtn.setChecked(true);
         }
 
