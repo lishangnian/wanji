@@ -757,15 +757,19 @@ public class MainActivity extends Activity implements LocationSource, AMapLocati
 
                 //更新出发结束按钮的反馈
                 if (System.currentTimeMillis() - 2000 > DataStorage.stopGoTimeStamp) {
-
+                    //大于2000ms时间为了让stopgo能发送2s时间再和反馈做判断
                     if (DataStorage.stopgo == 1 && DataStorage.driverStatus > 0) {
                         //DataStorage.stopgo  1--出发  2--结束     车反馈为自驾状态，则发送的出发命令变为默认
                         goRaBtn.setChecked(false);
                         endRaBtn.setChecked(false);
+                        goRaBtn.setTextColor(getResources().getColor(R.color.noCheckColorGray));
+                        endRaBtn.setTextColor(getResources().getColor(R.color.noCheckColorGray));
                         DataStorage.stopgo = 0;
                     } else if (DataStorage.stopgo == 2 && DataStorage.driverStatus == 0) {
-                        endRaBtn.setChecked(false);
                         goRaBtn.setChecked(false);
+                        endRaBtn.setChecked(false);
+                        goRaBtn.setTextColor(getResources().getColor(R.color.noCheckColorGray));
+                        endRaBtn.setTextColor(getResources().getColor(R.color.noCheckColorGray));
                         DataStorage.stopgo = 0;
                     }
                 }
