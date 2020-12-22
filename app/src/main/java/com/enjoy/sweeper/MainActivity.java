@@ -72,6 +72,8 @@ import java.util.Timer;
 import java.util.TimerTask;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 
 
 public class MainActivity extends Activity implements LocationSource, AMapLocationListener,
@@ -111,6 +113,7 @@ public class MainActivity extends Activity implements LocationSource, AMapLocati
     private RelativeLayout relativeLayout;
 
     private Timer sendGoOrStopTimer = null;
+    private static Lock stopGoLock = new ReentrantLock();
 
 
     /********************************************************************************/
@@ -371,15 +374,20 @@ public class MainActivity extends Activity implements LocationSource, AMapLocati
                     broomImgBtn.setBackgroundColor(Color.GRAY);
                 }
 
-
             }
         });
         //清倒点击
         garbageImgBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                DataStorage.dumpRubbishClick = 1; //通知车转为清倒垃圾
-                ToastUtil.show(MainActivity.this, "倾倒点击********");
+                if (DataStorage.dumpRubbishClick < 1) {
+                    DataStorage.dumpRubbishClick = 1; //通知车转为清倒垃圾
+                    ToastUtil.show(MainActivity.this, "倾倒打开");
+                }else {
+                    DataStorage.dumpRubbishClick = 0;
+                    ToastUtil.show(MainActivity.this, "倾倒关闭");
+                }
+
             }
         });
 
@@ -601,18 +609,22 @@ public class MainActivity extends Activity implements LocationSource, AMapLocati
         goRaBtn.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+                stopGoLock.lock();
                 if (b) {
                     DataStorage.stopGoTimeStamp = System.currentTimeMillis();
                     DataStorage.stopgo = 1;
                     goRaBtn.setTextColor(getResources().getColor(R.color.pureColorBackgroundWhite));
+                    Log.i(TAG, "Go按钮点击***************");
                 } else {
                     goRaBtn.setTextColor(getResources().getColor(R.color.noCheckColorGray));
                 }
+                stopGoLock.unlock();
             }
         });
         endRaBtn.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+                stopGoLock.lock();
                 if (b) {
                     DataStorage.stopGoTimeStamp = System.currentTimeMillis();
                     DataStorage.stopgo = 2;
@@ -620,6 +632,7 @@ public class MainActivity extends Activity implements LocationSource, AMapLocati
                 } else {
                     endRaBtn.setTextColor(getResources().getColor(R.color.noCheckColorGray));
                 }
+                stopGoLock.unlock();
             }
         });
 
@@ -755,24 +768,48 @@ public class MainActivity extends Activity implements LocationSource, AMapLocati
                     connectTxt.setText(getResources().getText(R.string.connect_off_line));
                 }
 
-                //更新出发结束按钮的反馈
-                if (System.currentTimeMillis() - 2000 > DataStorage.stopGoTimeStamp) {
-                    //大于2000ms时间为了让stopgo能发送2s时间再和反馈做判断
-                    if (DataStorage.stopgo == 1 && DataStorage.driverStatus > 0) {
-                        //DataStorage.stopgo  1--出发  2--结束     车反馈为自驾状态，则发送的出发命令变为默认
+                if (!Global.connectFlag) {   //未连接
+                    if (System.currentTimeMillis() - 2000 > DataStorage.stopGoTimeStamp) {
                         goRaBtn.setChecked(false);
-                        endRaBtn.setChecked(false);
+                        endRaBtn.setChecked(true);
                         goRaBtn.setTextColor(getResources().getColor(R.color.noCheckColorGray));
-                        endRaBtn.setTextColor(getResources().getColor(R.color.noCheckColorGray));
-                        DataStorage.stopgo = 0;
-                    } else if (DataStorage.stopgo == 2 && DataStorage.driverStatus == 0) {
+                        endRaBtn.setTextColor(getResources().getColor(R.color.pureColorBackgroundWhite));
+                        DataStorage.stopgo = 2;
+                    }
+                } else {
+                    if (System.currentTimeMillis() - DataStorage.actuatorTimeStamp > 3000) { //已经超过3秒没收到车状态数据了，认为车不在线，显示为结束
                         goRaBtn.setChecked(false);
-                        endRaBtn.setChecked(false);
+                        endRaBtn.setChecked(true);
+                        endRaBtn.setTextColor(getResources().getColor(R.color.pureColorBackgroundWhite));
                         goRaBtn.setTextColor(getResources().getColor(R.color.noCheckColorGray));
-                        endRaBtn.setTextColor(getResources().getColor(R.color.noCheckColorGray));
                         DataStorage.stopgo = 0;
                     }
+                    //更新出发结束按钮的反馈     用锁stopGoLock防止点击出发结束按钮时与自动更新相碰撞
+                    else if (System.currentTimeMillis() - 2000 > DataStorage.stopGoTimeStamp && stopGoLock.tryLock()) {
+                        goRaBtn.setEnabled(true);
+                        endRaBtn.setEnabled(true);
+                        //大于2000ms时间为了让stopgo能发送2s时间再和反馈做判断
+                        if (DataStorage.driverStatus > 0) {
+                            //DataStorage.stopgo  1--出发  2--结束     车反馈为自驾状态，则发送的出发命令变为默认
+                            goRaBtn.setChecked(true);
+                            endRaBtn.setChecked(false);
+                            endRaBtn.setTextColor(getResources().getColor(R.color.noCheckColorGray));
+                            goRaBtn.setTextColor(getResources().getColor(R.color.pureColorBackgroundWhite));
+                            DataStorage.stopgo = 0;
+                        } else if (DataStorage.driverStatus == 0) {
+                            goRaBtn.setChecked(false);
+                            endRaBtn.setChecked(true);
+                            endRaBtn.setTextColor(getResources().getColor(R.color.pureColorBackgroundWhite));
+                            goRaBtn.setTextColor(getResources().getColor(R.color.noCheckColorGray));
+                            DataStorage.stopgo = 0;
+                        }
+                        stopGoLock.unlock();
+                    } else {
+                        goRaBtn.setEnabled(false);
+                        endRaBtn.setEnabled(false);
+                    }
                 }
+
 
                 //障碍物
                 if (!Global.connectFlag) {
@@ -848,13 +885,15 @@ public class MainActivity extends Activity implements LocationSource, AMapLocati
                         broomImgBtn.setImageDrawable(getResources().getDrawable(R.drawable.broom));
                     }
 
-                    if (DataStorage.liftStatus > 0) { //清倒
+                    if (DataStorage.liftStatus  == 1 || DataStorage.liftStatus == 2 ) { //清倒
+                        //0--默认  1--准备  2---执行中  3---结束
                         if (timeFlag > 500) {
                             garbageImgBtn.setImageDrawable(getResources().getDrawable(R.drawable.garbage_box01));
                         } else {
                             garbageImgBtn.setImageDrawable(getResources().getDrawable(R.drawable.garbage_box));
                         }
-                    } else {
+                    } else if (DataStorage.liftStatus == 3){ //结束
+                        DataStorage.dumpRubbishClick = 0; //倾倒发送变为0
                         garbageImgBtn.setImageDrawable(getResources().getDrawable(R.drawable.garbage_box0));
                     }
                 }
@@ -910,37 +949,6 @@ public class MainActivity extends Activity implements LocationSource, AMapLocati
                 } else {
                     resetImgBtn.setImageDrawable(getResources().getDrawable(R.drawable.reload_no_check));
                 }
-
-                /**
-                 if (DataStorage.warning > 0) { //一键报警
-                 alarmFromPoliceImgBtn.setImageDrawable(getResources().getDrawable(R.drawable.police_alarm));
-                 } else {
-                 alarmFromPoliceImgBtn.setImageDrawable(getResources().getDrawable(R.drawable.remove_alarm));
-                 }
-
-                 if (DataStorage.ledLight > 0) { //警灯
-                 policeLightImgBtn.setImageDrawable(getResources().getDrawable(R.drawable.alarm_light_check));
-                 } else {
-                 policeLightImgBtn.setImageDrawable(getResources().getDrawable(R.drawable.alarm_light_no_check));
-                 }
-                 if (DataStorage.horn > 0) { //警笛
-                 policeWhistleImgBtn.setImageDrawable(getResources().getDrawable(R.drawable.whistle_check));
-                 } else {
-                 policeWhistleImgBtn.setImageDrawable(getResources().getDrawable(R.drawable.whistle_no_check));
-                 }
-                 **/
-
-
-//                if (DataStorage.frontLight > 0) { //前灯
-//                    frontLightImgBtn.setImageDrawable(getResources().getDrawable(R.drawable.front_light_check));
-//                } else {
-//                    frontLightImgBtn.setImageDrawable(getResources().getDrawable(R.drawable.front_light_no_check));
-//                }
-//                if (DataStorage.backLight > 0) { //尾灯
-//                    tailLightImgBtn.setImageDrawable(getResources().getDrawable(R.drawable.tail_light_check));
-//                } else {
-//                    tailLightImgBtn.setImageDrawable(getResources().getDrawable(R.drawable.tail_light_no_check));
-//                }
 
                 Log.i(TAG, "主页面UI更新");
                 break;

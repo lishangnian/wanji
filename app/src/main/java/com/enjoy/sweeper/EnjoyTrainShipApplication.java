@@ -234,10 +234,7 @@ public class EnjoyTrainShipApplication extends Application {
                 dataMap.put(timestampCommonStr, System.currentTimeMillis());
                 taskMsg = MyStringUtil.sendDataStr(sendTopicNameAppMsg, dataMap);
 
-
                 client.send(taskMsg);
-                //用户点击了清倒，发送命令后转为默认
-                DataStorage.dumpRubbishClick = DataStorage.dumpRubbishClick > 0 ? 0 : DataStorage.dumpRubbishClick;
                 dataMap.clear();
                 Log.i(TAG, "APP发送启停命令" + taskMsg);
 
@@ -487,6 +484,7 @@ public class EnjoyTrainShipApplication extends Application {
                         int driverStatus = Integer.valueOf(jsonObj.get("sysstatus").toString());
                         int batterySoc = Integer.valueOf(jsonObj.get("soc").toString()); //电量  %
 
+
                         float battery = Float.valueOf(jsonObj.get("battery").toString()); //电压
                         int batteryInt = Math.round(battery);
 
@@ -501,6 +499,7 @@ public class EnjoyTrainShipApplication extends Application {
                         DataStorage.battery = batteryInt;    //电压
                         DataStorage.liftStatus = liftStatus;
                         DataStorage.sweepStatus = sweepStatus;
+                        DataStorage.actuatorTimeStamp = timeStamp;
                     }
                 } catch (ParseException e) {
                     e.printStackTrace();

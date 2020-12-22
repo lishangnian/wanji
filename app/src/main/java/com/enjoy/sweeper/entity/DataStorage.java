@@ -63,6 +63,7 @@ public class DataStorage {
         return "yuanqu" + collectSelectedAreaNo;
 
     }
+
     public static int getCollectSelectedAreaNo() {
         return collectSelectedAreaNo;
 
@@ -87,6 +88,7 @@ public class DataStorage {
     public static int obs = 0;    //0 -- 无   1--有
     //驾驶状态标志
     public static int driverStatus = 0;      //0--非自动驾驶  1-自动驾驶
+    public static long actuatorTimeStamp = System.currentTimeMillis();  //actuator的时间戳
     private static int carWorkMode = 0;   //0--等待中 1,清扫       2,去车库       3,去垃圾站
     public static volatile int battery = 0;   //电压
     public static volatile int batterySoc = 0; //电量
@@ -133,7 +135,7 @@ public class DataStorage {
     public static volatile int broomCleanClick = 2;  //清扫点击 0：默认1：使能 2：不使能
     public static volatile int sweepStatus = 0; //得到的车上清扫状态   0---无   >0有
 
-    public static volatile int dumpRubbishClick = 0; //清倒 0：默认     1：使能
+    public static volatile int dumpRubbishClick = 0; //清倒 0：默认     1：使能 ( >0)
     public static volatile int liftStatus = 0; //得到车的倾倒状态  0--无  >0有
 
 
@@ -230,7 +232,7 @@ public class DataStorage {
             String areaNumStr = ConstantsUtil.getNumStrFromStr(area);
             numTreeSet.add(areaNumStr);
         }
-        for(String str: numTreeSet){
+        for (String str : numTreeSet) {
             areaList.add("园区" + str);
         }
         return areaList;
