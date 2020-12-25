@@ -9,8 +9,8 @@ import java.util.regex.Pattern;
 public class ConstantsUtil {
 
     /*****定义线程池****/
-    public static ExecutorService executorService = new ThreadPoolExecutor(24,24,0L,
-            TimeUnit.MILLISECONDS, new ArrayBlockingQueue<Runnable>(100));
+//    public static ExecutorService executorService = new ThreadPoolExecutor(24,24,0L,
+//            TimeUnit.MILLISECONDS, new ArrayBlockingQueue<Runnable>(100));
 
 
     /**

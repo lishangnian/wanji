@@ -378,9 +378,9 @@ public class EnjoyTrainShipApplication extends Application {
      */
     public void onEvent(final PublishEvent event) {
 
-        ConstantsUtil.executorService.execute(new Runnable() {
-            @Override
-            public void run() {
+//        ConstantsUtil.executorService.execute(new Runnable() {
+//            @Override
+//            public void run() {
                 //解析json消息
                 JSONParser parser = new JSONParser();
                 JSONObject jsonObj = null;
@@ -452,6 +452,8 @@ public class EnjoyTrainShipApplication extends Application {
                         Log.i(TAG, "behaviorDecision time cost = " + (System.currentTimeMillis() - timeStamp) + "ms");
                         JSONArray jsonObsArray = (JSONArray) jsonObj.get("obs");
                         int carWorkMode = Integer.parseInt(jsonObj.get("carworkmode").toString());// 获取工作模式 1,清扫    2,去车库   3,去垃圾站
+                        int lowbattery = Integer.parseInt(jsonObj.get("lowbattery").toString()); //低压报警 0:默认 1：电量低报警
+                        DataStorage.lowBattery = lowbattery;
                         DataStorage.setCarWorkMode(carWorkMode);
 
                         //获取是否报警
@@ -508,8 +510,8 @@ public class EnjoyTrainShipApplication extends Application {
                     parser = null;
                     jsonObj = null;
                 }
-            }
-        });
+//            }
+//        });
 
         Log.d("df", event.msg);
     }

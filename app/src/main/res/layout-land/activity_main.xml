@@ -183,41 +183,42 @@
             android:gravity="center"
             android:shadowColor="@color/noCheckColorGray"
             android:text="暂停"
-            android:textColor="@color/colorDeepBlack"></Button>
+            android:textColor="@color/noCheckColorGray"></Button>
 
-        <RadioGroup
+        <LinearLayout
             android:id="@+id/start_end_radio_group"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@+id/go_pause_btn"
+            android:orientation="vertical"
             android:layout_marginTop="10px">
 
-            <RadioButton
+            <Button
                 android:id="@+id/go_radio_btn"
                 android:layout_width="110px"
                 android:layout_height="50px"
                 android:layout_gravity="center"
-                android:background="@drawable/radio_btn"
+                android:background="@drawable/stop_go_btn_default"
                 android:button="@null"
                 android:text="出发"
                 android:textAlignment="center"
                 android:textColor="@color/noCheckColorGray"
                 android:textSize="22px" />
 
-            <RadioButton
+            <Button
                 android:id="@+id/end_radio_btn"
                 android:layout_width="110px"
                 android:layout_height="50px"
                 android:layout_gravity="center"
                 android:layout_marginTop="10px"
-                android:background="@drawable/radio_btn"
+                android:background="@drawable/stop_go_btn_default"
                 android:button="@null"
                 android:text="结束"
                 android:textAlignment="center"
                 android:textColor="@color/noCheckColorGray"
                 android:textSize="22px" />
 
-        </RadioGroup>
+        </LinearLayout>
         <!--刷新-->
         <TextView
             android:id="@+id/connect_txt"

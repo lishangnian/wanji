@@ -88,12 +88,13 @@ public class DataStorage {
     public static int obs = 0;    //0 -- 无   1--有
     //驾驶状态标志
     public static int driverStatus = 0;      //0--非自动驾驶  1-自动驾驶
-    public static long actuatorTimeStamp = System.currentTimeMillis();  //actuator的时间戳
+    public static volatile long actuatorTimeStamp = System.currentTimeMillis();  //actuator的时间戳
     private static int carWorkMode = 0;   //0--等待中 1,清扫       2,去车库       3,去垃圾站
     public static volatile int battery = 0;   //电压
     public static volatile int batterySoc = 0; //电量
     private static long carWorkModeUpdateStamp = System.currentTimeMillis();
     public static int pathError = 0; //报警   0--无   1---报警
+    public static volatile int lowBattery = 0;  //0:默认 1：电量低报警
     public static volatile int frontLight = 0;     //前灯  0--关   1-开
     public static volatile int backLight = 0;  //尾灯
     public static volatile int ledLight = 0; //警灯
