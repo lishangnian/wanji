@@ -814,21 +814,22 @@ public class MainActivity extends Activity implements LocationSource, AMapLocati
                             endRaBtn.setEnabled(false);
                         }
                     } else {   //已经连接了
-                        if (System.currentTimeMillis() - DataStorage.actuatorTimeStamp > 4000) { //已经超过4秒没收到车状态数据了，认为车不在线，显示为结束
-                            if (System.currentTimeMillis() - 2000 > DataStorage.stopGoTimeStamp) {
-                                endRaBtn.setBackground(getResources().getDrawable(R.drawable.stop_go_btn_checked));
-                                endRaBtn.setTextColor(getResources().getColor(R.color.pureColorBackgroundWhite));
-
-                                goRaBtn.setBackground(getResources().getDrawable(R.drawable.stop_go_btn_default));
-                                goRaBtn.setTextColor(getResources().getColor(R.color.noCheckColorGray));
-                                DataStorage.stopgo = 0;
-                                goRaBtn.setEnabled(true);
-                                endRaBtn.setEnabled(true);
-                            } else {
-                                goRaBtn.setEnabled(false);
-                                endRaBtn.setEnabled(false);
-                            }
-                        } else if (System.currentTimeMillis() - 2000 > DataStorage.stopGoTimeStamp) { //actuator数据及时，更新出发结束按钮的反馈
+//                        if (System.currentTimeMillis() - DataStorage.actuatorTimeStamp > 4000) { //已经超过4秒没收到车状态数据了，认为车不在线，显示为结束
+//                            if (System.currentTimeMillis() - 2000 > DataStorage.stopGoTimeStamp) {
+//                                endRaBtn.setBackground(getResources().getDrawable(R.drawable.stop_go_btn_checked));
+//                                endRaBtn.setTextColor(getResources().getColor(R.color.pureColorBackgroundWhite));
+//
+//                                goRaBtn.setBackground(getResources().getDrawable(R.drawable.stop_go_btn_default));
+//                                goRaBtn.setTextColor(getResources().getColor(R.color.noCheckColorGray));
+//                                DataStorage.stopgo = 0;
+//                                goRaBtn.setEnabled(true);
+//                                endRaBtn.setEnabled(true);
+//                            } else {
+//                                goRaBtn.setEnabled(false);
+//                                endRaBtn.setEnabled(false);
+//                            }
+//                        } else
+                        if (System.currentTimeMillis() - 2000 > DataStorage.stopGoTimeStamp) { //actuator数据及时，更新出发结束按钮的反馈
                             goRaBtn.setEnabled(true);
                             endRaBtn.setEnabled(true);
                             //大于2000ms时间为了让stopgo能发送2s时间再和反馈做判断
@@ -967,7 +968,7 @@ public class MainActivity extends Activity implements LocationSource, AMapLocati
                         voltageImgBtn.setImageDrawable(getResources().getDrawable(R.drawable.voltage));
                     }
                 }
-                voltageTxt.setText(DataStorage.battery + "V");
+                voltageTxt.setText(DataStorage.battery);     //电压
 
                 //GPS速度等数据
                 if (!Global.connectFlag) {

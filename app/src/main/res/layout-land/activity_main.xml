@@ -56,7 +56,7 @@
         android:id="@+id/left_menu_panel"
         android:layout_width="120px"
         android:layout_height="wrap_content"
-        android:layout_marginTop="100px"
+        android:layout_marginTop="80px"
         android:background="@drawable/index_left_menu"
         android:orientation="vertical">
 

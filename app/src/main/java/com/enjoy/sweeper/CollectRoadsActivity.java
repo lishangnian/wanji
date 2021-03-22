@@ -71,6 +71,10 @@ public class CollectRoadsActivity extends Activity {
     //地图采集中时的提示
     private LinearLayout collectingTagLayout;
 
+    private final static int UPDATE_SPINNER = 777;
+    private final static int UPDATE_BASE_UI = 666;
+    private final static int RELOAD_ROADS = 555;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -469,7 +473,8 @@ public class CollectRoadsActivity extends Activity {
                     @Override
                     public void run() {
                         SystemClock.sleep(800); //800ms后请求加载地图
-                        refreshRoads();
+//                        refreshRoads();
+                        handler.sendEmptyMessage(RELOAD_ROADS);
                     }
                 }).start();
 
@@ -515,7 +520,7 @@ public class CollectRoadsActivity extends Activity {
 
         //2秒后认为所有轨迹已经返回，开始重新设置下拉区域框
         SystemClock.sleep(2000);
-        handler.sendEmptyMessage(777);
+        handler.sendEmptyMessage(UPDATE_SPINNER);
     }
 
     /**
@@ -528,7 +533,7 @@ public class CollectRoadsActivity extends Activity {
                 if (isCancelled()) {
                     break;
                 }
-                handler.sendEmptyMessage(666);
+                handler.sendEmptyMessage(UPDATE_BASE_UI);
                 SystemClock.sleep(200);
             }
             return null;
@@ -586,7 +591,7 @@ public class CollectRoadsActivity extends Activity {
      */
     private void myHandleMessage(int what) {
         switch (what) {
-            case 666:
+            case UPDATE_BASE_UI:
                 //车辆gps状态，更新速度
                 if (DataStorage.rtk >= 4) {
 //                    carStatusImage.setImageResource(R.drawable.normal);
@@ -606,7 +611,7 @@ public class CollectRoadsActivity extends Activity {
 
                 Log.i(TAG, "UI更新");
                 break;
-            case 777:
+            case UPDATE_SPINNER:
                 //重新设置区域下拉框
                 collectAreaAdapter = new ArrayAdapter(CollectRoadsActivity.this, android.R.layout.simple_spinner_item, DataStorage.getMapAreaListForCollectMap());
                 //下拉风格
@@ -616,7 +621,9 @@ public class CollectRoadsActivity extends Activity {
                 //设置区域为上次所选的
                 //Spinner中position是从0开始的，0--1  1--2
                 collectAreaSpinner.setSelection(DataStorage.collectAreaSpinnerPosition, true);
-
+                break;
+            case RELOAD_ROADS:
+                refreshRoads();
                 break;
 
         }

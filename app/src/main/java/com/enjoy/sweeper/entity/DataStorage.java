@@ -16,6 +16,7 @@ import java.util.TreeMap;
 import java.util.TreeSet;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
@@ -90,10 +91,11 @@ public class DataStorage {
     public static int driverStatus = 0;      //0--非自动驾驶  1-自动驾驶
     public static volatile long actuatorTimeStamp = System.currentTimeMillis();  //actuator的时间戳
     private static int carWorkMode = 0;   //0--等待中 1,清扫       2,去车库       3,去垃圾站
-    public static volatile int battery = 0;   //电压
+    public static volatile String battery = "0V";   //电压
     public static volatile int batterySoc = 0; //电量
     private static long carWorkModeUpdateStamp = System.currentTimeMillis();
-    public static int pathError = 0; //报警   0--无   1---报警
+    public static volatile int pathError = 0; //报警   0--无   1---报警
+    public static volatile int sysError = 0;//故障报警 gps无数据或gps状态为0--1  激光雷达无数据--2   毫米波雷达无数据--3  超声波雷达无数据--4  无数据--5-10
     public static volatile int lowBattery = 0;  //0:默认 1：电量低报警
     public static volatile int frontLight = 0;     //前灯  0--关   1-开
     public static volatile int backLight = 0;  //尾灯
@@ -188,7 +190,7 @@ public class DataStorage {
 
     //所有路径地图的json集合
     public static List<String> roadsNameList = new ArrayList<>();
-    public static BlockingQueue<String> nameBlockQueue = new ArrayBlockingQueue<>(10); //先进先出
+    public static BlockingQueue<String> nameBlockQueue = new ArrayBlockingQueue<>(128); //先进先出
     public static Map<String, JSONObject> roadsMap = new LinkedHashMap<>();     //使用LinkedHashMap会按插入顺序排列
     //    public static volatile String selectMapName = "";  //选中的地图名称
     public static volatile String initSelectMapName = "";  //初步选中的地图名称
@@ -198,7 +200,7 @@ public class DataStorage {
     private static List<String> mapAreaList = new ArrayList<>();        //作业区名字list
     private static volatile String selectedToDeleteMapName = "";     //选中的要删除的轨迹
     //    private static Set<String> mapAreaSet = new HashSet<>();
-    private static Map<String, List<String>> areaAndListMap = new HashMap<>();
+    private static Map<String, List<String>> areaAndListMap = new ConcurrentHashMap<>(); //用ConcurrentHashMap是因为存在线程安全问题
 
 
     private static volatile int selectMapNO = 1;

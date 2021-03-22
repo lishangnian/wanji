@@ -17,6 +17,7 @@ import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 
 import java.io.IOException;
+import java.text.DecimalFormat;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
@@ -52,7 +53,7 @@ public class EnjoyTrainShipApplication extends Application {
 
 
     String rosIP = "192.168.6.100";
-    //    String rosIP = "192.168.6.113";
+    //    String rosIP = "192.168.6.111";
     String appMsgStopGoStr = "\"stopgo\":";
     String appMsgMapNameStr = ",\"mapname\":";
     String appMsgCleanenableStr = ",\"cleanenable\":"; //是否清扫
@@ -98,6 +99,8 @@ public class EnjoyTrainShipApplication extends Application {
 
     ROSBridgeClient client;
 
+    DecimalFormat decimalFormat = new DecimalFormat("#.#");  //保留一位小数
+
     @Override
     public void onCreate() {
         super.onCreate();
@@ -123,7 +126,6 @@ public class EnjoyTrainShipApplication extends Application {
             mediaPlayer.prepare();
         } catch (IOException ioe) {
             Log.v(TAG, "*********音频数据源读取设置有误********");
-
         }
 
 
@@ -381,135 +383,156 @@ public class EnjoyTrainShipApplication extends Application {
 //        ConstantsUtil.executorService.execute(new Runnable() {
 //            @Override
 //            public void run() {
-                //解析json消息
-                JSONParser parser = new JSONParser();
-                JSONObject jsonObj = null;
-                try {
-                    jsonObj = (JSONObject) parser.parse(event.msg);
-                    Log.i(TAG, "收到订阅消息topic =" + event.name);
-                    if (recvTopicSensorGps.equals(event.name)) {
-                        long timeStamp = Long.valueOf(jsonObj.get("timestamp").toString());
-                        Log.i(TAG, "sensorGps time cost = " + (System.currentTimeMillis() - timeStamp) + "ms");
-                        long rtkStatus = (long) jsonObj.get("status");     //定位状态
-                        double lon = (double) jsonObj.get("lon");
-                        double lat = (double) jsonObj.get("lat");
-                        String heading = String.valueOf((double) jsonObj.get("heading"));
-                        String speed = String.valueOf((int) ((double) jsonObj.get("velocity") * 3.6));
+        //解析json消息
+        JSONParser parser = new JSONParser();
+        JSONObject jsonObj = null;
+        try {
+            jsonObj = (JSONObject) parser.parse(event.msg);
+            Log.i(TAG, "收到订阅消息topic =" + event.name);
+            if (recvTopicSensorGps.equals(event.name)) {
+                long timeStamp = Long.valueOf(jsonObj.get("timestamp").toString());
+                Log.i(TAG, "sensorGps time cost = " + (System.currentTimeMillis() - timeStamp) + "ms");
+                long rtkStatus = (long) jsonObj.get("status");     //定位状态
+                double lon = (double) jsonObj.get("lon");
+                double lat = (double) jsonObj.get("lat");
+                String heading = String.valueOf((double) jsonObj.get("heading"));
+                String speed = String.valueOf((int) ((double) jsonObj.get("velocity") * 3.6));
 
-                        DataStorage.rtk = rtkStatus;
-                        DataStorage.lon = lon;
-                        DataStorage.lat = lat;
-                        DataStorage.heading = heading;
-                        DataStorage.speed = speed;
+                DataStorage.rtk = rtkStatus;
+                DataStorage.lon = lon;
+                DataStorage.lat = lat;
+                DataStorage.heading = heading;
+                DataStorage.speed = speed;
 
-                    }
+            }
 
-                    /**
-                     if (DataStorage.mode != 1) {  //如果不是显示订阅信息模式，则不显示
-                     return;
-                     }
-                     **/
-                    if (recvTopicLoadMapsName.equals(event.name)) {  //接收到地图信息
-                        Log.i("ROS加载地图", jsonObj.toString());
-                        String mapNameOrigin = (String) jsonObj.get("mapname");//轨迹名称--带文件夹名称的
-                        String[] mapNameArr = mapNameOrigin.split("/");
-                        String roadArea = mapNameArr[0];  //轨迹的的作业区域
-                        String mapName = mapNameArr[1]; //轨迹名称
+            /**
+             if (DataStorage.mode != 1) {  //如果不是显示订阅信息模式，则不显示
+             return;
+             }
+             **/
+            if (recvTopicLoadMapsName.equals(event.name)) {  //接收到地图信息
+                Log.i("ROS加载地图", jsonObj.toString());
+                String mapNameOrigin = (String) jsonObj.get("mapname");//轨迹名称--带文件夹名称的
+                String[] mapNameArr = mapNameOrigin.split("/");
+                String roadArea = mapNameArr[0];  //轨迹的的作业区域
+                String mapName = mapNameArr[1]; //轨迹名称
 
-                        if (DataStorage.roadsMap.get(mapNameOrigin) != null) {
-                            Log.i(TAG, "重复地图忽略 mapName = " + mapNameOrigin);
-                            return;
-                        }
-                        boolean isRoadToClean = !mapName.startsWith("maping_"); //是否为清倒道路
-//                        DataStorage.nameBlockQueue.add(mapName);
-                        DataStorage.nameBlockQueue.add(mapNameOrigin);
-                        DataStorage.roadsMap.put(mapNameOrigin, jsonObj);
-
-                        /********对地图名称装入map，key为汉语名，value为英文名*********/
-                        if (isRoadToClean) {
-//                            DataStorage.addRoadArea(roadArea);
-                            DataStorage.addRoadAreaAndRoads(roadArea, mapName);
-//                            roadNameToCh(mapName);
-                        }
-                        //轨迹没有选中,设置初步选定的轨迹，默认为先得到的清倒轨迹
-                        /**
-                         * 清扫地图（默认）mapingX
-                         * 车库地图 maping_garage_X
-                         * 车库倒车地图 maping_garage_reverse_X
-                         * 场站地图 maping_garbagestation_X
-                         * 场站倒车地图 maping_garbagestation_reverse_X
-                         */
-                        if (DataStorage.initSelectMapName == null || DataStorage.initSelectMapName.equals("")) {
-                            if (isRoadToClean) {
-                                DataStorage.initSelectMapName = mapName;
-                            }
-                        }
-                        mapName = null;
-                    } else if (recvTopicBehaviordecision.equals(event.name)) {   //收到障碍物信息 obs为空--无障碍物非空0--未分类 1-4为实体障碍物 >4虚拟障碍物
-                        Log.i(TAG, "收到障碍物信息" + jsonObj.toString());  //50ms一次
-                        //{"obs":[],"timestamp":0,"isvalid":0,"turnlights":0,"laneblock":0,"drivebehavior":1}
-                        long timeStamp = Long.valueOf(jsonObj.get("timestamp").toString());
-                        Log.i(TAG, "behaviorDecision time cost = " + (System.currentTimeMillis() - timeStamp) + "ms");
-                        JSONArray jsonObsArray = (JSONArray) jsonObj.get("obs");
-                        int carWorkMode = Integer.parseInt(jsonObj.get("carworkmode").toString());// 获取工作模式 1,清扫    2,去车库   3,去垃圾站
-                        int lowbattery = Integer.parseInt(jsonObj.get("lowbattery").toString()); //低压报警 0:默认 1：电量低报警
-                        DataStorage.lowBattery = lowbattery;
-                        DataStorage.setCarWorkMode(carWorkMode);
-
-                        //获取是否报警
-                        Object sysErrorObj = jsonObj.get("patherror"); //0 默认 1 报警
-                        if (sysErrorObj != null) {
-                            int sysError = Integer.parseInt(sysErrorObj.toString());
-                            Log.i(TAG, "收到报警" + sysError);
-                            DataStorage.pathError = sysError;
-                        } else {
-                            DataStorage.pathError = 0;
-                        }
-
-                        int obsClass = 0;
-                        if (jsonObsArray == null || jsonObsArray.size() == 0) { //没有障碍物
-                            obsClass = 0;
-                        } else {
-                            for (int i = 0; i < jsonObsArray.size(); i++) {
-                                JSONObject jn = (JSONObject) jsonObsArray.get(i);
-                                int cation = Integer.valueOf(jn.get("classification").toString());
-                                if (cation > obsClass) {
-                                    obsClass = cation;
-                                }
-                            }
-                        }
-                        if (DataStorage.obs != obsClass) {
-                            DataStorage.obs = obsClass; //障碍物状态有改变的时候发送广播
-                        }
-                    } else if (recvTopicActuator.equals(event.name)) {      //驾驶状态信息 1-自动驾驶  0-非自动驾驶      //50ms一次
-                        Log.i(TAG, "收到驾驶状态信息" + jsonObj.toString());
-                        int driverStatus = Integer.valueOf(jsonObj.get("sysstatus").toString());
-                        int batterySoc = Integer.valueOf(jsonObj.get("soc").toString()); //电量  %
-
-
-                        float battery = Float.valueOf(jsonObj.get("battery").toString()); //电压
-                        int batteryInt = Math.round(battery);
-
-                        int liftStatus = Integer.valueOf(jsonObj.get("liftstate").toString());     //倾倒状态  0--无  >0有
-                        int sweepStatus = Integer.valueOf(jsonObj.get("sweepstate").toString());  //清扫状态   0---无   >0有
-
-                        long timeStamp = Long.valueOf(jsonObj.get("timestamp").toString());
-                        Log.i(TAG, "actuator time cost = " + (System.currentTimeMillis() - timeStamp) + "ms");
-
-                        DataStorage.driverStatus = driverStatus;
-                        DataStorage.batterySoc = batterySoc;  //电量  %
-                        DataStorage.battery = batteryInt;    //电压
-                        DataStorage.liftStatus = liftStatus;
-                        DataStorage.sweepStatus = sweepStatus;
-                        DataStorage.actuatorTimeStamp = timeStamp;
-                    }
-                } catch (ParseException e) {
-                    e.printStackTrace();
-                    Log.e(TAG, "json转化出错");
-                } finally {
-                    parser = null;
-                    jsonObj = null;
+                if (DataStorage.roadsMap.get(mapNameOrigin) != null) {
+                    Log.i(TAG, "重复地图忽略 mapName = " + mapNameOrigin);
+                    return;
                 }
+                boolean isRoadToClean = !mapName.startsWith("maping_"); //是否为清倒道路
+//                        DataStorage.nameBlockQueue.add(mapName);
+                DataStorage.nameBlockQueue.add(mapNameOrigin);
+                DataStorage.roadsMap.put(mapNameOrigin, jsonObj);
+
+                /********对地图名称装入map，key为汉语名，value为英文名*********/
+                if (isRoadToClean) {
+//                            DataStorage.addRoadArea(roadArea);
+                    DataStorage.addRoadAreaAndRoads(roadArea, mapName);
+//                            roadNameToCh(mapName);
+                }
+                //轨迹没有选中,设置初步选定的轨迹，默认为先得到的清倒轨迹
+                /**
+                 * 清扫地图（默认）mapingX
+                 * 车库地图 maping_garage_X
+                 * 车库倒车地图 maping_garage_reverse_X
+                 * 场站地图 maping_garbagestation_X
+                 * 场站倒车地图 maping_garbagestation_reverse_X
+                 */
+                if (DataStorage.initSelectMapName == null || DataStorage.initSelectMapName.equals("")) {
+                    if (isRoadToClean) {
+                        DataStorage.initSelectMapName = mapName;
+                    }
+                }
+                mapName = null;
+            } else if (recvTopicBehaviordecision.equals(event.name)) {   //收到障碍物信息 obs为空--无障碍物非空0--未分类 1-4为实体障碍物 >4虚拟障碍物
+                Log.i(TAG, "收到障碍物信息" + jsonObj.toString());  //50ms一次
+                //{"obs":[],"timestamp":0,"isvalid":0,"turnlights":0,"laneblock":0,"drivebehavior":1}
+                long timeStamp = Long.valueOf(jsonObj.get("timestamp").toString());
+                Log.i(TAG, "behaviorDecision time cost = " + (System.currentTimeMillis() - timeStamp) + "ms");
+                JSONArray jsonObsArray = (JSONArray) jsonObj.get("obs");
+                int carWorkMode = Integer.parseInt(jsonObj.get("carworkmode").toString());// 获取工作模式 1,清扫    2,去车库   3,去垃圾站
+                int lowbattery = Integer.parseInt(jsonObj.get("lowbattery").toString()); //低压报警 0:默认 1：电量低报警
+                DataStorage.lowBattery = lowbattery;
+                DataStorage.setCarWorkMode(carWorkMode);
+
+                //获取是否路径偏移报警
+                Object sysRoadErrorObj = jsonObj.get("patherror"); //0 默认 1 路径偏移报警
+                if (sysRoadErrorObj != null) {
+                    int sysError = Integer.parseInt(sysRoadErrorObj.toString());
+                    Log.i(TAG, "收到路径偏移报警" + sysError);
+                    DataStorage.pathError = sysError;
+                } else {
+                    DataStorage.pathError = 0;
+                }
+                //获取故障报警
+                /**
+                 * gps无数据或gps状态为0 	1
+                 * 激光雷达无数据	        2
+                 * 毫米波雷达无数据	        3
+                 * 超声波雷达无数据         	4
+                 * 无数据	                 5
+                 * 无数据	                 6
+                 * 无数据	                7
+                 * 无数据	                8
+                 * 无数据	                9
+                 * 无数据	                10
+                 */
+                Object sysErrorObj = jsonObj.get("laneblock");
+                if (sysErrorObj != null) {
+                    int sysError = Integer.parseInt(sysErrorObj.toString());
+                    Log.i(TAG, "收到故障报警" + sysError);
+                } else {
+                    DataStorage.sysError = 0;
+                }
+
+
+                int obsClass = 0;
+                if (jsonObsArray == null || jsonObsArray.size() == 0) { //没有障碍物
+                    obsClass = 0;
+                } else {
+                    for (int i = 0; i < jsonObsArray.size(); i++) {
+                        JSONObject jn = (JSONObject) jsonObsArray.get(i);
+                        int cation = Integer.valueOf(jn.get("classification").toString());
+                        if (cation > obsClass) {
+                            obsClass = cation;
+                        }
+                    }
+                }
+                if (DataStorage.obs != obsClass) {
+                    DataStorage.obs = obsClass; //障碍物状态有改变的时候发送广播
+                }
+            } else if (recvTopicActuator.equals(event.name)) {      //驾驶状态信息 1-自动驾驶  0-非自动驾驶      //50ms一次
+                Log.i(TAG, "收到驾驶状态信息" + jsonObj.toString());
+                int driverStatus = Integer.valueOf(jsonObj.get("sysstatus").toString());
+                int batterySoc = Integer.valueOf(jsonObj.get("soc").toString()); //电量  %
+
+
+                double battery = Double.valueOf(jsonObj.get("battery").toString()); //电压
+                String batteryStr = decimalFormat.format(battery); //保留一位小数
+
+                int liftStatus = Integer.valueOf(jsonObj.get("liftstate").toString());     //倾倒状态  0--无  >0有
+                int sweepStatus = Integer.valueOf(jsonObj.get("sweepstate").toString());  //清扫状态   0---无   >0有
+
+                long timeStamp = Long.valueOf(jsonObj.get("timestamp").toString());
+                Log.i(TAG, "actuator time cost = " + (System.currentTimeMillis() - timeStamp) + "ms");
+
+                DataStorage.driverStatus = driverStatus;
+                DataStorage.batterySoc = batterySoc;  //电量  %
+                DataStorage.battery = batteryStr + "V";    //电压
+                DataStorage.liftStatus = liftStatus;
+                DataStorage.sweepStatus = sweepStatus;
+                DataStorage.actuatorTimeStamp = timeStamp;
+            }
+        } catch (ParseException e) {
+            e.printStackTrace();
+            Log.e(TAG, "json转化出错");
+        } finally {
+            parser = null;
+            jsonObj = null;
+        }
 //            }
 //        });
 
