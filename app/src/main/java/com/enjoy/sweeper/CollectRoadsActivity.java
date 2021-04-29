@@ -361,7 +361,10 @@ public class CollectRoadsActivity extends Activity {
 
 
         collectAreaSpinner = findViewById(R.id.collect_area_spinner);
-        collectAreaAdapter = new ArrayAdapter(CollectRoadsActivity.this, android.R.layout.simple_spinner_item, DataStorage.getMapAreaListForCollectMap());
+        List<String> mapAreaList = DataStorage.getMapAreaListForCollectMap();
+//        collectAreaAdapter = new ArrayAdapter(CollectRoadsActivity.this, android.R.layout.simple_spinner_item, DataStorage.getMapAreaListForCollectMap());
+        collectAreaAdapter = new ArrayAdapter(CollectRoadsActivity.this, android.R.layout.simple_spinner_item, mapAreaList);
+        Log.i("快看快看出现了", "initView mapAreaList 长度="+ mapAreaList.size());
         //下拉风格
         collectAreaAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         collectAreaSpinner.setAdapter(collectAreaAdapter);
@@ -439,6 +442,7 @@ public class CollectRoadsActivity extends Activity {
 
                 //记录选择区域Spinner的position
                 int selectAreaSpinnerPosition = collectAreaSpinner.getSelectedItemPosition();
+                Log.i("快看快看出现了", "startCollectBtn DataStorage.collectAreaSpinnerPosition=" + DataStorage.collectAreaSpinnerPosition);
                 DataStorage.collectAreaSpinnerPosition = selectAreaSpinnerPosition;
             }
         });
@@ -469,14 +473,7 @@ public class CollectRoadsActivity extends Activity {
                 startCollectBtn.setTextColor(getResources().getColor(R.color.noCheckColorGray));
 
 //                reloadRoads();   //重新加载地图
-                new Thread(new Runnable() {
-                    @Override
-                    public void run() {
-                        SystemClock.sleep(800); //800ms后请求加载地图
-//                        refreshRoads();
-                        handler.sendEmptyMessage(RELOAD_ROADS);
-                    }
-                }).start();
+                handler.sendEmptyMessageDelayed(RELOAD_ROADS, 1000);
 
                 ToastUtil.show(getApplicationContext(), "采集成功");
             }
@@ -519,8 +516,9 @@ public class CollectRoadsActivity extends Activity {
 
 
         //2秒后认为所有轨迹已经返回，开始重新设置下拉区域框
-        SystemClock.sleep(2000);
-        handler.sendEmptyMessage(UPDATE_SPINNER);
+//        SystemClock.sleep(2000);
+//        handler.sendEmptyMessage(UPDATE_SPINNER);
+        handler.sendEmptyMessageDelayed(UPDATE_SPINNER, 2000);
     }
 
     /**
@@ -613,13 +611,15 @@ public class CollectRoadsActivity extends Activity {
                 break;
             case UPDATE_SPINNER:
                 //重新设置区域下拉框
-                collectAreaAdapter = new ArrayAdapter(CollectRoadsActivity.this, android.R.layout.simple_spinner_item, DataStorage.getMapAreaListForCollectMap());
+                List mapAreaList = DataStorage.getMapAreaListForCollectMap();
+                collectAreaAdapter = new ArrayAdapter(CollectRoadsActivity.this, android.R.layout.simple_spinner_item, mapAreaList);
                 //下拉风格
                 collectAreaAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                 collectAreaSpinner.setAdapter(collectAreaAdapter);
 
                 //设置区域为上次所选的
                 //Spinner中position是从0开始的，0--1  1--2
+                Log.i("快看快看出现了", "UPDATE_SPINNER DataStorage.collectAreaSpinnerPosition=" + DataStorage.collectAreaSpinnerPosition + "mapAreaList 长度="+ mapAreaList.size());
                 collectAreaSpinner.setSelection(DataStorage.collectAreaSpinnerPosition, true);
                 break;
             case RELOAD_ROADS:

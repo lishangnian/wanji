@@ -1009,10 +1009,12 @@ public class MainActivity extends Activity implements LocationSource, AMapLocati
                 break;
             case 777:
                 String roadName = DataStorage.nameBlockQueue.poll(); //移除并返回队列头部元素
-                boolean drawFlag = (roadName != null) && (!roadName.equals(""));
-                if (drawFlag) {
-                    drawRoadInMap(roadName);
-                }
+                /***********************************高德地图不绘制轨迹****************************************/
+//                boolean drawFlag = (roadName != null) && (!roadName.equals(""));
+//                if (drawFlag) {
+//                    drawRoadInMap(roadName);
+//                }
+
                 //给下拉框添加轨迹
                 roadNameChList = DataStorage.getMapName_CH_list();
                 roadsAdapter = new ArrayAdapter(MainActivity.this, android.R.layout.simple_spinner_item, roadNameChList);
@@ -1024,7 +1026,7 @@ public class MainActivity extends Activity implements LocationSource, AMapLocati
                 areasAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                 areaSpinner.setAdapter(areasAdapter);
 
-                Log.i(TAG, "主页面轨迹更新 drawFlag = " + drawFlag);
+//                Log.i(TAG, "主页面轨迹更新 drawFlag = " + drawFlag);
                 break;
         }
     }

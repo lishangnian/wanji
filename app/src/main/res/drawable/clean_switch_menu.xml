@@ -5,7 +5,5 @@
         <corners android:radius="5px"/>
         <solid android:color="@color/gearColorNumDefault3"/>
     </shape>
-
 </item>
-
 </layer-list>

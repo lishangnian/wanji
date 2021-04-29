@@ -53,7 +53,7 @@ public class EnjoyTrainShipApplication extends Application {
 
 
     String rosIP = "192.168.6.100";
-    //    String rosIP = "192.168.6.111";
+    //        String rosIP = "192.168.6.111";
     String appMsgStopGoStr = "\"stopgo\":";
     String appMsgMapNameStr = ",\"mapname\":";
     String appMsgCleanenableStr = ",\"cleanenable\":"; //是否清扫
@@ -351,7 +351,7 @@ public class EnjoyTrainShipApplication extends Application {
                 client.setDebug(true);
                 Global.connectFlag = true;
                 connectTry = false;
-
+                Log.i(TAG, "connect ros success");
             }
 
 
@@ -418,11 +418,13 @@ public class EnjoyTrainShipApplication extends Application {
                 String roadArea = mapNameArr[0];  //轨迹的的作业区域
                 String mapName = mapNameArr[1]; //轨迹名称
 
+                Log.i("快看快看****", mapNameOrigin);
+
                 if (DataStorage.roadsMap.get(mapNameOrigin) != null) {
                     Log.i(TAG, "重复地图忽略 mapName = " + mapNameOrigin);
                     return;
                 }
-                boolean isRoadToClean = !mapName.startsWith("maping_"); //是否为清倒道路
+                boolean isRoadToClean = !mapName.startsWith("maping_"); //是否为清扫道路
 //                        DataStorage.nameBlockQueue.add(mapName);
                 DataStorage.nameBlockQueue.add(mapNameOrigin);
                 DataStorage.roadsMap.put(mapNameOrigin, jsonObj);
