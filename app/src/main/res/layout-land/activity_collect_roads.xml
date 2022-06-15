@@ -9,194 +9,716 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="20px"
-        android:layout_marginTop="10px"
-        android:gravity="center_horizontal"
-        android:orientation="horizontal"
-        android:textAlignment="center">
+        android:layout_marginTop="20dp"
+        android:id="@+id/top_layout"
+        android:orientation="horizontal">
 
         <ImageButton
             android:id="@+id/back_in_collect_img_btn"
-            android:layout_width="50px"
-            android:layout_height="50px"
-            android:layout_marginLeft="35px"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_marginLeft="50dp"
+            android:layout_marginStart="50dp"
             android:background="@drawable/img_button_circle"
             android:padding="0dp"
             android:scaleType="fitXY"
             android:src="@drawable/back_btn_img" />
 
 
+        <!--区域选择下拉框-->
         <TextView
+            android:id="@+id/title_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="24px"
+            android:layout_marginLeft="10dp"
             android:includeFontPadding="false"
             android:text="地图采集"
             android:textColor="@color/titleColorDarkBlue"
-            android:textSize="28px"
-            android:id="@+id/title_name"
-            />
-        <!--速度快速选择按钮-->
-        <RadioGroup
-            android:layout_width="wrap_content"
-            android:layout_height="50px"
-            android:layout_marginLeft="80px"
-            android:orientation="horizontal">
-
-            <RadioButton
-                android:layout_width="70px"
-                android:layout_height="60px"
-                android:id="@+id/speed_slow_btn"
-                android:background="@drawable/speed_rbtn_slow"
-                android:button="@null" />
-
-            <RadioButton
-                android:layout_width="70px"
-                android:layout_height="60px"
-                android:layout_marginLeft="30px"
-                android:id="@+id/speed_normal_btn"
-                android:background="@drawable/speed_rbtn_normal"
-                android:button="@null" />
-
-            <RadioButton
-                android:layout_width="70px"
-                android:layout_height="60px"
-                android:layout_marginLeft="30px"
-                android:id="@+id/speed_fast_btn"
-                android:background="@drawable/speed_rbtn_fast"
-                android:button="@null" />
-        </RadioGroup>
-
-        <!--区域选择下拉框-->
-        <Spinner
-            android:layout_width="150px"
-            android:layout_height="65px"
-            android:layout_marginLeft="50px"
-            android:id="@+id/collect_area_spinner"
-
-            />
-    </LinearLayout>
-    <!--速度选择按钮-->
-    <LinearLayout
-        android:layout_width="230px"
-        android:layout_height="60px"
-        android:layout_marginLeft="100px"
-        android:layout_marginTop="90px"
-        android:background="@drawable/collect_roads_speed_select_backg"
-        android:gravity="center_vertical"
-        android:orientation="horizontal">
-
-        <Button
-            android:id="@+id/speed_click_select_btn"
-            android:layout_width="80px"
-            android:layout_height="50px"
-            android:layout_gravity="center"
-            android:layout_marginLeft="17px"
-            android:background="@drawable/collect_roads_speed_btn_back"
-            android:text="00"
-            android:textAlignment="center"
-            android:textColor="@color/checkColorBlue"
-            android:textSize="36px" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_marginLeft="10px"
-            android:gravity="center_vertical"
-            android:text="速度(km/h)"
-            android:textColor="@color/pureColorBackgroundWhite"
-            android:textSize="22px" />
-
+            android:textSize="28sp" />
     </LinearLayout>
 
-    <!--采集地图时的文字提示-->
-    <LinearLayout
-        android:id="@+id/roads_collecting_tag_layout"
+    <GridLayout
+        android:id="@+id/grid_layout1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="400px"
-        android:layout_marginTop="100px"
-        android:gravity="center_vertical"
-        android:orientation="horizontal"
-        android:visibility="invisible">
-
-        <ImageView
-            android:layout_width="22px"
-            android:layout_height="22px"
-            android:padding="0dp"
-            android:scaleType="fitXY"
-            android:src="@drawable/funnel_collecting" />
-
-        <TextView
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_below="@+id/top_layout"
+        android:layout_marginTop="30dp"
+        android:paddingLeft="20dp"
+        android:paddingStart="20dp"
+        android:layout_toLeftOf="@+id/right_layout"
+        android:layout_toStartOf="@+id/right_layout"
+        android:columnCount="3"
+        android:rowCount="5">
+        <!--        园区选择 1行 1列-->
+        <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="12px"
-            android:text="地图采集中…"
-            android:textColor="@color/titleColorDarkBlue"
-            android:textSize="28px"
+            android:layout_column="0"
+            android:layout_row="0"
+            android:layout_marginLeft="10dp"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="10dp"
+            android:orientation="horizontal">
+            <TextView
+                android:layout_width="80dp"
+                android:layout_height="35dp"
+                android:layout_gravity="center"
+                android:layout_marginLeft="10dp"
+                android:layout_marginStart="10dp"
+                android:gravity="center_vertical|end"
+                android:text="园区名"
+                android:textColor="@color/colorBlack"
+                android:textSize="16sp" />
+            <Button
+                android:id="@+id/map_area_select_btn"
+                android:layout_width="100dp"
+                android:layout_height="35dp"
+                android:layout_gravity="center"
+                android:layout_marginLeft="5dp"
+                android:background="@drawable/collect_roads_speed_btn_back"
+                android:text=""
+                android:textAlignment="center"
+                android:textColor="@color/checkColorBlue"
+                android:textSize="16sp" />
+        </LinearLayout>
 
-            />
-    </LinearLayout>
+        <!--        轨迹名称 1行 2列-->
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_row="0"
+            android:layout_column="1"
+            android:layout_marginLeft="10dp"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="10dp"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="80dp"
+                android:layout_height="35dp"
+                android:layout_gravity="center"
+                android:layout_marginLeft="10dp"
+                android:layout_marginStart="10dp"
+                android:gravity="center_vertical|end"
+                android:text="地图名"
+                android:textColor="@color/colorBlack"
+                android:textSize="16sp" />
+            <Button
+                android:id="@+id/map_name_btn"
+                android:layout_width="100dp"
+                android:layout_height="35dp"
+                android:layout_gravity="center"
+                android:layout_marginLeft="5dp"
+                android:background="@drawable/collect_roads_speed_btn_back"
+                android:textAlignment="center"
+                android:textColor="@color/checkColorBlue"
+                android:textSize="16sp" />
+
+        </LinearLayout>
+
+        <!-- 轨迹名称 1行 3列-->
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_row="0"
+            android:layout_column="2"
+            android:layout_marginLeft="10dp"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="10dp"
+            android:orientation="horizontal">
+<!--            原 道路属性-->
+            <TextView
+                android:layout_width="80dp"
+                android:layout_height="35dp"
+                android:layout_gravity="center"
+                android:layout_marginLeft="10dp"
+                android:gravity="center_vertical|end"
+                android:text="地图属性"
+                android:textColor="@color/colorBlack"
+                android:textSize="16sp" />
+            <Button
+                android:id="@+id/map_speed_btn"
+                android:layout_width="100dp"
+                android:layout_height="35dp"
+                android:layout_gravity="center"
+                android:layout_marginLeft="5dp"
+                android:background="@drawable/collect_roads_speed_btn_back"
+                android:textAlignment="center"
+                android:textColor="@color/checkColorBlue"
+                android:textSize="16sp" />
+
+        </LinearLayout>
 
 
-    <!--选择是否清扫按钮-->
-    <LinearLayout
+        <!-- 轨迹道路属性 2行 1列-->
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_column="0"
+            android:layout_row="1"
+            android:layout_marginLeft="10dp"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="10dp"
+
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="80dp"
+                android:layout_height="35dp"
+                android:layout_gravity="center"
+                android:layout_marginLeft="10dp"
+                android:gravity="center_vertical|end"
+                android:text="车道属性"
+                android:textColor="@color/colorBlack"
+                android:textSize="16sp" />
+            <Button
+                android:id="@+id/map_lane_btn"
+                android:layout_width="100dp"
+                android:layout_height="35dp"
+                android:layout_gravity="center"
+                android:layout_marginLeft="5dp"
+                android:background="@drawable/collect_roads_speed_btn_back"
+                android:textAlignment="center"
+                android:textColor="@color/checkColorBlue"
+                android:textSize="16sp" />
+
+        </LinearLayout>
+
+        <!-- 属性 2行 2列-->
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_column="1"
+            android:layout_marginLeft="10dp"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="10dp"
+            android:layout_row="1"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="80dp"
+                android:layout_height="35dp"
+                android:layout_gravity="center"
+                android:layout_marginLeft="10dp"
+                android:gravity="center_vertical|end"
+                android:text="临时停车"
+                android:textColor="@color/colorBlack"
+                android:textSize="16sp" />
+            <Button
+                android:id="@+id/map_stop_width_btn"
+                android:layout_width="100dp"
+                android:layout_height="35dp"
+                android:layout_gravity="center"
+                android:layout_marginLeft="5dp"
+                android:background="@drawable/collect_roads_speed_btn_back"
+                android:textAlignment="center"
+                android:textColor="@color/checkColorBlue"
+                android:textSize="16sp" />
+
+        </LinearLayout>
+
+
+        <!--切换道路属性 2行 3列-->
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_column="2"
+            android:layout_row="1"
+            android:layout_marginLeft="10dp"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="10dp"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="80dp"
+                android:layout_height="35dp"
+                android:layout_gravity="center"
+                android:layout_marginLeft="10dp"
+                android:gravity="center_vertical|end"
+                android:text="并道属性"
+                android:textColor="@color/colorBlack"
+                android:textSize="16sp" />
+            <Button
+                android:id="@+id/map_merge_lane_btn"
+                android:layout_width="100dp"
+                android:layout_height="35dp"
+                android:layout_gravity="center"
+                android:layout_marginLeft="5dp"
+                android:background="@drawable/collect_roads_speed_btn_back"
+                android:textAlignment="center"
+                android:textColor="@color/checkColorBlue"
+                android:textSize="16sp" />
+
+        </LinearLayout>
+
+
+        <!-- 左道路宽 3行 1列-->
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_column="0"
+            android:layout_marginLeft="10dp"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="10dp"
+            android:layout_row="2"
+            android:orientation="horizontal">
+
+
+            <TextView
+                android:layout_width="80dp"
+                android:layout_height="35dp"
+                android:layout_gravity="center"
+                android:layout_marginLeft="10dp"
+                android:gravity="center_vertical|end"
+                android:text="左安全距离"
+                android:textColor="@color/colorBlack"
+                android:textSize="16sp" />
+            <Button
+                android:id="@+id/map_left_width_btn"
+                android:layout_width="100dp"
+                android:layout_height="35dp"
+                android:layout_gravity="center"
+                android:layout_marginLeft="5dp"
+                android:background="@drawable/collect_roads_speed_btn_back"
+                android:textAlignment="center"
+                android:textColor="@color/checkColorBlue"
+                android:textSize="16sp" />
+
+
+        </LinearLayout>
+
+
+        <!-- 右道路宽 3行 2列-->
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_column="1"
+            android:layout_marginLeft="10dp"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="10dp"
+            android:layout_row="2"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="80dp"
+                android:layout_height="35dp"
+                android:layout_gravity="center"
+                android:layout_marginLeft="10dp"
+                android:gravity="center_vertical|end"
+                android:text="右安全距离"
+                android:textColor="@color/colorBlack"
+                android:textSize="16sp" />
+
+            <Button
+                android:id="@+id/map_right_width_btn"
+                android:layout_width="100dp"
+                android:layout_height="40dp"
+                android:layout_gravity="center"
+                android:layout_marginLeft="5dp"
+                android:background="@drawable/collect_roads_speed_btn_back"
+                android:textAlignment="center"
+                android:textColor="@color/checkColorBlue"
+                android:textSize="16sp" />
+
+        </LinearLayout>
+
+
+        <!-- 期望速度 3行 3列-->
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_column="2"
+            android:layout_marginLeft="10dp"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="10dp"
+            android:layout_row="2"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="80dp"
+                android:layout_height="35dp"
+                android:layout_gravity="center"
+                android:layout_marginLeft="10dp"
+                android:gravity="center_vertical|end"
+                android:text="期望速度"
+                android:textColor="@color/colorBlack"
+                android:textSize="16sp" />
+
+            <Button
+                android:id="@+id/ex_speed_btn"
+                android:layout_width="100dp"
+                android:layout_height="40dp"
+                android:layout_gravity="center"
+                android:layout_marginLeft="5dp"
+                android:background="@drawable/collect_roads_speed_btn_back"
+                android:textAlignment="center"
+                android:textColor="@color/checkColorBlue"
+                android:textSize="16sp" />
+
+        </LinearLayout>
+
+
+
+        <!-- 4行 1列  左安全距离-->
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_column="0"
+            android:layout_marginLeft="10dp"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="10dp"
+            android:layout_row="3"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="80dp"
+                android:layout_height="35dp"
+                android:layout_gravity="center"
+                android:layout_marginLeft="10dp"
+                android:gravity="center_vertical|end"
+                android:text="左道路宽"
+                android:textColor="@color/colorBlack"
+                android:textSize="16sp" />
+
+            <Button
+                android:id="@+id/left_lane_width_btn"
+                android:layout_width="100dp"
+                android:layout_height="40dp"
+                android:layout_gravity="center"
+                android:layout_marginLeft="5dp"
+                android:background="@drawable/collect_roads_speed_btn_back"
+                android:textAlignment="center"
+                android:textColor="@color/checkColorBlue"
+                android:textSize="16sp" />
+
+        </LinearLayout>
+
+
+        <!-- 4行 2列  右安全距离-->
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_column="1"
+            android:layout_marginLeft="10dp"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="10dp"
+            android:layout_row="3"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="80dp"
+                android:layout_height="35dp"
+                android:layout_gravity="center"
+                android:layout_marginLeft="10dp"
+                android:gravity="center_vertical|end"
+                android:text="右道路宽"
+                android:textColor="@color/colorBlack"
+                android:textSize="16sp" />
+
+            <Button
+                android:id="@+id/right_lane_width_btn"
+                android:layout_width="100dp"
+                android:layout_height="40dp"
+                android:layout_gravity="center"
+                android:layout_marginLeft="5dp"
+                android:background="@drawable/collect_roads_speed_btn_back"
+                android:textAlignment="center"
+                android:textColor="@color/checkColorBlue"
+                android:textSize="16sp" />
+
+        </LinearLayout>
+
+
+        <!-- 临时停车 4行 2列-->
+<!--
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_column="1"
+            android:layout_marginLeft="10dp"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="10dp"
+            android:layout_row="3"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="80dp"
+                android:layout_height="35dp"
+                android:layout_gravity="center"
+                android:layout_marginLeft="10dp"
+                android:gravity="center_vertical|end"
+                android:text="临时停车"
+                android:textColor="@color/colorBlack"
+                android:textSize="16sp" />
+
+            <Button
+                android:id="@+id/temporary_stop_btn"
+                android:layout_width="100dp"
+                android:layout_height="40dp"
+                android:layout_gravity="center"
+                android:layout_marginLeft="5dp"
+                android:background="@drawable/collect_roads_speed_btn_back"
+                android:textAlignment="center"
+                android:textColor="@color/checkColorBlue"
+                android:textSize="16sp" />
+
+        </LinearLayout>
+ -->
+
+        <!-- 车道宽带 4行 3列-->
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_column="2"
+            android:layout_marginLeft="10dp"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="10dp"
+            android:layout_row="3"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="80dp"
+                android:layout_height="35dp"
+                android:layout_gravity="center"
+                android:layout_marginLeft="10dp"
+                android:gravity="center_vertical|end"
+                android:text="车道宽度"
+                android:textColor="@color/colorBlack"
+                android:textSize="16sp" />
+
+            <Button
+                android:id="@+id/lane_width_btn"
+                android:layout_width="100dp"
+                android:layout_height="40dp"
+                android:layout_gravity="center"
+                android:layout_marginLeft="5dp"
+                android:background="@drawable/collect_roads_speed_btn_back"
+                android:textAlignment="center"
+                android:textColor="@color/checkColorBlue"
+                android:textSize="16sp" />
+
+        </LinearLayout>
+
+
+
+        <!-- 道路状态 5行 1列-->
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_column="0"
+            android:layout_marginLeft="10dp"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="10dp"
+            android:layout_row="4"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="80dp"
+                android:layout_height="35dp"
+                android:layout_gravity="center"
+                android:layout_marginLeft="10dp"
+                android:gravity="center_vertical|end"
+                android:text="道路状态"
+                android:textColor="@color/colorBlack"
+                android:textSize="16sp" />
+
+            <Button
+                android:id="@+id/lane_status_btn"
+                android:layout_width="100dp"
+                android:layout_height="40dp"
+                android:layout_gravity="center"
+                android:layout_marginLeft="5dp"
+                android:background="@drawable/collect_roads_speed_btn_back"
+                android:textAlignment="center"
+                android:textColor="@color/checkColorBlue"
+                android:textSize="16sp" />
+
+        </LinearLayout>
+
+
+    </GridLayout>
+
+    <GridLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="600px"
-        android:layout_marginTop="100px"
-        android:background="@drawable/clean_switch_menu"
-        android:gravity="center_horizontal"
-        android:orientation="horizontal"
-        android:paddingBottom="5px"
-        android:paddingLeft="5px"
-        android:paddingRight="5px"
-        android:paddingTop="5px">
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_below="@+id/grid_layout1"
+        android:layout_marginTop="30dp"
+        android:paddingLeft="20dp"
+        android:paddingStart="20dp"
+        android:layout_toLeftOf="@+id/right_layout"
+        android:layout_toStartOf="@+id/right_layout"
+        android:columnCount="3"
+        android:rowCount="2">
 
-        <ImageButton
-            android:id="@+id/sweep_enable_img_btn"
-            android:layout_width="70px"
-            android:layout_height="50px"
-            android:background="@color/grey"
-            android:scaleType="fitCenter"
-            android:src="@drawable/sweep_enable_false" />
+        <!--索引值-->
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_column="0"
+            android:layout_marginLeft="10dp"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="10dp"
+            android:layout_row="0"
+            android:orientation="horizontal">
 
-        <ImageButton
-            android:id="@+id/switch_sweep_img_btn"
-            android:layout_width="60px"
-            android:layout_height="50px"
-            android:layout_marginLeft="10px"
-            android:background="@color/grey"
-            android:scaleType="fitCenter"
-            android:src="@drawable/sweep_switch_btn_run" />
+            <TextView
+                android:layout_width="80dp"
+                android:layout_height="35dp"
+                android:layout_gravity="center"
+                android:layout_marginLeft="10dp"
+                android:gravity="center_vertical|end"
+                android:text="停车索引"
+                android:textColor="@color/colorBlack"
+                android:textSize="16sp" />
 
-        <ImageButton
-            android:id="@+id/path_valid_img_btn"
-            android:layout_width="60px"
-            android:layout_height="50px"
-            android:layout_marginLeft="10px"
-            android:background="@color/titleColorBackgroundWhite"
-            android:scaleType="fitCenter"
-            android:src="@drawable/path_valid">
+            <Button
+                android:id="@+id/map_stop_index_btn"
+                android:layout_width="100dp"
+                android:layout_height="40dp"
+                android:layout_gravity="center"
+                android:layout_marginLeft="5dp"
+                android:background="@drawable/collect_roads_speed_btn_back"
+                android:textAlignment="center"
+                android:textColor="@color/checkColorBlue"
+                android:textSize="16sp" />
 
-        </ImageButton>
-    </LinearLayout>
+        </LinearLayout>
+
+        <!--停车时间-->
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_column="1"
+            android:layout_row="0"
+            android:layout_marginLeft="10dp"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="10dp"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="80dp"
+                android:layout_height="35dp"
+                android:layout_gravity="center"
+                android:layout_marginLeft="10dp"
+                android:gravity="center_vertical|end"
+                android:text="停车时间"
+                android:textColor="@color/colorBlack"
+                android:textSize="16sp" />
+
+            <Button
+                android:id="@+id/map_stop_time_btn"
+                android:layout_width="100dp"
+                android:layout_height="40dp"
+                android:layout_gravity="center"
+                android:layout_marginLeft="5dp"
+                android:background="@drawable/collect_roads_speed_btn_back"
+                android:textAlignment="center"
+                android:textColor="@color/checkColorBlue"
+                android:textSize="16sp" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_column="2"
+            android:layout_marginLeft="10dp"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="10dp"
+            android:layout_row="0"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="80dp"
+                android:layout_height="35dp"
+                android:layout_gravity="center"
+                android:layout_marginLeft="10dp"
+                android:gravity="center_vertical|end"
+                android:text="停车属性"
+                android:textColor="@color/colorBlack"
+                android:textSize="16sp" />
+
+            <Button
+                android:id="@+id/map_stop_property_btn"
+                android:layout_width="100dp"
+                android:layout_height="40dp"
+                android:layout_gravity="center"
+                android:layout_marginLeft="5dp"
+                android:background="@drawable/collect_roads_speed_btn_back"
+                android:textAlignment="center"
+                android:textColor="@color/checkColorBlue"
+                android:textSize="16sp" />
+
+        </LinearLayout>
+
+<!--        泊车方位-->
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_column="0"
+            android:layout_marginLeft="10dp"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="10dp"
+            android:layout_row="1"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="80dp"
+                android:layout_height="35dp"
+                android:layout_gravity="center"
+                android:layout_marginLeft="10dp"
+                android:gravity="center_vertical|end"
+                android:text="停车方位"
+                android:textColor="@color/colorBlack"
+                android:textSize="16sp" />
+
+            <Button
+                android:id="@+id/map_stop_orientation_btn"
+                android:layout_width="100dp"
+                android:layout_height="40dp"
+                android:layout_gravity="center"
+                android:layout_marginLeft="5dp"
+                android:background="@drawable/collect_roads_speed_btn_back"
+                android:textAlignment="center"
+                android:textColor="@color/checkColorBlue"
+                android:textSize="16sp" />
+
+        </LinearLayout>
+
+    </GridLayout>
 
     <!--右侧电量与速度显示-->
     <LinearLayout
-        android:layout_width="90px"
+        android:layout_width="80dp"
         android:layout_height="wrap_content"
         android:layout_alignParentRight="true"
-        android:layout_marginRight="10px"
-        android:layout_marginTop="80px"
+        android:layout_marginRight="10dp"
+        android:layout_marginTop="100dp"
         android:gravity="center_horizontal"
+        android:id="@+id/right_layout"
         android:orientation="vertical">
+
+<!--        <Button-->
+<!--            android:layout_width="60dp"-->
+<!--            android:layout_height="40dp"-->
+<!--            android:id="@+id/add_area_btn"-->
+<!--            android:text="添加"-->
+<!--            android:scaleType="fitCenter"-->
+<!--            android:background="@color/pureColorBackgroundWhite"-->
+<!--            android:textColor="@color/checkColorBlue"-->
+<!--            android:textSize="18sp"-->
+<!--            />-->
+
 
         <ImageView
             android:id="@+id/car_status_in_collect"
-            android:layout_width="48px"
-            android:layout_height="28px"
-            android:layout_marginTop="20px"
+            android:layout_width="45dp"
+            android:layout_height="24dp"
+            android:layout_marginTop="10dp"
             android:padding="0dp"
             android:scaleType="fitXY"
             android:src="@drawable/car_status_default" />
@@ -205,177 +727,37 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:layout_marginTop="10px"
+            android:layout_marginTop="10dp"
             android:includeFontPadding="false"
             android:text="车状态"
             android:textAlignment="center"
             android:textColor="@color/checkColorBlue"
-            android:textSize="18px" />
-
+            android:textSize="18sp" />
 
         <ImageView
-            android:layout_width="48px"
-            android:layout_height="24px"
-            android:layout_marginTop="20px"
+            android:layout_width="45dp"
+            android:layout_height="45dp"
+            android:layout_marginTop="30dp"
             android:padding="0dp"
             android:scaleType="fitXY"
-            android:src="@drawable/battery_img" />
+            android:src="@drawable/collect_no"
+            android:id="@+id/flag_collect_img"
+            />
+
         <TextView
-            android:id="@+id/battery_in_collect"
+            android:id="@+id/flag_collect_txt"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:layout_marginTop="10px"
+            android:layout_marginTop="10dp"
             android:includeFontPadding="false"
-            android:text="00%"
+            android:text="@string/collect_no"
             android:textAlignment="center"
             android:textColor="@color/checkColorBlue"
-            android:textSize="18px" />
-        <RadioGroup
-            android:id="@+id/station_radio_group"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="20px"
-            android:orientation="vertical">
-
-            <RadioButton
-                android:id="@+id/path_default_rbtn"
-                android:layout_width="90px"
-                android:layout_height="50px"
-                android:layout_gravity="center"
-                android:background="@drawable/radio_btn"
-                android:button="@null"
-                android:checked="true"
-                android:text="清扫"
-                android:textAlignment="center"
-                android:textColor="@color/pureColorBackgroundWhite"
-                android:textSize="22px" />
-
-            <RadioButton
-                android:id="@+id/path_dump_rbtn"
-                android:layout_width="90px"
-                android:layout_height="50px"
-                android:layout_gravity="center"
-                android:layout_marginTop="5px"
-                android:background="@drawable/radio_btn"
-                android:button="@null"
-                android:text="倾倒"
-                android:textAlignment="center"
-                android:textColor="@color/noCheckColorGray"
-                android:textSize="22px" />
-
-            <RadioButton
-                android:id="@+id/path_park_rbtn"
-                android:layout_width="90px"
-                android:layout_height="50px"
-                android:layout_gravity="center"
-                android:layout_marginTop="5px"
-                android:background="@drawable/radio_btn"
-                android:button="@null"
-                android:text="回库"
-                android:textAlignment="center"
-                android:textColor="@color/noCheckColorGray"
-                android:textSize="22px" />
-
-        </RadioGroup>
-
-
-        <Button
-            android:id="@+id/in_or_out_btn"
-            android:layout_width="80px"
-            android:layout_height="50px"
-            android:layout_marginTop="10px"
-            android:background="@color/pureColorBackgroundWhite"
-            android:scaleType="fitCenter"
-            android:text="进站"
-            android:textColor="@color/checkColorBlue"
-            android:textSize="22px">
-
-        </Button>
-
-        <!--    设置属性  0 ：默认清扫       1:倾倒垃圾点       2:车库停车点-->
-        <RadioGroup
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="10px">
-
-            <RadioButton
-                android:id="@+id/forward_radio_btn"
-                android:layout_width="80px"
-                android:layout_height="50px"
-                android:layout_gravity="center"
-                android:layout_marginTop="5px"
-                android:background="@drawable/collect_direction_forward"
-                android:button="@null"
-                android:checked="true" />
-
-            <RadioButton
-                android:id="@+id/back_radio_btn"
-                android:layout_width="80px"
-                android:layout_height="50px"
-                android:layout_gravity="center"
-                android:layout_marginTop="10px"
-                android:background="@drawable/collect_direction_back"
-                android:button="@null" />
-
-        </RadioGroup>
-
-
+            android:textSize="16sp" />
 
     </LinearLayout>
 
-    <!--路径类型选择
-        marginLeft 165 158
-    -->
-    <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="90px"
-        android:layout_marginTop="210px">
-
-        <!--文档标注 按钮宽高为310x408-->
-        <RadioGroup
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
-
-            <RadioButton
-                android:id="@+id/roads_type_single_rb"
-                android:layout_width="160px"
-                android:layout_height="210px"
-                android:background="@drawable/single_lane_default"
-                android:button="@null" />
-
-
-            <RadioButton
-                android:id="@+id/roads_type_right_rb"
-                android:layout_width="160px"
-                android:layout_height="210px"
-                android:layout_marginLeft="30px"
-                android:background="@drawable/right_lane_default"
-                android:button="@null" />
-
-            <RadioButton
-                android:id="@+id/roads_type_middle_rb"
-                android:layout_width="160px"
-                android:layout_height="210px"
-                android:layout_marginLeft="30px"
-                android:background="@drawable/middle_lane_default"
-                android:button="@null" />
-
-
-            <RadioButton
-                android:id="@+id/roads_type_left_rb"
-                android:layout_width="160px"
-                android:layout_height="210px"
-                android:layout_marginLeft="30px"
-                android:background="@drawable/left_lane_default"
-                android:button="@null" />
-
-        </RadioGroup>
-
-
-    </LinearLayout>
 
 
     <!--路径开始采集 结束采集按钮-->
@@ -383,30 +765,31 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:layout_marginBottom="80px"
-        android:layout_marginLeft="260px"
+        android:layout_marginBottom="30dp"
+        android:layout_marginLeft="300dp"
         android:gravity="center_vertical"
         android:orientation="horizontal"
+        android:id="@+id/button_layout"
         android:padding="0dp">
 
         <Button
             android:id="@+id/start_collect_btn"
-            android:layout_width="200px"
-            android:layout_height="60px"
+            android:layout_width="160dp"
+            android:layout_height="50dp"
             android:background="@drawable/button_start_end_collect_btn_dft"
             android:text="开始采集"
             android:textColor="@color/checkColorBlue"
-            android:textSize="28px" />
+            android:textSize="24sp" />
 
         <Button
             android:id="@+id/end_collect_btn"
-            android:layout_width="200px"
-            android:layout_height="60px"
-            android:layout_marginLeft="60px"
+            android:layout_width="160dp"
+            android:layout_height="50dp"
+            android:layout_marginLeft="30dp"
             android:background="@drawable/button_start_end_collect_btn_dft"
             android:text="结束采集"
             android:textColor="@color/checkColorBlue"
-            android:textSize="32px" />
+            android:textSize="24sp" />
 
     </LinearLayout>
 </RelativeLayout>

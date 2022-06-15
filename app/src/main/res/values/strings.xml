@@ -1,19 +1,17 @@
 <resources>
-    <string name="app_name">扫地僧</string>
+    <string name="app_name">万集</string>
     <string name="animate">Animate</string>
 
     <string name="connect_off_line">未连接</string>
     <string name="connect_try">连接中</string>
     <string name="connect_success">已连接</string>
-
-    <string name="touch_alarm">一键报警</string>
-    <string name="remove_alarm">解除报警</string>
-    <string name="alarm_light">警灯</string>
-    <string name="alarm_whistle">警笛</string>
-    <string name="front_light">前灯</string>
-    <string name="tail_light">尾灯</string>
+    <string name="collect_no">未采集</string>
+    <string name="collect_doing">采集中</string>
 
     <string name="title_control">遥控器</string>
+    <string name="alarm">预警</string>
+    <string name="rename">输入新名称</string>
+    <string name="rename_ip">输入IP</string>
 
     <!-- offlinemap -->
     <string name="beijing">"北京"</string>

@@ -3,7 +3,10 @@
     android:id="@+id/activity_main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/collect_roads_background">
+    android:background="@color/grey"
+    >
+
+<!--    android:background="@drawable/collect_roads_background"-->
 
     <com.amap.api.maps.MapView
         android:id="@+id/map"
@@ -20,69 +23,166 @@
     <LinearLayout
         android:id="@+id/top_title_panel"
         android:layout_width="match_parent"
-        android:layout_height="80px"
+        android:layout_height="80dp"
         android:background="@color/titleColorBackgroundWhite"
         android:gravity="center_vertical"
         android:orientation="horizontal">
 
-        <!--android:layout_width="195px"-->
-        <!--android:layout_height="40px"-->
         <ImageView
-            android:layout_width="140px"
+            android:layout_width="160dp"
             android:layout_height="match_parent"
-            android:layout_marginLeft="20px"
-            android:layout_marginRight="30px"
+            android:layout_marginLeft="20dp"
+            android:layout_marginStart="20dp"
+            android:layout_marginRight="20dp"
             android:src="@drawable/company_logo" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="36px"
-            android:gravity="center_vertical"
-            android:text="无人驾驶扫地机"
-            android:includeFontPadding="false"
-            android:textColor="@color/titleColorDarkBlue"
-            android:textSize="32px" />
 
         <include
             layout="@layout/head_show_layout"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:layout_marginLeft="20px" />
+            android:layout_marginLeft="50dp" />
+
+<!--        按钮部分-->
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:orientation="horizontal"
+            android:layout_marginLeft="20dp"
+            >
+            <!--园区选择-->
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:gravity="center">
+                <Button
+                    android:id="@+id/map_zone_select_btn"
+                    android:layout_width="100dp"
+                    android:layout_height="35dp"
+                    android:layout_gravity="center"
+                    android:background="@drawable/collect_roads_speed_btn_back"
+                    android:text="选择园区"
+                    android:textAlignment="center"
+                    android:textColor="@color/checkColorBlue"
+                    android:textSize="16sp" />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="2dp"
+                    android:text="园区"
+                    android:textColor="@color/noCheckColorGray"
+                    android:textSize="16sp" />
+            </LinearLayout>
+
+            <!--停车点选择-->
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:layout_marginLeft="20dp"
+                android:gravity="center">
+                <Button
+                    android:id="@+id/map_park_btn"
+                    android:layout_width="80dp"
+                    android:layout_height="35dp"
+                    android:layout_gravity="center"
+                    android:background="@drawable/collect_roads_speed_btn_back"
+                    android:text="请选择"
+                    android:textAlignment="center"
+                    android:textColor="@color/checkColorBlue"
+                    android:textSize="16sp" />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="2dp"
+                    android:text="停车点"
+                    android:textColor="@color/noCheckColorGray"
+                    android:textSize="16sp" />
+            </LinearLayout>
+
+
+            <Button
+                android:id="@+id/edit_btn"
+                android:layout_width="80dp"
+                android:layout_height="40dp"
+                android:layout_marginLeft="10dp"
+                android:layout_gravity="center"
+                android:background="@drawable/collect_roads_speed_btn_back"
+                android:text="园区命名"
+                android:textAlignment="center"
+                android:textColor="@color/checkColorBlue"
+                android:textSize="16sp" />
+
+        </LinearLayout>
 
     </LinearLayout>
 
     <!--左侧菜单层-->
     <RelativeLayout
         android:id="@+id/left_menu_panel"
-        android:layout_width="120px"
+        android:layout_width="100dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="80px"
+        android:layout_alignParentBottom="true"
+        android:layout_below="@+id/top_title_panel"
         android:background="@drawable/index_left_menu"
         android:orientation="vertical">
 
-        <ImageButton
-            android:id="@+id/connect_img_btn"
-            android:layout_width="45px"
-            android:layout_height="45px"
-            android:layout_centerHorizontal="true"
-            android:layout_marginTop="10px"
-            android:background="#fcf9f2"
-            android:scaleType="fitEnd"
-            android:src="@drawable/not_connect" />
+        <!--出发与结束-->
+        <RadioGroup
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/start_end_radio_group"
+            android:layout_marginTop="40dp"
+            >
 
+            <RadioButton
+                android:layout_width="70dp"
+                android:layout_height="35dp"
+                android:layout_gravity="center"
+                android:text="出发"
+                android:textSize="16sp"
+                android:textAlignment="center"
+                android:textColor="@color/noCheckColorGray"
+                android:button="@null"
+                android:background="@drawable/radio_btn"
+                android:id="@+id/go_radio_btn"
+                />
+
+            <RadioButton
+                android:layout_width="70dp"
+                android:layout_height="35dp"
+                android:layout_gravity="center"
+                android:layout_marginTop="5dp"
+                android:textSize="16sp"
+                android:text="结束"
+                android:textAlignment="center"
+                android:textColor="@color/noCheckColorGray"
+                android:background="@drawable/radio_btn"
+                android:button="@null"
+                android:id="@+id/end_radio_btn"
+                />
+
+            <!--                android:checked="true"-->
+
+        </RadioGroup>
+
+
+        <!--地图采集-->
         <LinearLayout
             android:id="@+id/collect_tab"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@+id/start_end_radio_group"
-            android:layout_marginTop="10px"
+            android:layout_marginTop="20dp"
             android:gravity="center_horizontal"
             android:orientation="vertical">
 
             <ImageButton
                 android:id="@+id/collect_map_img_btn"
-                android:layout_width="45px"
-                android:layout_height="43px"
+                android:layout_width="40dp"
+                android:layout_height="36dp"
                 android:layout_centerHorizontal="true"
                 android:background="#fcf9f2"
                 android:scaleType="fitEnd"
@@ -93,14 +193,14 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/collect_map_img_btn"
-                android:layout_marginTop="5px"
+                android:layout_marginTop="5dp"
                 android:gravity="center"
                 android:includeFontPadding="false"
-                android:paddingBottom="0px"
-                android:paddingTop="0px"
+                android:paddingBottom="0dp"
+                android:paddingTop="0dp"
                 android:text="地图采集"
                 android:textColor="@color/noCheckColorGray"
-                android:textSize="18px" />
+                android:textSize="12sp" />
 
         </LinearLayout>
 
@@ -109,14 +209,14 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@+id/collect_tab"
-            android:layout_marginTop="10px"
+            android:layout_marginTop="20dp"
             android:gravity="center_horizontal"
             android:orientation="vertical">
 
             <ImageButton
                 android:id="@+id/reload_img_btn"
-                android:layout_width="45px"
-                android:layout_height="45px"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
                 android:layout_centerHorizontal="true"
                 android:background="#fcf9f2"
                 android:scaleType="fitEnd"
@@ -127,216 +227,63 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/reload_img_btn"
-                android:layout_marginTop="5px"
+                android:layout_marginTop="5dp"
                 android:gravity="center"
                 android:includeFontPadding="false"
-                android:paddingBottom="0px"
-                android:paddingTop="0px"
+                android:paddingBottom="0dp"
+                android:paddingTop="0dp"
                 android:text="刷新"
                 android:textColor="@color/noCheckColorGray"
-                android:textSize="18px" />
+                android:textSize="12sp" />
         </LinearLayout>
 
         <LinearLayout
-            android:id="@+id/delete_road_tab"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@+id/reload_tab"
-            android:layout_marginTop="10px"
+            android:layout_marginTop="20dp"
             android:gravity="center_horizontal"
             android:orientation="vertical">
-
-            <ImageButton
-                android:id="@+id/delete_road_img_btn"
-                android:layout_width="45px"
-                android:layout_height="45px"
-                android:layout_centerHorizontal="true"
-                android:background="#fcf9f2"
-                android:scaleType="fitEnd"
-                android:src="@drawable/delete_map_no_check" />
-
-            <TextView
-                android:id="@+id/delete_road_txt"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/delete_road_img_btn"
-                android:layout_marginTop="10px"
-                android:gravity="center"
-                android:includeFontPadding="false"
-                android:paddingBottom="0px"
-                android:paddingTop="0px"
-                android:text="删除轨迹"
-                android:textColor="@color/noCheckColorGray"
-                android:textSize="18px" />
-        </LinearLayout>
-        <!--地图采集-->
-
-        <Button
-            android:id="@+id/go_pause_btn"
-            android:layout_width="110px"
-            android:layout_height="50px"
-            android:layout_below="@+id/connect_txt"
-            android:layout_centerHorizontal="true"
-            android:layout_marginTop="20px"
-            android:textSize="22px"
-            android:background="@drawable/button_activ_switch"
-            android:gravity="center"
-            android:shadowColor="@color/noCheckColorGray"
-            android:text="暂停"
-            android:textColor="@color/noCheckColorGray"></Button>
-
-        <LinearLayout
-            android:id="@+id/start_end_radio_group"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/go_pause_btn"
-            android:orientation="vertical"
-            android:layout_marginTop="10px">
-
+            <!--        临时停车-->
             <Button
-                android:id="@+id/go_radio_btn"
-                android:layout_width="110px"
-                android:layout_height="50px"
-                android:layout_gravity="center"
-                android:background="@drawable/stop_go_btn_default"
-                android:button="@null"
-                android:text="出发"
+                android:layout_width="80dp"
+                android:layout_height="40dp"
+                android:background="@drawable/button_shape_default"
+                android:text="临时停车"
                 android:textAlignment="center"
-                android:textColor="@color/noCheckColorGray"
-                android:textSize="22px" />
-
-            <Button
-                android:id="@+id/end_radio_btn"
-                android:layout_width="110px"
-                android:layout_height="50px"
                 android:layout_gravity="center"
-                android:layout_marginTop="10px"
-                android:background="@drawable/stop_go_btn_default"
-                android:button="@null"
-                android:text="结束"
-                android:textAlignment="center"
-                android:textColor="@color/noCheckColorGray"
-                android:textSize="22px" />
+                android:textColor="@color/colorBlack"
+                android:textSize="16sp"
+                android:id="@+id/estop_btn"
+                />
+<!--            <Button-->
+<!--                android:layout_width="80dp"-->
+<!--                android:layout_height="40dp"-->
+<!--                android:layout_marginTop="5dp"-->
+<!--                android:background="@drawable/button_shape_default"-->
+<!--                android:text="泊车"-->
+<!--                android:textColor="@color/colorBlack"-->
+<!--                android:textAlignment="center"-->
+<!--                android:layout_gravity="center"-->
+<!--                android:textSize="16sp"-->
+<!--                android:id="@+id/park_btn"-->
+<!--                />-->
 
         </LinearLayout>
+
         <!--刷新-->
-        <TextView
-            android:id="@+id/connect_txt"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/connect_img_btn"
-            android:layout_marginTop="5px"
-            android:gravity="center"
-            android:includeFontPadding="false"
-            android:text="@string/connect_off_line"
-            android:textColor="#627288"
-            android:textSize="18px" />
-    </RelativeLayout>
-
-
-    <!--右侧菜单层-->
-    <!--#060610      #33A1C9-->
-    <RelativeLayout
-        android:id="@+id/right_menu_panel"
-        android:layout_width="120px"
-        android:layout_height="wrap_content"
-        android:layout_alignParentRight="true"
-        android:layout_marginTop="110px"
-        android:background="@drawable/index_right_menu"
-        android:orientation="vertical">
-
-        <Button
-            android:id="@+id/go_clean_btn"
-            android:layout_width="110px"
-            android:layout_height="50px"
-            android:layout_below="@+id/work_mode_txt"
-            android:layout_centerHorizontal="true"
-            android:layout_marginTop="30px"
-            android:background="@drawable/button_activ_switch"
-            android:gravity="center"
-            android:shadowColor="@color/noCheckColorGray"
-            android:text="扫地"
-            android:textColor="@color/colorDeepBlack" />
-
-        <Button
-            android:id="@+id/go_garbagestation_btn"
-            android:layout_width="110px"
-            android:layout_height="50px"
-            android:layout_below="@+id/go_clean_btn"
-            android:layout_centerHorizontal="true"
-            android:layout_marginTop="30px"
-            android:background="@drawable/button_activ_switch"
-            android:gravity="center"
-            android:shadowColor="@color/noCheckColorGray"
-            android:text="回站"
-            android:textColor="@color/colorDeepBlack" />
-
-        <Button
-            android:id="@+id/go_garage_btn"
-            android:layout_width="110px"
-            android:layout_height="50px"
-            android:layout_below="@+id/go_garbagestation_btn"
-            android:layout_centerHorizontal="true"
-            android:layout_marginTop="30px"
-            android:background="@drawable/button_activ_switch"
-            android:gravity="center"
-            android:shadowColor="@color/noCheckColorGray"
-            android:text="回库"
-            android:textColor="@color/colorDeepBlack"></Button>
-
-
-        <Button
-            android:id="@+id/presentation_btn"
-            android:layout_width="110px"
-            android:layout_height="50px"
-            android:layout_below="@+id/go_garage_btn"
-            android:layout_centerHorizontal="true"
-            android:layout_marginBottom="10px"
-            android:layout_marginTop="20px"
-            android:background="@drawable/button_activ_switch"
-            android:gravity="center"
-            android:shadowColor="@color/noCheckColorGray"
-            android:text="演示"
-            android:textColor="@color/colorDeepBlack"></Button>
-
-        <TextView
-            android:id="@+id/work_mode_txt"
-            android:layout_width="80px"
-            android:layout_height="32px"
-            android:layout_centerHorizontal="true"
-            android:layout_gravity="center_horizontal"
-            android:layout_marginLeft="10px"
-            android:layout_marginTop="30px"
-            android:background="@drawable/sys_enable_pressed"
-            android:text="等待中.."
-            android:textAlignment="center"
-            android:textColor="@color/titleColorBackgroundWhite"
-            android:textSize="18px" />
 
     </RelativeLayout>
 
+    <!--右侧按钮-->
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="110px"
-        android:layout_toLeftOf="@+id/right_menu_panel"
-        android:layout_marginRight="10px"
-        android:orientation="vertical"
-        >
-<!--        android:background="@color/colorDark"-->
-
-        <Spinner
-            android:layout_width="150px"
-            android:layout_height="65px"
-            android:layout_marginTop="10px"
-            android:id="@+id/area_spinner"
-            />
-        <Spinner
-            android:layout_width="150px"
-            android:layout_height="65px"
-            android:layout_marginTop="10px"
-            android:id="@+id/road_spinner"
-            />
+        android:layout_marginTop="120dp"
+        android:layout_marginRight="10dp"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        android:orientation="vertical">
 
     </LinearLayout>
 

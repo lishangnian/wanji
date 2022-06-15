@@ -24,7 +24,7 @@
             <NumberPicker
                 android:layout_width="150dp"
                 android:layout_height="150dp"
-                android:scrollbarSize="84px"
+                android:scrollbarSize="60sp"
                 android:id="@+id/speed_picker"
                 android:theme="@style/SpeedPickerStyle"
                 >
@@ -32,13 +32,11 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="30px"
+                android:layout_marginLeft="20dp"
                 android:text="km/h"
-                android:textSize="50px"
+                android:textSize="30sp"
                 />
         </LinearLayout>
 
     </LinearLayout>
-
-
 </RelativeLayout>

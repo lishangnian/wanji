@@ -1,10 +1,59 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.enjoy.sweeper">
+    package="com.enjoy.wanji">
 
 
-    <uses-permission android:name="android.permission.INTERNET" />
+    <application
+        android:name="com.enjoy.wanji.EnjoyTrainShipApplication"
+        android:allowBackup="true"
+        android:icon="@mipmap/logo"
+        android:label="@string/app_name"
+        android:supportsRtl="true"
+        android:theme="@style/AppTheme">
+
+        <!--4fbf00cd9f6eddc885655bb71fa6f5c2-->
+        <!--061d93a5becde6e314edaec6a971db38-->
+
+        <!--<activity android:name=".load"-->
+        <!--&gt;-->
+        <!--<intent-filter>-->
+        <!--<action android:name="android.intent.action.MAIN" />-->
+        <!--<category android:name="android.intent.category.LAUNCHER" />-->
+        <!--</intent-filter>-->
+        <!--</activity>-->
+
+
+        <activity
+            android:name="com.enjoy.wanji.InitActivity"
+            android:theme="@android:style/Theme.NoTitleBar.Fullscreen"
+            android:windowSoftInputMode="adjustPan|stateHidden"
+            >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name="com.enjoy.wanji.MainActivity"
+            android:launchMode="singleInstance"
+            android:screenOrientation="landscape"
+            android:theme="@android:style/Theme.NoTitleBar.Fullscreen">
+        </activity>
+        <activity
+            android:name="com.enjoy.wanji.CollectRoadsActivity1"
+            android:launchMode="standard"
+            android:screenOrientation="landscape"
+            android:theme="@android:style/Theme.NoTitleBar.Fullscreen"></activity>
+
+        <meta-data
+            android:name="com.amap.api.v2.apikey"
+            android:value="4fbf00cd9f6eddc885655bb71fa6f5c2" />
+
+        <service android:name="com.enjoy.wanji.service.EnjoySocketService" />
+
+    </application>
     <!--<uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />-->
+    <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
@@ -12,9 +61,8 @@
     <uses-permission android:name="android.permission.CHANGE_WIFI_STATE" />
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
     <uses-permission android:name="android.permission.WAKE_LOCK" />
-    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
     <!--<uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>-->
-    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <!--只能在系统app中配置-->
     <!--<uses-permission android:name="android.permission.WRITE_SETTINGS" />-->
     <!--<uses-permission android:name="android.permission.CHANGE_CONFIGURATION" />-->
@@ -25,55 +73,14 @@
     <!--<uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>-->
 
     <!--<uses-sdk-->
-        <!--android:minSdkVersion="14"-->
-        <!--/>-->
+    <!--android:minSdkVersion="14"-->
+    <!--/>-->
 
 
     <!--android:icon="@mipmap/logo"-->
     <!--android:theme="@style/AppTheme"-->
     <!--android:theme="@android:style/Theme.Black.NoTitleBar"-->
 
-    <application
-        android:name="com.enjoy.sweeper.EnjoyTrainShipApplication"
-        android:allowBackup="true"
-        android:label="@string/app_name"
-        android:icon="@mipmap/logo"
-        android:supportsRtl="true"
-        android:theme="@style/AppTheme"
-        >
-        <meta-data
-            android:name="com.amap.api.v2.apikey"
-            android:value="4fbf00cd9f6eddc885655bb71fa6f5c2" />
-
-        <!--4fbf00cd9f6eddc885655bb71fa6f5c2-->
-        <!--061d93a5becde6e314edaec6a971db38-->
-
-        <!--<activity android:name=".load"-->
-         <!--&gt;-->
-            <!--<intent-filter>-->
-                <!--<action android:name="android.intent.action.MAIN" />-->
-                <!--<category android:name="android.intent.category.LAUNCHER" />-->
-            <!--</intent-filter>-->
-        <!--</activity>-->
-
-        <activity
-            android:name="com.enjoy.sweeper.MainActivity"
-            android:theme="@android:style/Theme.NoTitleBar.Fullscreen"
-            android:screenOrientation="landscape"
-            android:launchMode="singleInstance"
-            >
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
-        <activity android:name="com.enjoy.sweeper.CollectRoadsActivity"
-            android:theme="@android:style/Theme.NoTitleBar.Fullscreen"
-            android:screenOrientation="landscape"
-            android:launchMode="standard"
-            >
-        </activity>
-
-    </application>
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
 
 </manifest>
