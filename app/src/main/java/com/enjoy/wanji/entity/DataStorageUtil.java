@@ -71,7 +71,7 @@ public class DataStorageUtil {
      * 2：切换SLAM
      * 3：左并道
      * 4：右并道
-     *
+     * 5：结束并道
      * @return
      */
     public static List<String> getMergeLaneList() {
@@ -81,6 +81,7 @@ public class DataStorageUtil {
             mergeLaneList.add("2-切换SLAM");
             mergeLaneList.add("3-左并道");
             mergeLaneList.add("4-右并道");
+            mergeLaneList.add("5-结束并道");
         }
         return mergeLaneList;
     }
