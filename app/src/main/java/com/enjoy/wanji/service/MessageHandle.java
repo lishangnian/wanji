@@ -9,6 +9,9 @@ import com.enjoy.wanji.entity.DataStorageFromPC;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class MessageHandle {
 
     static String tag = "msgTag";
@@ -70,6 +73,14 @@ public class MessageHandle {
                     Log.e(tag, "接收轨迹点为空");
                 }
                 DataStorageFromPC.roadsMap.put(zoneName, jsonObj);
+
+                //把同一个园区内的轨迹放在一个list中归类
+                List<JSONObject> roadsJsonList = DataStorageFromPC.zoneNameJsonListMap.get(zoneName);
+                if (roadsJsonList == null) {
+                    roadsJsonList = new ArrayList<>();
+                    roadsJsonList.add(jsonObj);
+                }
+                DataStorageFromPC.zoneNameJsonListMap.put(zoneName, roadsJsonList);
                 break;
             case TopicAndParams.topicRecvControllon:  //获取障碍物距离
                 double objDis = (double) jsonObj.get("objdis");  //单位米
