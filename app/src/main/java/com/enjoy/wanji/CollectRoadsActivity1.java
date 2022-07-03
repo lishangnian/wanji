@@ -668,6 +668,7 @@ public class CollectRoadsActivity1 extends Activity {
         }
         //清除已有路径信息
         DataStorageFromPC.roadsMap.clear();      //原始轨迹名称与经纬度Map
+        DataStorageFromPC.zoneNameJsonListMap.clear();
         Global.loadRoadsFlag = true;
 
         Log.i(TAG, "重置完成");
