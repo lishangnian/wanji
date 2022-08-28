@@ -2,7 +2,9 @@ package com.enjoy.wanji.entity;
 
 import org.json.simple.JSONObject;
 
+import java.util.HashMap;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
@@ -48,5 +50,6 @@ public class DataStorageFromPC {
 
     //所有路径地图的json集合
     public static volatile Map<String, JSONObject> roadsMap = new LinkedHashMap<>();     //使用LinkedHashMap会按插入顺序排列, key为轨迹园区名
-
+    //key是园区   value是list，存放园区里各个的轨迹
+    public static volatile Map<String, List<JSONObject>> zoneNameJsonListMap = new LinkedHashMap<>();
 }

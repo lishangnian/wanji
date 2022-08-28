@@ -131,6 +131,7 @@ public class MainActivity extends Activity implements LocationSource, AMapLocati
     //存储地图Poyline的list
 //    private static Map<String, Polyline> aMapLineListMap = new HashMap<>();
     Polyline polyline = null;
+    private static List<Polyline> polylineList = new ArrayList<>();
 
 
     private static Lock stopGoLock = new ReentrantLock();
@@ -177,33 +178,40 @@ public class MainActivity extends Activity implements LocationSource, AMapLocati
      * @param zoneName
      */
     private void drawRoadInMap(String zoneName) {
-        JSONObject jsonObject = DataStorageFromPC.roadsMap.get(zoneName);
-        if (jsonObject == null) {
+        List<JSONObject> jsonList = DataStorageFromPC.zoneNameJsonListMap.get(zoneName);
+        if (jsonList == null || jsonList.size() == 0) {
             return;
         }
-        List<LatLng> temp = new ArrayList();
-        JSONArray pointsArray = (JSONArray) jsonObject.get("points");
-        if (pointsArray == null || pointsArray.isEmpty()) {
-            return;
+        //清除已有的轨迹
+        for (Polyline line : polylineList) {
+            line.remove();
         }
 
-        //清除当前的轨迹
-        if (polyline != null) {
-            polyline.remove();
+        for (JSONObject jsonObject : jsonList) {
+
+            List<LatLng> temp = new ArrayList();
+            JSONArray pointsArray = (JSONArray) jsonObject.get("points");
+            if (pointsArray == null || pointsArray.isEmpty()) {
+                continue;
+//                return;
+            }
+
+            //clearMarkers();   //清除 始终点标记
+            int size = pointsArray.size();
+            for (int i = 0; i < size; i++) {
+                JSONObject pointJson = (JSONObject) pointsArray.get(i);
+                double lat = (Double) pointJson.get("lat");
+                double lon = (Double) pointJson.get("lon");
+                LatLng latLngPoint = ChangeLatlon.transform(lat, lon);
+                temp.add(latLngPoint);
+            }
+            addStartEndMarker(temp.get(0), temp.get(temp.size() - 1));
+            PolylineOptions po = new PolylineOptions().addAll(temp).setUseTexture(true).setCustomTexture(normalRouteBlue)
+                    .width(20).color(Color.argb(255, 0, 255, 1));
+            Polyline poly = aMap.addPolyline(po);
+            polylineList.add(poly);
         }
-        clearMarkers();   //清除 始终点标记
-        int size = pointsArray.size();
-        for (int i = 0; i < size; i++) {
-            JSONObject pointJson = (JSONObject) pointsArray.get(i);
-            double lat = (Double) pointJson.get("lat");
-            double lon = (Double) pointJson.get("lon");
-            LatLng latLngPoint = ChangeLatlon.transform(lat, lon);
-            temp.add(latLngPoint);
-        }
-        addStartEndMarker(temp.get(0), temp.get(temp.size() - 1));
-        PolylineOptions po = new PolylineOptions().addAll(temp).setUseTexture(true).setCustomTexture(normalRouteBlue)
-                .width(20).color(Color.argb(255, 0, 255, 1));
-        polyline = aMap.addPolyline(po);
+
         Log.i(TAG, "画路线完成" + zoneName);
     }
 
@@ -1025,9 +1033,16 @@ public class MainActivity extends Activity implements LocationSource, AMapLocati
         }
         //清除已有路径信息
         DataStorageFromPC.roadsMap.clear();      //原始轨迹名称与经纬度Map
+        DataStorageFromPC.zoneNameJsonListMap.clear();
         clearMarkers();//移除覆盖物
+        /**
         if (polyline != null) {  //删除显示的轨迹
             polyline.remove();
+        }
+         **/
+        //删除显示的轨迹
+        for(Polyline line: polylineList){
+            line.remove();
         }
         Global.loadRoadsFlag = true;
         resetImgBtn.setImageDrawable(getResources().getDrawable(R.drawable.reload_check));
