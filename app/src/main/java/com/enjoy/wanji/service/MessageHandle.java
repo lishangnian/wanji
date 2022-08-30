@@ -9,6 +9,9 @@ import com.enjoy.wanji.entity.DataStorageFromPC;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class MessageHandle {
 
     static String tag = "msgTag";
@@ -70,11 +73,19 @@ public class MessageHandle {
                     Log.e(tag, "接收轨迹点为空");
                 }
                 DataStorageFromPC.roadsMap.put(zoneName, jsonObj);
+
+                //把同一个园区内的轨迹放在一个list中归类
+                List<JSONObject> roadsJsonList = DataStorageFromPC.zoneNameJsonListMap.get(zoneName);
+                if (roadsJsonList == null) {
+                    roadsJsonList = new ArrayList<>();
+                    roadsJsonList.add(jsonObj);
+                }
+                DataStorageFromPC.zoneNameJsonListMap.put(zoneName, roadsJsonList);
                 break;
             case TopicAndParams.topicRecvControllon:  //获取障碍物距离
                 double objDis = (double) jsonObj.get("objdis");  //单位米
                 //刹车注意，当actuator发出的自动驾驶状态为1，且acc 由大于零跳变成小于零时触发
-                int brakePedal = Integer.parseInt(jsonObj.get("brakePedal").toString()) ;
+                int brakePedal = Integer.parseInt(jsonObj.get("brakePedal").toString());
                 String objDisStr = String.format("%.1f", objDis);   //保留一位小数
                 if (objDis >= 100) {
                     DataStorageFromPC.objDis = "---m";
