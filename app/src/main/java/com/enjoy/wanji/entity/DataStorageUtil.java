@@ -145,6 +145,8 @@ public class DataStorageUtil {
             stopPropertyList.add("2-水平泊车点");
             stopPropertyList.add("3-站点停车点");
             stopPropertyList.add("4-红绿灯停车点");
+            stopPropertyList.add("5-模式切换点");
+            stopPropertyList.add("6-倒车目标点");
         }
         return stopPropertyList;
     }
@@ -164,7 +166,7 @@ public class DataStorageUtil {
             speedList.add("7-隧道");
             speedList.add("8-路口中");
             speedList.add("9-路口后段");
-            speedList.add("10-预留2");
+            speedList.add("10-切换倒车");
         }
         return speedList;
     }
