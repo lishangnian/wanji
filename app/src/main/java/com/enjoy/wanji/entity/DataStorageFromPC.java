@@ -21,7 +21,7 @@ public class DataStorageFromPC {
     public static int velocity = 0;  //速度数值
     public static volatile long rtk = 0;
     public static String objDis = "---m";  //障碍物距离单位
-    public static int brakePadel = 0;   //刹车信号
+    public static float brakePadel = 0f;   //刹车信号
     public static int accBrake = 0;  //刹车提醒  0-无  1-有
     //v2x
     public static double lightColor = 0;  //0:无 1：红灯 2：绿灯 3：黄灯

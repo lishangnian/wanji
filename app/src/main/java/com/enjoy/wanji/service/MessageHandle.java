@@ -85,7 +85,8 @@ public class MessageHandle {
             case TopicAndParams.topicRecvControllon:  //获取障碍物距离
                 double objDis = (double) jsonObj.get("objdis");  //单位米
                 //刹车注意，当actuator发出的自动驾驶状态为1，且acc 由大于零跳变成小于零时触发
-                int brakePedal = Integer.parseInt(jsonObj.get("brakePedal").toString());
+//                int brakePedal = Integer.parseInt(jsonObj.get("brakePedal").toString());
+                float brakePedal = Float.parseFloat(jsonObj.get("brakePedal").toString());
                 String objDisStr = String.format("%.1f", objDis);   //保留一位小数
                 if (objDis >= 100) {
                     DataStorageFromPC.objDis = "---m";
@@ -97,7 +98,7 @@ public class MessageHandle {
                 if (DataStorageFromPC.driverStatus > 0 && DataStorageFromPC.velocity / 3.6 > 1) {  //自驾状态 且速度大于1m/s
 
                     //uint8    brakePedal  当actuator发出的自动驾驶状态为1，且车速大于1m/s，且brakepedal 由等于零跳变成大于零时触发
-                    if (DataStorageFromPC.brakePadel == 0 && brakePedal > 0) {
+                    if (DataStorageFromPC.brakePadel == 0f && brakePedal > 0) {
                         DataStorageFromPC.accBrake = 1;  //刹车
                     }
                 }
