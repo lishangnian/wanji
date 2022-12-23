@@ -672,7 +672,7 @@
                 android:layout_gravity="center"
                 android:layout_marginLeft="10dp"
                 android:gravity="center_vertical|end"
-                android:text="停车方位"
+                android:text="红绿灯方位"
                 android:textColor="@color/colorBlack"
                 android:textSize="16sp" />
 

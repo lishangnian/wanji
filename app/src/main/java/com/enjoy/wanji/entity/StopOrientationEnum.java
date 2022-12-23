@@ -4,8 +4,11 @@ package com.enjoy.wanji.entity;
  * 泊车方位枚举
  */
 public enum StopOrientationEnum {
-    RIGHT(0, "右"),
-    LEFT(1, "左");
+
+    MIDDLE(1, "中"),
+    LEFT(0, "左"),
+    RIGHT(2, "右");
+
 
     public final int key;
     public final String value;

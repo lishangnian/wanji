@@ -249,6 +249,9 @@ public class CollectRoadsActivity1 extends Activity {
             public void onClick(View v) {
                 if (DataStorageCollectMap.stopOrientation == StopOrientationEnum.RIGHT.key) {
                     DataStorageCollectMap.stopOrientation = StopOrientationEnum.LEFT.key;
+                } else if (DataStorageCollectMap.stopOrientation == StopOrientationEnum.LEFT.key) {
+                    DataStorageCollectMap.stopOrientation = StopOrientationEnum.MIDDLE.key;
+
                 } else {
                     DataStorageCollectMap.stopOrientation = StopOrientationEnum.RIGHT.key;
                 }
