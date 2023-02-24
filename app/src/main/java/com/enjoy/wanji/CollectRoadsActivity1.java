@@ -47,7 +47,7 @@ public class CollectRoadsActivity1 extends Activity {
             mapZoneBtn, mapNameBtn, speedBtn, mapLaneBtn, stopSideRoadWidthBtn, mergeLaneBtn,
             leftSafeBtn, rightSafeBtn, stopTimeBtn, stopIndexBtn, stopPropertyBtn, stopOrientationBtn,
             exSpeedBtn, laneStatusBtn, laneWidthBtn,  //temporaryStopBtn,
-            leftLaneWidthBtn, rightLaneWidthBtn;
+            leftLaneWidthBtn, rightLaneWidthBtn, laneStartNoBtn, laneEndNoBtn;
 
     private ImageView carStatusImage, collectImg;
     private TextView collectFlagTxt;
@@ -126,6 +126,8 @@ public class CollectRoadsActivity1 extends Activity {
         laneStatusBtn = findViewById(R.id.lane_status_btn); //道路状态
         leftLaneWidthBtn = findViewById(R.id.left_lane_width_btn); //左道路宽
         rightLaneWidthBtn = findViewById(R.id.right_lane_width_btn);//右道路宽
+        laneStartNoBtn = findViewById(R.id.lane_start_no_btn);  //起点编号
+        laneEndNoBtn = findViewById(R.id.lane_end_no_btn);   //终点编号
 
         exSpeedBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -243,6 +245,44 @@ public class CollectRoadsActivity1 extends Activity {
             }
         });
 
+        laneStartNoBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                final List<String> list = DataStorageUtil.getLaneStartOrEndNoList();
+                EnjoyDialogUtil.selectItemDialog(CollectRoadsActivity1.this,
+                        list.toArray(new String[list.size()]), "起点编号", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                if (EnjoyDialogUtil.WHICH != -1) {
+                                    String startNoStr = list.get(EnjoyDialogUtil.WHICH);
+                                    laneStartNoBtn.setText(startNoStr);
+                                    DataStorageCollectMap.laneStartNo = Integer.parseInt(startNoStr);
+                                }
+                                dialog.dismiss();
+                            }
+                        });
+            }
+        });
+
+//        终点编号
+        laneEndNoBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                final List<String> list = DataStorageUtil.getLaneStartOrEndNoList();
+                EnjoyDialogUtil.selectItemDialog(CollectRoadsActivity1.this,
+                        list.toArray(new String[list.size()]), "终点编号", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                if (EnjoyDialogUtil.WHICH != -1) {
+                                    String startNoStr = list.get(EnjoyDialogUtil.WHICH);
+                                    laneEndNoBtn.setText(startNoStr);
+                                    DataStorageCollectMap.laneEndNo = Integer.parseInt(startNoStr);
+                                }
+                                dialog.dismiss();
+                            }
+                        });
+            }
+        });
         //停车方位
         stopOrientationBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -740,7 +780,8 @@ public class CollectRoadsActivity1 extends Activity {
 
         leftLaneWidthBtn.setText(DataStorageCollectMap.leftWidthDis + "");
         rightLaneWidthBtn.setText(DataStorageCollectMap.rightWidthDis + "");
-
+        laneStartNoBtn.setText(DataStorageCollectMap.laneStartNo + "");
+        laneEndNoBtn.setText(DataStorageCollectMap.laneEndNo + "");
 //        refreshRoads();
     }
 
