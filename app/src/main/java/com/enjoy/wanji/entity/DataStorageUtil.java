@@ -263,6 +263,12 @@ public class DataStorageUtil {
             exSpeedList.add(40 + "");
             exSpeedList.add(50 + "");
             exSpeedList.add(60 + "");
+            exSpeedList.add(70 + "");
+            exSpeedList.add(80 + "");
+            exSpeedList.add(90 + "");
+            exSpeedList.add(100 + "");
+            exSpeedList.add(110 + "");
+            exSpeedList.add(120 + "");
         }
         return exSpeedList;
     }
