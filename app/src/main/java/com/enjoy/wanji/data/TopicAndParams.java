@@ -48,7 +48,10 @@ public class TopicAndParams {
     public static String paramLeftLaneWidthTopicCollectMap = ",\"leftlanewidth\":";  //左道路宽度
     public static String paramRightLaneWidthTopicCollectMap = ",\"rightlanewidth\":";  //右道路宽度
 
-
+    public static String paramLaneSwitchTopicCollectMap = ",\"laneswitch\":";  //换道标志位
+    public static String paramSidePassTopicCollectMap = ",\"sidepass\":";  //借道标志位
+    public static String paramLaneNumTopicCollectMap = ",\"lanenum\":";  //车道总数
+    public static String paramLaneSiteTopicCollectMap = ",\"lanesite\":";  //所在第几车道
 
 
 

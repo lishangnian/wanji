@@ -33,6 +33,7 @@ public class DataStorageUtil {
     private static List<String> leftRightSafeDisList = new ArrayList<>(); // 左， 右安全距离
 //    1.2 1.4 1.5 1.7 2 2.5 3 3.5 4
 
+    private static List<String> sideFlagList = new ArrayList<>();//车道数，换道等选项
 
     /**
      * 车道属性  1--5
@@ -265,6 +266,16 @@ public class DataStorageUtil {
             exSpeedList.add(60 + "");
         }
         return exSpeedList;
+    }
+
+
+    public static List<String> getSideFlagList() {
+        if (sideFlagList.size() == 0) {
+            for (int i = 0; i < 10; i++) {
+                sideFlagList.add("" + i);
+            }
+        }
+        return sideFlagList;
     }
 
     /**

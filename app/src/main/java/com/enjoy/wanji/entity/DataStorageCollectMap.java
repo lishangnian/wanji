@@ -20,7 +20,10 @@ public class DataStorageCollectMap {
     public static float leftWidthDis = 3.5f;  //左道路宽
     public static float rightWidthDis = 3.5f;  //右道路宽
 
-
+    public static int laneSwitch = 0; //换道标志
+    public static int sidePass = 0; //借道标志
+    public static int laneNum = 0;  //车道总数
+    public static int laneSite = 0;  //所在车道
     //时间戳
 
     //对停车点的采集

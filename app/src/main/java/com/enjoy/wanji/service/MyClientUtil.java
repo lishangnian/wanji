@@ -104,6 +104,10 @@ public class MyClientUtil {
         dataMap.put(TopicAndParams.paramLaneStatusTopicCollectMap, DataStorageCollectMap.laneStatus);  //道路状态
         dataMap.put(TopicAndParams.paramLaneWidthTopicCollectMap, DataStorageCollectMap.laneWidth);  //道路宽
 
+        dataMap.put(TopicAndParams.paramLaneSwitchTopicCollectMap, DataStorageCollectMap.laneSwitch); //换道标志
+        dataMap.put(TopicAndParams.paramSidePassTopicCollectMap, DataStorageCollectMap.sidePass); //借道标志
+        dataMap.put(TopicAndParams.paramLaneNumTopicCollectMap, DataStorageCollectMap.laneNum); //车道总数
+        dataMap.put(TopicAndParams.paramLaneSiteTopicCollectMap, DataStorageCollectMap.laneSite); //所在第几车道
 
         dataMap.put(TopicAndParams.timestamp, System.currentTimeMillis());
         String str = MyStringUtil.sendDataStr(TopicAndParams.topicSendCollectMap, dataMap);

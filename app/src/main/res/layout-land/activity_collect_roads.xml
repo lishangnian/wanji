@@ -45,11 +45,11 @@
         android:layout_alignParentStart="true"
         android:layout_below="@+id/top_layout"
         android:layout_marginTop="30dp"
-        android:paddingLeft="20dp"
-        android:paddingStart="20dp"
+        android:paddingLeft="10dp"
+        android:paddingStart="10dp"
         android:layout_toLeftOf="@+id/right_layout"
         android:layout_toStartOf="@+id/right_layout"
-        android:columnCount="3"
+        android:columnCount="4"
         android:rowCount="5">
         <!--        园区选择 1行 1列-->
         <LinearLayout
@@ -150,7 +150,38 @@
                 android:textSize="16sp" />
 
         </LinearLayout>
+        <!-- 第一行 4列-->
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_row="0"
+            android:layout_column="3"
+            android:layout_marginLeft="10dp"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="10dp"
+            android:orientation="horizontal">
 
+            <TextView
+                android:layout_width="80dp"
+                android:layout_height="35dp"
+                android:layout_gravity="center"
+                android:layout_marginLeft="10dp"
+                android:gravity="center_vertical|end"
+                android:text="换道标志"
+                android:textColor="@color/colorBlack"
+                android:textSize="16sp" />
+            <Button
+                android:id="@+id/switch_lane_flag_btn"
+                android:layout_width="100dp"
+                android:layout_height="35dp"
+                android:layout_gravity="center"
+                android:layout_marginLeft="5dp"
+                android:background="@drawable/collect_roads_speed_btn_back"
+                android:textAlignment="center"
+                android:textColor="@color/checkColorBlue"
+                android:textSize="16sp" />
+
+        </LinearLayout>
 
         <!-- 轨迹道路属性 2行 1列-->
         <LinearLayout
@@ -252,7 +283,38 @@
                 android:textSize="16sp" />
 
         </LinearLayout>
+        <!--借道属性 2行 4列-->
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_column="3"
+            android:layout_row="1"
+            android:layout_marginLeft="10dp"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="10dp"
+            android:orientation="horizontal">
 
+            <TextView
+                android:layout_width="80dp"
+                android:layout_height="35dp"
+                android:layout_gravity="center"
+                android:layout_marginLeft="10dp"
+                android:gravity="center_vertical|end"
+                android:text="借道标志"
+                android:textColor="@color/colorBlack"
+                android:textSize="16sp" />
+            <Button
+                android:id="@+id/side_pass_flag_btn"
+                android:layout_width="100dp"
+                android:layout_height="35dp"
+                android:layout_gravity="center"
+                android:layout_marginLeft="5dp"
+                android:background="@drawable/collect_roads_speed_btn_back"
+                android:textAlignment="center"
+                android:textColor="@color/checkColorBlue"
+                android:textSize="16sp" />
+
+        </LinearLayout>
 
         <!-- 左道路宽 3行 1列-->
         <LinearLayout
@@ -358,7 +420,39 @@
                 android:textSize="16sp" />
 
         </LinearLayout>
+        <!--  三行4列-->
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_column="3"
+            android:layout_marginLeft="10dp"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="10dp"
+            android:layout_row="2"
+            android:orientation="horizontal">
 
+            <TextView
+                android:layout_width="80dp"
+                android:layout_height="35dp"
+                android:layout_gravity="center"
+                android:layout_marginLeft="10dp"
+                android:gravity="center_vertical|end"
+                android:text="车道总数"
+                android:textColor="@color/colorBlack"
+                android:textSize="16sp" />
+
+            <Button
+                android:id="@+id/lane_sum_btn"
+                android:layout_width="100dp"
+                android:layout_height="40dp"
+                android:layout_gravity="center"
+                android:layout_marginLeft="5dp"
+                android:background="@drawable/collect_roads_speed_btn_back"
+                android:textAlignment="center"
+                android:textColor="@color/checkColorBlue"
+                android:textSize="16sp" />
+
+        </LinearLayout>
 
 
         <!-- 4行 1列  左安全距离-->
@@ -490,6 +584,40 @@
 
             <Button
                 android:id="@+id/lane_width_btn"
+                android:layout_width="100dp"
+                android:layout_height="40dp"
+                android:layout_gravity="center"
+                android:layout_marginLeft="5dp"
+                android:background="@drawable/collect_roads_speed_btn_back"
+                android:textAlignment="center"
+                android:textColor="@color/checkColorBlue"
+                android:textSize="16sp" />
+
+        </LinearLayout>
+
+<!--        4行  4列-->
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_column="3"
+            android:layout_marginLeft="10dp"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="10dp"
+            android:layout_row="3"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="80dp"
+                android:layout_height="35dp"
+                android:layout_gravity="center"
+                android:layout_marginLeft="10dp"
+                android:gravity="center_vertical|end"
+                android:text="所在车道"
+                android:textColor="@color/colorBlack"
+                android:textSize="16sp" />
+
+            <Button
+                android:id="@+id/lane_side_btn"
                 android:layout_width="100dp"
                 android:layout_height="40dp"
                 android:layout_gravity="center"

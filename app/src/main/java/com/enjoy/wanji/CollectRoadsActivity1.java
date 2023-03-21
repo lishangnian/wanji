@@ -47,7 +47,7 @@ public class CollectRoadsActivity1 extends Activity {
             mapZoneBtn, mapNameBtn, speedBtn, mapLaneBtn, stopSideRoadWidthBtn, mergeLaneBtn,
             leftSafeBtn, rightSafeBtn, stopTimeBtn, stopIndexBtn, stopPropertyBtn, stopOrientationBtn,
             exSpeedBtn, laneStatusBtn, laneWidthBtn,  //temporaryStopBtn,
-            leftLaneWidthBtn, rightLaneWidthBtn;
+            leftLaneWidthBtn, rightLaneWidthBtn,laneSwitchFlagBtn, sidePassFlagBtn, laneNumBtn, nowLaneSiteBtn;;
 
     private ImageView carStatusImage, collectImg;
     private TextView collectFlagTxt;
@@ -126,6 +126,10 @@ public class CollectRoadsActivity1 extends Activity {
         laneStatusBtn = findViewById(R.id.lane_status_btn); //道路状态
         leftLaneWidthBtn = findViewById(R.id.left_lane_width_btn); //左道路宽
         rightLaneWidthBtn = findViewById(R.id.right_lane_width_btn);//右道路宽
+        laneSwitchFlagBtn = findViewById(R.id.switch_lane_flag_btn); //换道标志
+        sidePassFlagBtn = findViewById(R.id.side_pass_flag_btn); //借到标志
+        laneNumBtn = findViewById(R.id.lane_sum_btn); //车道总数
+        nowLaneSiteBtn = findViewById(R.id.lane_side_btn);// 当前车道数
 
         exSpeedBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -236,6 +240,86 @@ public class CollectRoadsActivity1 extends Activity {
                                     String rightWidthStr = list.get(EnjoyDialogUtil.WHICH);
                                     rightLaneWidthBtn.setText(rightWidthStr);
                                     DataStorageCollectMap.rightWidthDis = Float.parseFloat(rightWidthStr);
+                                }
+                                dialog.dismiss();
+                            }
+                        });
+            }
+        });
+
+
+        //换道标志
+        laneSwitchFlagBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                final List<String> laneSideList = DataStorageUtil.getSideFlagList();
+                EnjoyDialogUtil.selectItemDialog(CollectRoadsActivity1.this,
+                        laneSideList.toArray(new String[laneSideList.size()]), "换道标志", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                if (EnjoyDialogUtil.WHICH != -1) {
+                                    String propertyStr = laneSideList.get(EnjoyDialogUtil.WHICH);
+                                    laneSwitchFlagBtn.setText(propertyStr);
+                                    DataStorageCollectMap.laneSwitch = Integer.parseInt(propertyStr);
+                                }
+                                dialog.dismiss();
+                            }
+                        });
+            }
+        });
+
+        //借道标志
+        sidePassFlagBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                final List<String> laneSideList = DataStorageUtil.getSideFlagList();
+                EnjoyDialogUtil.selectItemDialog(CollectRoadsActivity1.this,
+                        laneSideList.toArray(new String[laneSideList.size()]), "借道标志", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                if (EnjoyDialogUtil.WHICH != -1) {
+                                    String propertyStr = laneSideList.get(EnjoyDialogUtil.WHICH);
+                                    sidePassFlagBtn.setText(propertyStr);
+                                    DataStorageCollectMap.sidePass = Integer.parseInt(propertyStr);
+                                }
+                                dialog.dismiss();
+                            }
+                        });
+            }
+        });
+
+        //车道总数
+        laneNumBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                final List<String> laneSideList = DataStorageUtil.getSideFlagList();
+                EnjoyDialogUtil.selectItemDialog(CollectRoadsActivity1.this,
+                        laneSideList.toArray(new String[laneSideList.size()]), "车道总数", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                if (EnjoyDialogUtil.WHICH != -1) {
+                                    String propertyStr = laneSideList.get(EnjoyDialogUtil.WHICH);
+                                    laneNumBtn.setText(propertyStr);
+                                    DataStorageCollectMap.laneNum = Integer.parseInt(propertyStr);
+                                }
+                                dialog.dismiss();
+                            }
+                        });
+            }
+        });
+        //当前车道数
+        nowLaneSiteBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                final List<String> laneSideList = DataStorageUtil.getSideFlagList();
+                EnjoyDialogUtil.selectItemDialog(CollectRoadsActivity1.this,
+                        laneSideList.toArray(new String[laneSideList.size()]), "当前车道数", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                if (EnjoyDialogUtil.WHICH != -1) {
+                                    String propertyStr = laneSideList.get(EnjoyDialogUtil.WHICH);
+                                    nowLaneSiteBtn.setText(propertyStr);
+                                    DataStorageCollectMap.laneSite = Integer.parseInt(propertyStr);
                                 }
                                 dialog.dismiss();
                             }
@@ -738,6 +822,10 @@ public class CollectRoadsActivity1 extends Activity {
         leftLaneWidthBtn.setText(DataStorageCollectMap.leftWidthDis + "");
         rightLaneWidthBtn.setText(DataStorageCollectMap.rightWidthDis + "");
 
+        laneSwitchFlagBtn.setText(DataStorageCollectMap.laneSwitch + "");
+        sidePassFlagBtn.setText(DataStorageCollectMap.sidePass + "");
+        laneNumBtn.setText(DataStorageCollectMap.laneNum + "");
+        nowLaneSiteBtn.setText(DataStorageCollectMap.laneSite + "");
 //        refreshRoads();
     }
 
