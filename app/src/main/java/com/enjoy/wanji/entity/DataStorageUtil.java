@@ -111,11 +111,11 @@ public class DataStorageUtil {
 
     /**
      * 停车索引列表
-     * 1到20
+     * 1到100
      */
     public static List<String> getStopIndexList() {
         if (stopIndexList.size() == 0) {
-            for (int i = 0; i <= 20; i++) {
+            for (int i = 0; i <= 100; i++) {
                 stopIndexList.add(i + "");
             }
         }
