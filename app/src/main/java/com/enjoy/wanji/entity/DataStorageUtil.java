@@ -116,7 +116,7 @@ public class DataStorageUtil {
      */
     public static List<String> getStopIndexList() {
         if (stopIndexList.size() == 0) {
-            for (int i = 0; i <= 20; i++) {
+            for (int i = 0; i <= 40; i++) {
                 stopIndexList.add(i + "");
             }
         }
@@ -264,6 +264,10 @@ public class DataStorageUtil {
             exSpeedList.add(40 + "");
             exSpeedList.add(50 + "");
             exSpeedList.add(60 + "");
+            exSpeedList.add(70 + "");
+            exSpeedList.add(80 + "");
+            exSpeedList.add(90 + "");
+            exSpeedList.add(100 + "");
         }
         return exSpeedList;
     }
