@@ -19,8 +19,8 @@ public class DataStorageCollectMap {
     public static int laneStatus = 1; //道路状态
     public static float leftWidthDis = 3.5f;  //左道路宽
     public static float rightWidthDis = 3.5f;  //右道路宽
-    public static float laneStartNo = 1;  //起点编号
-    public static float laneEndNo = 1;  //终点编号
+//    public static float laneStartNo = 1;  //起点编号
+//    public static float laneEndNo = 1;  //终点编号
 
     //时间戳
 

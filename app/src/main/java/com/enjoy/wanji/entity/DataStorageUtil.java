@@ -32,7 +32,7 @@ public class DataStorageUtil {
     private static List<String> laneStatusList = new ArrayList<>(); //车道状态
     private static List<String> leftRightSafeDisList = new ArrayList<>(); // 左， 右安全距离
     //    1.2 1.4 1.5 1.7 2 2.5 3 3.5 4
-    private static List<String> laneStartOrEndList = new ArrayList<>(); // 起点或终点编号
+//    private static List<String> laneStartOrEndList = new ArrayList<>(); // 起点或终点编号
 
 
     /**
@@ -193,16 +193,6 @@ public class DataStorageUtil {
             leftRightSafeDisList.add("3.8");
         }
         return leftRightSafeDisList;
-    }
-
-
-    public static List<String> getLaneStartOrEndNoList() {
-        if (laneStartOrEndList.size() == 0) {
-            for (int i = 1; i < 100; i++) {
-               laneStartOrEndList.add(i+"");
-            }
-        }
-        return laneStartOrEndList;
     }
 
 

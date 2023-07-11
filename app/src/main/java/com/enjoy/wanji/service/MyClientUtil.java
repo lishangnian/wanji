@@ -104,8 +104,8 @@ public class MyClientUtil {
         dataMap.put(TopicAndParams.paramRightLaneWidthTopicCollectMap, DataStorageCollectMap.rightWidthDis); //右道路宽
         dataMap.put(TopicAndParams.paramLaneStatusTopicCollectMap, DataStorageCollectMap.laneStatus);  //道路状态
         dataMap.put(TopicAndParams.paramLaneWidthTopicCollectMap, DataStorageCollectMap.laneWidth);  //道路宽
-        dataMap.put(TopicAndParams.paramLaneStartNoTopicCollectMap, DataStorageCollectMap.laneStartNo); //起点编号
-        dataMap.put(TopicAndParams.paramLaneEndNoTopicCollectMap, DataStorageCollectMap.laneEndNo); // 终点编号
+//        dataMap.put(TopicAndParams.paramLaneStartNoTopicCollectMap, DataStorageCollectMap.laneStartNo); //起点编号
+//        dataMap.put(TopicAndParams.paramLaneEndNoTopicCollectMap, DataStorageCollectMap.laneEndNo); // 终点编号
 
         dataMap.put(TopicAndParams.timestamp, System.currentTimeMillis());
         String str = MyStringUtil.sendDataStr(TopicAndParams.topicSendCollectMap, dataMap);

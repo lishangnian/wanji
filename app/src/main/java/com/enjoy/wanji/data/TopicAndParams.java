@@ -47,8 +47,8 @@ public class TopicAndParams {
     public static String paramLaneWidthTopicCollectMap = ",\"lanewidth\":";   //道路宽度
     public static String paramLeftLaneWidthTopicCollectMap = ",\"leftlanewidth\":";  //左道路宽度
     public static String paramRightLaneWidthTopicCollectMap = ",\"rightlanewidth\":";  //右道路宽度
-    public static String paramLaneStartNoTopicCollectMap = ",\"start\":";  //起点编号
-    public static String paramLaneEndNoTopicCollectMap = ",\"end\":";  //终点编号
+//    public static String paramLaneStartNoTopicCollectMap = ",\"start\":";  //起点编号
+//    public static String paramLaneEndNoTopicCollectMap = ",\"end\":";  //终点编号
 
 
 
