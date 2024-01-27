@@ -17,7 +17,7 @@ public class DataStorageUtil {
 
 
     private static List<String> collectMapNameList = new ArrayList<>();
-    private static List<String> speedList = new ArrayList<>();
+    private static List<String> speedList = new ArrayList<>();    //地图属性--速度
     private static List<String> stopPropertyList = new ArrayList<>();
     private static List<String> stopTimeList = new ArrayList<>();
     private static List<String> stopIndexList = new ArrayList<>(); //停车索引列表
@@ -43,11 +43,16 @@ public class DataStorageUtil {
     public static List<String> getMapLaneList() {
 //        1--4 单道， 右车道、中间车道、左车道
         if (mapLaneList.size() == 0) {
-            mapLaneList.add("1-单道");
-            mapLaneList.add("2-右车道");
-            mapLaneList.add("3-中间车道");
-            mapLaneList.add("4-左车道");
-            mapLaneList.add("5-借道");
+//            mapLaneList.add("1-单道");
+//            mapLaneList.add("2-右车道");
+//            mapLaneList.add("3-中间车道");
+//            mapLaneList.add("4-左车道");
+//            mapLaneList.add("5-借道");
+
+//            1-20 不是汉字纯数字
+            for (int i = 1; i <= 20; i++) {
+                mapLaneList.add(i + "-" + i);
+            }
         }
         return mapLaneList;
     }
@@ -156,16 +161,25 @@ public class DataStorageUtil {
     public static List<String> getRoadPropertyList() {
         if (speedList.size() == 0) {
             speedList.add("0-默认");
-            speedList.add("1-普通道路");
-            speedList.add("2-路口");
+//            speedList.add("1-普通道路");
+            speedList.add("1-常规道路");
+//            speedList.add("2-路口");
+            speedList.add("2-路口前");
             speedList.add("3-环岛");
-            speedList.add("4-匝道");
+//            speedList.add("4-匝道");
+            speedList.add("4-闸机");
             speedList.add("5-水平泊车");
             speedList.add("6-垂直泊车");
             speedList.add("7-隧道");
             speedList.add("8-路口中");
-            speedList.add("9-路口后段");
-            speedList.add("10-预留2");
+            speedList.add("9-路口后");
+            speedList.add("10-匝道");
+            speedList.add("11-路边停车");
+//            12~20---预留
+            for (int i = 12; i <= 20; i++) {
+                speedList.add(i + "-预留");
+            }
+
         }
         return speedList;
     }

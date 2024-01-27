@@ -7,7 +7,7 @@ android {
         minSdkVersion 16
         targetSdkVersion 29
         versionCode 16
-        versionName "1.1.02"
+        versionName "1.1.04"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         ndk {
             abiFilters "armeabi", "armeabi-v7a", "x86"
@@ -47,7 +47,6 @@ android {
             outputFileName = "${variant.name}-${variant.versionName}.apk"
         }
     }
-
 
 }
 
