@@ -133,6 +133,45 @@ public class EnjoyTrainShipApplication extends Application {
                 file = getResources().openRawResourceFd(R.raw.v2x15);
             } else if (AttentionInfo.attentionKey == V2xTypeEnum.EVW.key) {
                 file = getResources().openRawResourceFd(R.raw.v2x16);
+
+            } else if (AttentionInfo.attentionKey == V2xTypeEnum.V34.key) {
+                file = getResources().openRawResourceFd(R.raw.v2x34);
+            } else if (AttentionInfo.attentionKey == V2xTypeEnum.V242.key) {
+                file = getResources().openRawResourceFd(R.raw.v2x242);
+            } else if (AttentionInfo.attentionKey == V2xTypeEnum.V501.key) {
+                file = getResources().openRawResourceFd(R.raw.v2x501);
+            } else if (AttentionInfo.attentionKey == V2xTypeEnum.V103.key) {
+                file = getResources().openRawResourceFd(R.raw.v2x103);
+            } else if (AttentionInfo.attentionKey == V2xTypeEnum.V707.key) {
+                file = getResources().openRawResourceFd(R.raw.v2x707);
+            } else if (AttentionInfo.attentionKey == V2xTypeEnum.V415.key) {
+                file = getResources().openRawResourceFd(R.raw.v2x415);
+            } else if (AttentionInfo.attentionKey == V2xTypeEnum.V904.key) {
+                file = getResources().openRawResourceFd(R.raw.v2x904);
+            } else if (AttentionInfo.attentionKey == V2xTypeEnum.V425.key) {
+                file = getResources().openRawResourceFd(R.raw.v2x425);
+            } else if (AttentionInfo.attentionKey == V2xTypeEnum.V435.key) {
+                file = getResources().openRawResourceFd(R.raw.v2x435);
+            } else if (AttentionInfo.attentionKey == V2xTypeEnum.V311.key) {
+                file = getResources().openRawResourceFd(R.raw.v2x311);
+            } else if (AttentionInfo.attentionKey == V2xTypeEnum.V305.key) {
+                file = getResources().openRawResourceFd(R.raw.v2x305);
+            } else if (AttentionInfo.attentionKey == V2xTypeEnum.V301.key) {
+                file = getResources().openRawResourceFd(R.raw.v2x301);
+            } else if (AttentionInfo.attentionKey == V2xTypeEnum.V407.key) {
+                file = getResources().openRawResourceFd(R.raw.v2x407);
+            } else if (AttentionInfo.attentionKey == V2xTypeEnum.V507.key) {
+                file = getResources().openRawResourceFd(R.raw.v2x507);
+            } else if (AttentionInfo.attentionKey == V2xTypeEnum.V903.key) {
+                file = getResources().openRawResourceFd(R.raw.v2x903);
+            } else if (AttentionInfo.attentionKey == V2xTypeEnum.V902.key) {
+                file = getResources().openRawResourceFd(R.raw.v2x902);
+            } else if (AttentionInfo.attentionKey == V2xTypeEnum.V990.key) {
+                file = getResources().openRawResourceFd(R.raw.v2x990);
+            } else if (AttentionInfo.attentionKey == V2xTypeEnum.V598.key) {
+                file = getResources().openRawResourceFd(R.raw.v2x598);
+            } else if (AttentionInfo.attentionKey == V2xTypeEnum.V599.key) {
+                file = getResources().openRawResourceFd(R.raw.v2x599);
             } else {
                 playCompletionFlag = true;
                 return;   //没有该编码， 返回
