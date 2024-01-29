@@ -34,7 +34,7 @@
             android:layout_marginLeft="10dp"
             android:layout_marginStart="10dp"
             android:layout_marginRight="5dp"
-            android:src="@drawable/company_logo02" />
+            android:src="@drawable/company_enjoy_logo" />
 
         <TextView
             android:layout_width="wrap_content"
