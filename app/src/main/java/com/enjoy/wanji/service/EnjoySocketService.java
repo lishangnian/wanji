@@ -3,7 +3,10 @@ package com.enjoy.wanji.service;
 import android.app.IntentService;
 import android.content.Intent;
 import android.os.SystemClock;
+<<<<<<< HEAD
 //import android.support.annotation.Nullable;
+=======
+>>>>>>> ac9649c (bug修复播报语音时，文字不显示问题)
 import android.support.annotation.Nullable;
 import android.util.Log;
 
