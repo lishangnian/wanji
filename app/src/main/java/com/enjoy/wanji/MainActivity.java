@@ -68,9 +68,11 @@ import com.enjoy.wanji.entity.DataStorageToPC;
 import com.enjoy.wanji.entity.DataStorageUtil;
 import com.enjoy.wanji.entity.AttentionContentEnum;
 import com.enjoy.wanji.entity.ErrorContentEnum;
+import com.enjoy.wanji.entity.V2xTypeEnum;
 import com.enjoy.wanji.service.EnjoySocketService;
 import com.enjoy.wanji.util.AMapUtil;
 import com.enjoy.wanji.util.EnjoyDialogUtil;
+import com.enjoy.wanji.util.MyStringUtil;
 import com.enjoy.wanji.util.ToastUtil;
 
 import org.json.simple.JSONArray;
@@ -783,11 +785,15 @@ public class MainActivity extends Activity implements LocationSource, AMapLocati
         } else {
             AttentionInfo.title = "警告";
         }
-        if (type == AttentionTypeEnum.ERROR.key) {
-            AttentionInfo.message = AttentionContentEnum.getValue(key) + "\n" + "故障码" + DataStorageFromPC.error;
-        } else {
-            AttentionInfo.message = AttentionContentEnum.getValue(key);
+        String attentionMsg = AttentionContentEnum.getValue(key);
+        if (attentionMsg == null || "".equals(attentionMsg)) {
+            attentionMsg = V2xTypeEnum.getValue(key);
         }
+        if (type == AttentionTypeEnum.ERROR.key) {
+            attentionMsg = attentionMsg + "\n" + "故障码" + DataStorageFromPC.error;
+        }
+        AttentionInfo.message = attentionMsg;
+
 
         if (dialogPopWindow == null) {
             dialogPopWindow = new MyDialogPopWindow(this, new View.OnClickListener() {
@@ -1036,12 +1042,12 @@ public class MainActivity extends Activity implements LocationSource, AMapLocati
         DataStorageFromPC.zoneNameJsonListMap.clear();
         clearMarkers();//移除覆盖物
         /**
-        if (polyline != null) {  //删除显示的轨迹
-            polyline.remove();
-        }
+         if (polyline != null) {  //删除显示的轨迹
+         polyline.remove();
+         }
          **/
         //删除显示的轨迹
-        for(Polyline line: polylineList){
+        for (Polyline line : polylineList) {
             line.remove();
         }
         Global.loadRoadsFlag = true;

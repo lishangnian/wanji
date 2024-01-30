@@ -3,10 +3,10 @@ package com.enjoy.wanji.service;
 import android.app.IntentService;
 import android.content.Intent;
 import android.os.SystemClock;
-//import android.support.annotation.Nullable;
+import android.support.annotation.Nullable;
 import android.util.Log;
 
-import androidx.annotation.Nullable;
+//import androidx.annotation.Nullable;
 
 import com.enjoy.wanji.EnjoyTrainShipApplication;
 import com.enjoy.wanji.Global;
