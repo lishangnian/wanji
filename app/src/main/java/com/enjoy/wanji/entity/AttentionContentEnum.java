@@ -7,7 +7,8 @@ public enum AttentionContentEnum {
 
     //V2X_
     V2X_EMPTY(0, "无"),
-    V2X_FCW(1, "前方碰撞预警"), //
+//    V2X_FCW(1, "前方碰撞预警"), //
+    V2X_FCW(1, "超出设计运行范围"),
     V2X_ICW(2, "交叉路口碰撞预警"),
     V2X_LTA(3, "左转辅助"),
     V2X_BSW(4, "盲区预警/变道预警"),

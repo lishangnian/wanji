@@ -2,7 +2,8 @@ package com.enjoy.wanji.entity;
 
 public enum V2xTypeEnum {
     EMPTY(0, "无"),
-    FCW(1, "前方碰撞预警"), //
+//    FCW(1, "前方碰撞预警"), //
+    FCW(1, "超出设计运行范围"),
     ICW(2, "交叉路口碰撞预警"),
     LTA(3, "左转辅助"),
     BSW(4, "盲区预警/变道预警"),
