@@ -34,6 +34,13 @@
     <string name="city">市</string>
     <string name="district">区/县</string>
 
+    <string name="gear_p">P</string>
+    <string name="gear_R">R</string>
+    <string name="gear_N">N</string>
+    <string name="gear_D">D</string>
+    <string name="km_h">Km/H</string>
+    <string name="soc_default">--</string>
+
 
     <drawable name="btn_pressed">#535353</drawable>
     <drawable name="btn_normal">#33A1C9</drawable>

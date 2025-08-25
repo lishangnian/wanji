@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/activity_main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/grey"
+    android:orientation="horizontal"
+    >
+
+<!--    android:background="@drawable/collect_roads_background"-->
+<!--    ros连接状态信号图标  自动驾驶状态图形   车速  剩余电量    档位（字母）
+            转向灯     红绿灯     限速标志    超速提醒（超过限速值弹出）  -->
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:orientation="vertical">
+<!--    速度显示-->
+        <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+            android:id="@+id/speed_txt"
+            android:textSize="36sp"
+        />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+<!--            显示档位-->
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="24dp"
+                android:id="@+id/gear_txt"
+                android:layout_weight="1"
+                android:text="@string/gear_p"
+                />
+<!--            速度单位-->
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="24dp"
+                android:layout_weight="1"
+                android:text="@string/km_h"
+                />
+<!--            电量显示-->
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="24dp"
+                android:id="@+id/soc"
+                android:layout_weight="1"
+                android:text="@string/soc_default"
+                />
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+        </LinearLayout>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="2">
+
+        <com.amap.api.maps.MapView
+            android:id="@+id/map"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+        </com.amap.api.maps.MapView>
+
+    </LinearLayout>
+
+
+
+
+</LinearLayout>

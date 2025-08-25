@@ -13,6 +13,7 @@ import android.content.pm.ActivityInfo;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.location.Location;
+import android.location.LocationManager;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
@@ -36,9 +37,10 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.amap.api.location.AMapLocation;
+import com.amap.api.location.AMapLocationClient;
 import com.amap.api.location.AMapLocationListener;
-import com.amap.api.location.LocationManagerProxy;
-import com.amap.api.location.LocationProviderProxy;
+//import com.amap.api.location.LocationManagerProxy;
+//import com.amap.api.location.LocationProviderProxy;
 import com.amap.api.maps.AMap;
 import com.amap.api.maps.AMap.OnMapTouchListener;
 import com.amap.api.maps.CameraUpdateFactory;
@@ -47,6 +49,7 @@ import com.amap.api.maps.MapView;
 import com.amap.api.maps.UiSettings;
 import com.amap.api.maps.model.BitmapDescriptor;
 import com.amap.api.maps.model.BitmapDescriptorFactory;
+import com.amap.api.maps.model.CameraPosition;
 import com.amap.api.maps.model.LatLng;
 import com.amap.api.maps.model.LatLngBounds;
 import com.amap.api.maps.model.Marker;
@@ -54,6 +57,7 @@ import com.amap.api.maps.model.MarkerOptions;
 import com.amap.api.maps.model.Polyline;
 import com.amap.api.maps.model.PolylineOptions;
 import com.amap.api.maps.model.VisibleRegion;
+import com.amap.api.services.core.AMapException;
 import com.amap.api.services.geocoder.GeocodeAddress;
 import com.amap.api.services.geocoder.GeocodeResult;
 import com.amap.api.services.geocoder.GeocodeSearch;
@@ -93,7 +97,8 @@ public class MainActivity extends Activity implements LocationSource, AMapLocati
     private AMap aMap;//地图控制器类
     private MapView mapView;
     private OnLocationChangedListener mListener;
-    private LocationManagerProxy mAMapLocationManager;
+//    private LocationManagerProxy mAMapLocationManager;
+//    private LocationManager locationManager;
 
     private RadioButton endRaBtn, goRaBtn; //defaultRaBtn
     private TextView speedText, errorText, objDisTxt;
@@ -258,6 +263,13 @@ public class MainActivity extends Activity implements LocationSource, AMapLocati
             LatLng latLng1 = ChangeLatlon.transform(Double.parseDouble(latStr), Double.parseDouble(lonStr));
             aMap.animateCamera(CameraUpdateFactory.changeLatLng(latLng1)); //中心点
 
+            aMap.moveCamera(CameraUpdateFactory.newCameraPosition(new CameraPosition(
+                    latLng1,       //目标位置的经纬度
+                    20,          //缩放级别
+                    75,  //可视区域的倾斜角，单位为度
+                    0   //可视区域指向方向，单位为角度。从正北向顺时针计算，0-360
+            )));
+
             aMap.setMyLocationRotateAngle(90);
 
         }
@@ -376,7 +388,14 @@ public class MainActivity extends Activity implements LocationSource, AMapLocati
         });
 
 
-        geocoderSearch = new GeocodeSearch(this);
+        AMapLocationClient.updatePrivacyAgree(mContext, true);
+        AMapLocationClient.updatePrivacyShow(mContext, true, true);
+        try {
+            geocoderSearch = new GeocodeSearch(this);
+        } catch (AMapException e) {
+            Log.e(TAG,"new GeocodeSearch error");
+//            throw new RuntimeException(e);
+        }
         geocoderSearch.setOnGeocodeSearchListener(this);
         progDialog = new ProgressDialog(this);
 
@@ -847,6 +866,7 @@ public class MainActivity extends Activity implements LocationSource, AMapLocati
         aMap.setMyLocationRotateAngle(180);//旋转：可触发进入应用后，直接进入定位点
         aMap.setLocationSource(this);
         aMap.setOnMapTouchListener(this); //设置触摸控件
+        aMap.showBuildings(false);       //不显示3D楼
         uiSettings = aMap.getUiSettings();
         uiSettings.setCompassEnabled(true);// 设置地磁按钮是否显示
         //uiSettings.setMyLocationButtonEnabled(true);//显示定位按钮
@@ -966,11 +986,12 @@ public class MainActivity extends Activity implements LocationSource, AMapLocati
         mapView.onDestroy();
         //停止定位
         mListener = null;
-        if (mAMapLocationManager != null) {
-            mAMapLocationManager.removeUpdates(this);
-            mAMapLocationManager.destory();
-        }
-        mAMapLocationManager = null;
+//        if (mAMapLocationManager != null) {
+//            mAMapLocationManager.removeUpdates(this);
+//            mAMapLocationManager.destory();
+//        }
+//        mAMapLocationManager = null;
+
 
         System.exit(0); //退出应用
     }
@@ -993,6 +1014,9 @@ public class MainActivity extends Activity implements LocationSource, AMapLocati
     @Override
     public void activate(OnLocationChangedListener listener) {
         mListener = listener;
+        /**
+         *
+
         if (mAMapLocationManager == null) {
             mAMapLocationManager = LocationManagerProxy.getInstance(this);
             Log.e("tag", "激活定位");
@@ -1002,12 +1026,15 @@ public class MainActivity extends Activity implements LocationSource, AMapLocati
              * API定位采用GPS和网络混合定位方式
              * ，第一个参数是定位provider，第二个参数时间最短是2000毫秒，第三个参数距离间隔单位是米，第四个参数是定位监听者
              */
+        /**
+         *
             mAMapLocationManager.requestLocationUpdates(
                     LocationProviderProxy.AMapNetwork, 2000, 10, this);
 //                // API定位采用GPS定位方式，第一个参数是定位provider，第二个参数时间最短是2000毫秒，第三个参数距离间隔单位是米，第四个参数是定位监听者
 //                mAMapLocationManager.requestLocationUpdates(
 //                        LocationManagerProxy.GPS_PROVIDER, 2000, 10, this);
         }
+             */
     }
 
     /**
@@ -1017,11 +1044,15 @@ public class MainActivity extends Activity implements LocationSource, AMapLocati
     public void deactivate() {
         Log.e("tag", "停止定位");
         mListener = null;
+        /**
+         *
+
         if (mAMapLocationManager != null) {
             mAMapLocationManager.removeUpdates(this);
             mAMapLocationManager.destory();
         }
         mAMapLocationManager = null;
+         */
     }
 
     //清楚所有的marker
@@ -1079,6 +1110,7 @@ public class MainActivity extends Activity implements LocationSource, AMapLocati
                         .decodeResource(getResources(), R.mipmap.bus)))
                 .draggable(true));
         carMarker.setRotateAngle(360 - heading);
+
     }
 
 
