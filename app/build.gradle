@@ -81,4 +81,6 @@ dependencies {
     implementation files('libs/java_websocket.jar')
 //    implementation files('libs/eventbus.jar')
 //    implementation files('libs/butterknife-7.0.1.jar')
+
+    implementation 'org.rajawali3d:rajawali:1.1.970'
 }

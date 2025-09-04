@@ -13,7 +13,6 @@ import android.content.pm.ActivityInfo;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.location.Location;
-import android.location.LocationManager;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
@@ -39,8 +38,6 @@ import android.widget.TextView;
 import com.amap.api.location.AMapLocation;
 import com.amap.api.location.AMapLocationClient;
 import com.amap.api.location.AMapLocationListener;
-//import com.amap.api.location.LocationManagerProxy;
-//import com.amap.api.location.LocationProviderProxy;
 import com.amap.api.maps.AMap;
 import com.amap.api.maps.AMap.OnMapTouchListener;
 import com.amap.api.maps.CameraUpdateFactory;
@@ -63,6 +60,7 @@ import com.amap.api.services.geocoder.GeocodeResult;
 import com.amap.api.services.geocoder.GeocodeSearch;
 import com.amap.api.services.geocoder.RegeocodeResult;
 import com.enjoy.wanji.data.Common;
+import com.enjoy.wanji.entity.AttentionContentEnum;
 import com.enjoy.wanji.entity.AttentionInfo;
 import com.enjoy.wanji.entity.AttentionTypeEnum;
 import com.enjoy.wanji.entity.DataStorage;
@@ -70,17 +68,17 @@ import com.enjoy.wanji.entity.DataStorageCollectMap;
 import com.enjoy.wanji.entity.DataStorageFromPC;
 import com.enjoy.wanji.entity.DataStorageToPC;
 import com.enjoy.wanji.entity.DataStorageUtil;
-import com.enjoy.wanji.entity.AttentionContentEnum;
 import com.enjoy.wanji.entity.ErrorContentEnum;
 import com.enjoy.wanji.entity.V2xTypeEnum;
 import com.enjoy.wanji.service.EnjoySocketService;
 import com.enjoy.wanji.util.AMapUtil;
 import com.enjoy.wanji.util.EnjoyDialogUtil;
-import com.enjoy.wanji.util.MyStringUtil;
 import com.enjoy.wanji.util.ToastUtil;
+import com.enjoy.wanji.vr3D.CarScene;
 
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
+import org.rajawali3d.view.SurfaceView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -88,28 +86,21 @@ import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
 
-public class MainActivity extends Activity implements LocationSource, AMapLocationListener,
+public class MainActivity1 extends Activity implements LocationSource, AMapLocationListener,
         GeocodeSearch.OnGeocodeSearchListener, OnMapTouchListener {//定位接口
-    private static final String TAG = "PageActivityMain";
+    private static final String TAG = "PageActivityMain1";
     private static String mediaTag = "media_tag";
 
     private Context mContext;
     private AMap aMap;//地图控制器类
     private MapView mapView;
     private OnLocationChangedListener mListener;
-//    private LocationManagerProxy mAMapLocationManager;
-//    private LocationManager locationManager;
 
-    private RadioButton endRaBtn, goRaBtn; //defaultRaBtn
-    private TextView speedText, errorText, objDisTxt;
-    //  连接  采集地图 遥控器  删除轨迹 重载
-    private ImageButton collectRoads, resetImgBtn,  // deleteImgBtn,
-            errorImgBtn, speedPanelImg;
-    private Button mapZoneSelectBtn, mapParkBtn, renameBtn, estopBtn;  //parkBtn
-    private ImageView obs_img, gps_img, auto_drive_img, trafficLight;
+    private SurfaceView surfaceView;
+    private CarScene carScene;
 
-    //遥控器，采集地图，重载， 删除地图 组合控件
-    private LinearLayout collectTabLayout, reloadRoadTabLayout;   //deleteRoadTabLayout
+
+
 
     private UiSettings uiSettings;
 
@@ -150,7 +141,7 @@ public class MainActivity extends Activity implements LocationSource, AMapLocati
         super.onCreate(savedInstanceState);
         //设置本activity长亮
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON, WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_main1);
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_USER_LANDSCAPE); //设置屏幕格式为横屏
         /*
          * 设置离线地图存储目录，在下载离线地图或初始化地图设置;
@@ -163,6 +154,10 @@ public class MainActivity extends Activity implements LocationSource, AMapLocati
         mapView = findViewById(R.id.map); //获取地图控件引用
         mapView.onCreate(savedInstanceState);// 此方法必须重写  创建地图
 
+        surfaceView = findViewById(R.id.rajawali_surface);
+        carScene = new CarScene(this);
+        surfaceView.setSurfaceRenderer(carScene);
+
         //初始化控件
         initView();
         //注册广播接收器
@@ -172,7 +167,7 @@ public class MainActivity extends Activity implements LocationSource, AMapLocati
         filter.addAction(Common.MAIN_RECEIVER_ACTION);
         registerReceiver(mainActivityDataReceiver, filter);
         //启动服务连接
-        Intent intent = new Intent(MainActivity.this, EnjoySocketService.class);
+        Intent intent = new Intent(MainActivity1.this, EnjoySocketService.class);
         intent.putExtra(Common.ACTION_NAME, Common.ACTION_CONNECT);
         startService(intent);
 
@@ -230,15 +225,6 @@ public class MainActivity extends Activity implements LocationSource, AMapLocati
 
         DataStorage.mode = 1;    //订阅模式 1--显示订阅信息模式 2--采集地图模式
 
-        RelativeLayout leftLayout = findViewById(R.id.left_menu_panel);
-        leftLayout.bringToFront(); //让左侧菜单栏置顶
-
-        collectTabLayout = findViewById(R.id.collect_tab); //采集地图跳转组件
-        reloadRoadTabLayout = findViewById(R.id.reload_tab); //重载轨迹组件
-//        deleteRoadTabLayout = findViewById(R.id.delete_road_tab); //删除轨迹组件
-
-        errorImgBtn = findViewById(R.id.error_img_btn);  //电量
-        speedPanelImg = findViewById(R.id.speed_panel_img);
 
         if (aMap == null) {
             aMap = mapView.getMap();
@@ -256,136 +242,30 @@ public class MainActivity extends Activity implements LocationSource, AMapLocati
             this.normalRouteYellow = BitmapDescriptorFactory.fromAsset("yellow.png");
             this.normalRouteYellow = BitmapDescriptorFactory.fromAsset("grey.png");
 
-            //读取缓存经纬度数据  116.416797,40.037969
-            String lonStr = EnjoyTrainShipApplication.sharedPreferences.getString("lon", "116.416797");
-            String latStr = EnjoyTrainShipApplication.sharedPreferences.getString("lat", "40.037969");
+            //读取缓存经纬度数据  116.416797,40.037969      117.35513990,39.06378240,
+            String lonStr = EnjoyTrainShipApplication.sharedPreferences.getString("lon", "117.35513990");
+            String latStr = EnjoyTrainShipApplication.sharedPreferences.getString("lat", "39.06378240");
             Log.i(TAG, "获取缓存经纬度" + lonStr + "," + latStr);
             LatLng latLng1 = ChangeLatlon.transform(Double.parseDouble(latStr), Double.parseDouble(lonStr));
             aMap.animateCamera(CameraUpdateFactory.changeLatLng(latLng1)); //中心点
 
+            /**
+             *
+
             aMap.moveCamera(CameraUpdateFactory.newCameraPosition(new CameraPosition(
                     latLng1,       //目标位置的经纬度
                     20,          //缩放级别
-                    85,  //可视区域的倾斜角，单位为度
+                    80,  //可视区域的倾斜角，单位为度
                     0   //可视区域指向方向，单位为角度。从正北向顺时针计算，0-360
             )));
-
+             */
             aMap.setMyLocationRotateAngle(90);
 
         }
-        //采集地图按钮
-        collectRoads = findViewById(R.id.collect_map_img_btn);
-        collectRoads.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                collectRoads.setImageDrawable(getResources().getDrawable(R.drawable.collect_map_check));
-                Log.i(TAG, "跳转地图采集界面");
-                //判断轨迹数量是否大于10
-                /**
-                 if (DataStorage.roadsMap.size() >= 10) {  //路径数量>=10提示用户删除路径
-                 ToastUtil.show(getApplicationContext(), "路径数量已最大，请删除部分路径");
-                 return;
-                 }
-                 **/
-//                Intent mapIntent = new Intent(MainActivity.this, CollectRoadsActivity.class);
-                Intent mapIntent = new Intent(MainActivity.this, CollectRoadsActivity1.class);
-                startActivity(mapIntent);
-            }
-        });
-        collectTabLayout.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                collectRoads.setImageDrawable(getResources().getDrawable(R.drawable.collect_map_check));
-                Log.i(TAG, "跳转地图采集界面");
-                //判断轨迹数量是否大于10
-                /**
-                 if (DataStorage.roadsMap.size() >= 10) {  //路径数量>=10提示用户删除路径
-                 ToastUtil.show(getApplicationContext(), "路径数量已最大，请删除部分路径");
-                 return;
-                 }
-                 **/
-//                Intent mapIntent = new Intent(MainActivity.this, CollectRoadsActivity.class);
-                Intent mapIntent = new Intent(MainActivity.this, CollectRoadsActivity1.class);
-                startActivity(mapIntent);
-            }
-        });
 
-        //重载按钮
-        resetImgBtn = findViewById(R.id.reload_img_btn);
-        reloadRoadTabLayout.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                refresh("reloadRoadTabLayout");  //刷新按钮
-            }
-        });
-        resetImgBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                refresh("resetBtn");  //刷新按钮
-            }
-        });
-
-        //删除轨迹按钮
-//        deleteImgBtn = findViewById(R.id.delete_road_img_btn);
-//        deleteImgBtn.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                deleteRoadsSets();
-//            }
-//        });
-//        deleteRoadTabLayout.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                deleteRoadsSets();
-//            }
-//        });
-
-
-        //速度与电池文字显示
-        speedText = findViewById(R.id.speed_txt);
-        errorText = findViewById(R.id.error_txt);
-        objDisTxt = findViewById(R.id.obj_dis_txt);
-
-        //障碍物图片
-        obs_img = findViewById(R.id.obstacle_img);
-        //gps图片显示
-        gps_img = findViewById(R.id.gps_img);
-        //自动驾驶状态图片
-        auto_drive_img = findViewById(R.id.auto_drive_img);
-        //红绿灯
-        trafficLight = findViewById(R.id.traffic_light);
 
         //故障图片
 //        errorImg = findViewById(R.id.error_img);
-
-        //结束按钮  //出发按钮 radioButton
-        endRaBtn = findViewById(R.id.end_radio_btn);
-        goRaBtn = findViewById(R.id.go_radio_btn);
-        //0无效、1出发、停止2
-        goRaBtn.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if (isChecked) {
-                    DataStorageToPC.stopgo = 1;
-                    DataStorage.stopGoTimeStamp = System.currentTimeMillis();
-                    goRaBtn.setTextColor(getResources().getColor(R.color.pureColorBackgroundWhite));
-                } else {
-                    goRaBtn.setTextColor(getResources().getColor(R.color.noCheckColorGray));
-                }
-            }
-        });
-        endRaBtn.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if (isChecked) {
-                    DataStorage.stopGoTimeStamp = System.currentTimeMillis();
-                    DataStorageToPC.stopgo = 2;
-                    endRaBtn.setTextColor(getResources().getColor(R.color.pureColorBackgroundWhite));
-                } else {
-                    endRaBtn.setTextColor(getResources().getColor(R.color.noCheckColorGray));
-                }
-            }
-        });
 
 
         AMapLocationClient.updatePrivacyAgree(mContext, true);
@@ -399,22 +279,6 @@ public class MainActivity extends Activity implements LocationSource, AMapLocati
         geocoderSearch.setOnGeocodeSearchListener(this);
         progDialog = new ProgressDialog(this);
 
-        estopBtn = findViewById(R.id.estop_btn); //临时停车
-        //parkBtn = findViewById(R.id.park_btn);  //泊车
-        estopBtn.setOnClickListener(new View.OnClickListener() { //临时停车0-1切换
-            @Override
-            public void onClick(View v) {
-                if (DataStorageToPC.eStop == 0) {
-                    DataStorageToPC.eStop = 1;
-                    estopBtn.setTextColor(Color.WHITE);
-                    estopBtn.setBackground(getResources().getDrawable(R.drawable.button_shape_activate));
-                } else {
-                    DataStorageToPC.eStop = 0;
-                    estopBtn.setTextColor(Color.BLACK);
-                    estopBtn.setBackground(getResources().getDrawable(R.drawable.button_shape_default));
-                }
-            }
-        });
         //泊车
         /**
          parkBtn.setOnClickListener(new View.OnClickListener() {  //发5秒1，再变0触发加载回停车场地图
@@ -428,63 +292,12 @@ public class MainActivity extends Activity implements LocationSource, AMapLocati
          });
          **/
 
-        renameBtn = findViewById(R.id.edit_btn);
-        renameBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (DataStorageToPC.zoneName == 0) {
-                    ToastUtil.showShort(MainActivity.this, "请先选择园区");
-                    return;
-                }
-                tipViewShow();
-            }
-        });
-
-        //园区选择按钮
-        mapZoneSelectBtn = findViewById(R.id.map_zone_select_btn);
-        mapZoneSelectBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                final List<String> list = DataStorageUtil.getMapZoneMainList();
-                EnjoyDialogUtil.selectItemDialog(MainActivity.this, list.toArray(new String[list.size()]),
-                        "选择园区", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                if (-1 != EnjoyDialogUtil.WHICH) {
-                                    String zoneName = list.get(EnjoyDialogUtil.WHICH);
-                                    mapZoneSelectBtn.setText(zoneName);
-                                    //提取园区编号 例： yuanqu2或2---公园
-                                    DataStorageToPC.zoneName = DataStorageUtil.getZoneNum(zoneName);
-                                    //发送去绘制轨迹
-                                    handler.sendEmptyMessage(Common.ACTION_UI_ROADS_SHOW);
-                                }
-                            }
-                        });
-            }
-        });
-
         //路线选择下拉框部分
         final List<String> parkList = new ArrayList<>();
         for (int i = 1; i <= 3; i++) {
             parkList.add(i + "");
         }
-        mapParkBtn = findViewById(R.id.map_park_btn);  //停车点选择
-        mapParkBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                EnjoyDialogUtil.selectItemDialog(MainActivity.this, parkList.toArray(new String[parkList.size()]),
-                        "选择停车点", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                if (-1 != EnjoyDialogUtil.WHICH) {
-                                    String parkStr = parkList.get(EnjoyDialogUtil.WHICH);
-                                    mapParkBtn.setText(parkStr);
-                                    DataStorageToPC.apsNum = Integer.parseInt(parkStr);
-                                }
-                            }
-                        });
-            }
-        });
+
 
         handler = new Handler() {
             @Override
@@ -505,7 +318,7 @@ public class MainActivity extends Activity implements LocationSource, AMapLocati
         final EditText roadNameEdt = editeLayout.findViewById(R.id.zone_name_edt);
         TextView roadNumTxt = editeLayout.findViewById(R.id.zone_num_txt);
         roadNumTxt.setText("园区编号：" + DataStorageToPC.zoneName);
-        final AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
+        final AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity1.this);
         builder.setTitle("园区命名");
         builder.setView(editeLayout);
         builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
@@ -515,12 +328,12 @@ public class MainActivity extends Activity implements LocationSource, AMapLocati
                 Log.i("vvvvvvvvvvvvvvvv", "get num = " + num);
                 Editable roadEdt = roadNameEdt.getText();
                 if (roadEdt == null) {
-                    ToastUtil.showShort(MainActivity.this, "名称不可为空");
+                    ToastUtil.showShort(MainActivity1.this, "名称不可为空");
                     return;
                 }
                 String zoneNameNew = roadEdt.toString();
                 if ("".equals(zoneNameNew)) {
-                    ToastUtil.showShort(MainActivity.this, "名称不可为空");
+                    ToastUtil.showShort(MainActivity1.this, "名称不可为空");
                     return;
                 }
                 //名称存入缓存
@@ -600,7 +413,7 @@ public class MainActivity extends Activity implements LocationSource, AMapLocati
                 } else {
                     //todo 改变logo连接颜色
                     //红绿灯
-                    trafficLight.setImageDrawable(getResources().getDrawable(R.drawable.light_null));
+//                    trafficLight.setImageDrawable(getResources().getDrawable(R.drawable.light_null));
                 }
 
                 //更新stopgo的按钮显示
@@ -622,65 +435,23 @@ public class MainActivity extends Activity implements LocationSource, AMapLocati
 
 
                 //障碍物
-                if (!Global.connectFlag) {
-                    obs_img.setImageResource(R.drawable.obstacle_no);
-                } else {
-                    if (DataStorageFromPC.objDis.contains("-")) {  //无障碍物
-                        obs_img.setImageResource(R.drawable.obstacle_no);
-                    } else {             //有障碍物
-                        obs_img.setImageResource(R.drawable.obstacle);
-                    }
-                }
-                //障碍物距离
-                objDisTxt.setText(DataStorageFromPC.objDis);
 
                 //  GPS显示
                 if (!Global.connectFlag) {
-                    gps_img.setImageResource(R.drawable.gps0);
                 } else {
                     Log.i("aaaaaaaaaaa", "更新gps rtk = " + DataStorageFromPC.rtk);
-                    if (DataStorageFromPC.rtk >= 4) {
-                        gps_img.setImageResource(R.drawable.gps3);
-                    } else if (1 < DataStorageFromPC.rtk && DataStorageFromPC.rtk < 4) {
-                        gps_img.setImageResource(R.drawable.gps2);
-                    } else {
-                        gps_img.setImageResource(R.drawable.gps1);
-                    }
+
                 }
 
                 //驾驶状态
-                if (!Global.connectFlag) {
-                    auto_drive_img.setImageResource(R.drawable.no_auto_drive);
-                } else {
-                    if (DataStorageFromPC.driverStatus == 0) { //非自动驾驶状态
-                        auto_drive_img.setImageResource(R.drawable.manual_drive_img);
-                    } else {                         //自动驾驶状态
-                        auto_drive_img.setImageResource(R.drawable.auto_drive_img);
-                    }
-                }
+
 
                 //设置电量
-                if (!Global.connectFlag) { //未连接
-                    errorImgBtn.setImageDrawable(getResources().getDrawable(R.drawable.error_default));
-                } else {    //连接
-                    errorImgBtn.setImageDrawable(getResources().getDrawable(R.drawable.error_img));
-                }
-                errorText.setText(DataStorageFromPC.error + "");
 
                 //GPS速度等数据
-                if (!Global.connectFlag) {
-                    speedPanelImg.setImageDrawable(getResources().getDrawable(R.drawable.speed_panel0));
-                } else {
-                    speedPanelImg.setImageDrawable(getResources().getDrawable(R.drawable.speed_panel));
-                }
-                speedText.setText(DataStorageFromPC.speedStr);
 
                 //重载按钮
-                if (Global.loadRoadsFlag) {
-                    resetImgBtn.setImageDrawable(getResources().getDrawable(R.drawable.reload_check));
-                } else {
-                    resetImgBtn.setImageDrawable(getResources().getDrawable(R.drawable.reload_no_check));
-                }
+
                 //故障报警
                 attentionDialogShow();
 
@@ -717,15 +488,7 @@ public class MainActivity extends Activity implements LocationSource, AMapLocati
                 break;
             case Common.ACTION_UI_V2X:  //v2x
                 //0:无 1：红灯 2：绿灯 3：黄灯
-                if (0 == DataStorageFromPC.lightColor) {
-                    trafficLight.setImageDrawable(getResources().getDrawable(R.drawable.light_null));
-                } else if (1 == DataStorageFromPC.lightColor) {  //红
-                    trafficLight.setImageDrawable(getResources().getDrawable(R.drawable.light_red));
-                } else if (2 == DataStorageFromPC.lightColor) {  //绿
-                    trafficLight.setImageDrawable(getResources().getDrawable(R.drawable.light_green));
-                } else {  //黄
-                    trafficLight.setImageDrawable(getResources().getDrawable(R.drawable.light_yellow));
-                }
+
                 attentionDialogShow();
                 break;
         }
@@ -918,11 +681,14 @@ public class MainActivity extends Activity implements LocationSource, AMapLocati
 
         super.onResume();
         mapView.onResume();
+        if (surfaceView != null){
+            surfaceView.onResume();
+        }
 
         //按钮恢复为未点击
 //        controlImgBtn.setImageDrawable(getResources().getDrawable(R.drawable.control_img_no_check));
 
-        collectRoads.setImageDrawable(getResources().getDrawable(R.drawable.collect_map_no_check));
+//        collectRoads.setImageDrawable(getResources().getDrawable(R.drawable.collect_map_no_check));
 //        reloadRoadTabLayout.performClick(); //重载轨迹
         if (DataStorageCollectMap.collectMode == 2) {  //采集轨迹状态已经结束了,到主页面变为0
             DataStorageCollectMap.collectMode = 0;
@@ -940,6 +706,10 @@ public class MainActivity extends Activity implements LocationSource, AMapLocati
     protected void onPause() {
         super.onPause();
         mapView.onPause();
+        if (surfaceView != null){
+            surfaceView.onPause();
+        }
+
         deactivate();
         Log.i(TAG, "主页执行onPause*************");
 
@@ -1082,7 +852,7 @@ public class MainActivity extends Activity implements LocationSource, AMapLocati
             line.remove();
         }
         Global.loadRoadsFlag = true;
-        resetImgBtn.setImageDrawable(getResources().getDrawable(R.drawable.reload_check));
+//        resetImgBtn.setImageDrawable(getResources().getDrawable(R.drawable.reload_check));
         Log.i(TAG, "重置完成");
 
     }
@@ -1150,16 +920,16 @@ public class MainActivity extends Activity implements LocationSource, AMapLocati
 //                aMap.animateCamera(CameraUpdateFactory.newLatLngZoom(
 //                        AMapUtil.convertToLatLng(latLonPoint), 15));
 //                regeoMarker.setPosition(AMapUtil.convertToLatLng(latLonPoint));
-                ToastUtil.showShort(MainActivity.this, addressName);
+                ToastUtil.showShort(MainActivity1.this, addressName);
             } else {
-                ToastUtil.showShort(MainActivity.this, R.string.no_result);
+                ToastUtil.showShort(MainActivity1.this, R.string.no_result);
             }
         } else if (rCode == 27) {
-            ToastUtil.showShort(MainActivity.this, R.string.error_network);
+            ToastUtil.showShort(MainActivity1.this, R.string.error_network);
         } else if (rCode == 32) {
-            ToastUtil.showShort(MainActivity.this, R.string.error_key);
+            ToastUtil.showShort(MainActivity1.this, R.string.error_key);
         } else {
-            ToastUtil.showShort(MainActivity.this,
+            ToastUtil.showShort(MainActivity1.this,
                     getString(R.string.error_other) + rCode);
         }
     }
@@ -1177,16 +947,16 @@ public class MainActivity extends Activity implements LocationSource, AMapLocati
                         .getLatLonPoint()));
                 addressName = "经纬度值:" + address.getLatLonPoint() + "\n位置描述:"
                         + address.getFormatAddress();
-                ToastUtil.showShort(MainActivity.this, addressName);
+                ToastUtil.showShort(MainActivity1.this, addressName);
             } else {
-                ToastUtil.showShort(MainActivity.this, R.string.no_result);
+                ToastUtil.showShort(MainActivity1.this, R.string.no_result);
             }
         } else if (rCode == 27) {
-            ToastUtil.showShort(MainActivity.this, R.string.error_network);
+            ToastUtil.showShort(MainActivity1.this, R.string.error_network);
         } else if (rCode == 32) {
-            ToastUtil.showShort(MainActivity.this, R.string.error_key);
+            ToastUtil.showShort(MainActivity1.this, R.string.error_key);
         } else {
-            ToastUtil.showShort(MainActivity.this,
+            ToastUtil.showShort(MainActivity1.this,
                     getString(R.string.error_other) + rCode);
         }
     }

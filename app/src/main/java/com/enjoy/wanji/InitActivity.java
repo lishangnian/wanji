@@ -64,8 +64,9 @@ public class InitActivity extends Activity {
                 EnjoyTrainShipApplication.editor.commit();
 
                 //跳转
-                Intent intent = new Intent(InitActivity.this, MainActivity.class);
+                Intent intent = new Intent(InitActivity.this, MainActivity1.class);
                 startActivity(intent);
+                Log.i("init tag","start to MainActivity1 *******");
                 finish();
 
             }

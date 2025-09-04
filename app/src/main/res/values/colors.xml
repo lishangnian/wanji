@@ -14,6 +14,8 @@
     <color name="phone_bg">#f6f6f6</color>
     <color name="grey">#ebebeb</color>
     <color name="white">#ffffff</color>
+    <color name="red">#ff0000</color>
+    <color name="green">#00ff00</color>
     <color name="yellow">#FFFF00</color>
     <color name="colorDeepBlack">#000000</color>
 

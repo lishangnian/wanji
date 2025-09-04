@@ -39,7 +39,7 @@
     <string name="gear_N">N</string>
     <string name="gear_D">D</string>
     <string name="km_h">Km/H</string>
-    <string name="soc_default">--</string>
+    <string name="soc_default">--%</string>
 
 
     <drawable name="btn_pressed">#535353</drawable>

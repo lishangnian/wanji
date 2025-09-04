@@ -21,22 +21,17 @@
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:orientation="vertical"
-            android:layout_weight="2"
+            android:layout_weight="1"
             tools:ignore="NestedWeights">
             <!--    速度显示-->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:gravity="center_horizontal|bottom"
-                android:layout_weight="1"
                 tools:ignore="NestedWeights">
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:gravity="center_horizontal|bottom"
-                    android:paddingBottom="0dp"
                     android:id="@+id/speed_txt"
-                    android:textColor="@color/black"
                     android:textSize="36sp"
                     android:text="0" />
             </LinearLayout>
@@ -44,21 +39,14 @@
             <!--档位 速度 电量-->
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:layout_gravity="center_vertical"
-                android:layout_weight="1"
-                >
+                android:layout_height="wrap_content">
                 <!--            显示档位-->
                 <TextView
                     android:layout_width="0dp"
-                    android:layout_height="match_parent"
+                    android:layout_height="24dp"
                     android:id="@+id/gear_txt"
                     android:layout_weight="1"
-                    android:textColor="@color/red"
-                    android:gravity="center"
-                    android:textFontWeight="@android:integer/config_longAnimTime"
-                    android:textSize="20sp"
+                    android:gravity="center_horizontal"
                     android:text="@string/gear_p"
                     />
                 <!--            速度单位-->
@@ -67,7 +55,6 @@
                     android:layout_height="24dp"
                     android:layout_weight="1"
                     android:gravity="center_horizontal"
-                    android:textColor="@color/black"
                     android:text="@string/km_h"
                     />
                 <!--            电量显示-->
@@ -76,7 +63,6 @@
                     android:layout_height="24dp"
                     android:id="@+id/soc"
                     android:layout_weight="1"
-                    android:textColor="@color/black"
                     android:gravity="center_horizontal"
                     android:text="@string/soc_default"
                     />
@@ -85,7 +71,6 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
                 android:orientation="horizontal">
                 <LinearLayout
                     android:layout_width="0dp"
@@ -111,13 +96,13 @@
                         android:layout_width="30dp"
                         android:layout_height="30dp"
                         android:id="@+id/turn_left_light_img"
-                        android:src="@drawable/turn_left_on"
+                        android:src="@drawable/turn_left_off"
                         />
                     <ImageView
                         android:layout_width="30dp"
                         android:layout_height="30dp"
                         android:id="@+id/turn_right_light_img"
-                        android:src="@drawable/turn_right_on"
+                        android:src="@drawable/turn_right_off"
                         />
                 </LinearLayout>
                 <!--            连接标志-->
@@ -141,12 +126,12 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_weight="4">
+            android:layout_weight="3">
              <org.rajawali3d.view.SurfaceView
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:id="@+id/rajawali_surface"
-                 ></org.rajawali3d.view.SurfaceView>
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:id="@+id/rajawali_surface"
+            />
         </LinearLayout>
     </LinearLayout>
 
@@ -154,6 +139,7 @@
         android:layout_width="0dp"
         android:layout_height="match_parent"
         android:layout_weight="2">
+
         <com.amap.api.maps.MapView
             android:id="@+id/map"
             android:layout_width="match_parent"
