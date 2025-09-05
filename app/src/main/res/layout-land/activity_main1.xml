@@ -21,71 +21,67 @@
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:orientation="vertical"
-            android:layout_weight="2"
-            tools:ignore="NestedWeights">
+            android:layout_weight="2">
             <!--    速度显示-->
-            <LinearLayout
+            <TextView
+                android:id="@+id/speed_txt"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:gravity="center_horizontal|bottom"
-                android:layout_weight="1"
-                tools:ignore="NestedWeights">
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:gravity="center_horizontal|bottom"
-                    android:paddingBottom="0dp"
-                    android:id="@+id/speed_txt"
-                    android:textColor="@color/black"
-                    android:textSize="36sp"
-                    android:text="0" />
-            </LinearLayout>
+                android:layout_height="0dp"
+                android:layout_weight="3"
+                android:gravity="bottom|center_horizontal"
+                android:paddingBottom="0dp"
+                android:text="0"
+                android:textColor="@color/black"
+                android:textSize="128sp" />
+
 
             <!--档位 速度 电量-->
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="0dp"
                 android:orientation="horizontal"
                 android:layout_gravity="center_vertical"
-                android:layout_weight="1"
+                android:layout_weight="2"
                 >
                 <!--            显示档位-->
                 <TextView
                     android:layout_width="0dp"
-                    android:layout_height="match_parent"
+                    android:layout_height="wrap_content"
                     android:id="@+id/gear_txt"
                     android:layout_weight="1"
                     android:textColor="@color/red"
                     android:gravity="center"
                     android:textFontWeight="@android:integer/config_longAnimTime"
-                    android:textSize="20sp"
+                    android:textSize="72sp"
                     android:text="@string/gear_p"
                     />
                 <!--            速度单位-->
                 <TextView
                     android:layout_width="0dp"
-                    android:layout_height="24dp"
+                    android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:gravity="center_horizontal"
+                    android:gravity="center_horizontal|top"
                     android:textColor="@color/black"
+                    android:textSize="64sp"
                     android:text="@string/km_h"
                     />
                 <!--            电量显示-->
                 <TextView
                     android:layout_width="0dp"
-                    android:layout_height="24dp"
+                    android:layout_height="wrap_content"
                     android:id="@+id/soc"
                     android:layout_weight="1"
                     android:textColor="@color/black"
                     android:gravity="center_horizontal"
+                    android:textSize="64sp"
                     android:text="@string/soc_default"
                     />
             </LinearLayout>
             <!--        驾驶标志与转向灯-->
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
+                android:layout_height="0dp"
+                android:layout_weight="2"
                 android:orientation="horizontal">
                 <LinearLayout
                     android:layout_width="0dp"
@@ -93,8 +89,8 @@
                     android:gravity="center_horizontal"
                     android:layout_weight="1">
                     <ImageView
-                        android:layout_width="30dp"
-                        android:layout_height="30dp"
+                        android:layout_width="64dp"
+                        android:layout_height="64dp"
                         android:id="@+id/auto_drive_img"
                         android:src="@drawable/no_auto_drive"
                         />
@@ -103,19 +99,19 @@
                 <LinearLayout
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
+                    android:layout_weight="2"
                     android:orientation="horizontal"
                     android:gravity="center_horizontal"
                     >
                     <ImageView
-                        android:layout_width="30dp"
-                        android:layout_height="30dp"
+                        android:layout_width="72dp"
+                        android:layout_height="72dp"
                         android:id="@+id/turn_left_light_img"
                         android:src="@drawable/turn_left_on"
                         />
                     <ImageView
-                        android:layout_width="30dp"
-                        android:layout_height="30dp"
+                        android:layout_width="72dp"
+                        android:layout_height="72dp"
                         android:id="@+id/turn_right_light_img"
                         android:src="@drawable/turn_right_on"
                         />
@@ -127,8 +123,8 @@
                     android:layout_weight="1"
                     android:gravity="center_horizontal">
                     <ImageView
-                        android:layout_width="30dp"
-                        android:layout_height="30dp"
+                        android:layout_width="64dp"
+                        android:layout_height="64dp"
                         android:id="@+id/connect_flag"
                         android:src="@drawable/disconnect"
                         />
@@ -150,6 +146,7 @@
         </LinearLayout>
     </LinearLayout>
 
+<!--    右侧地图部分-->
     <LinearLayout
         android:layout_width="0dp"
         android:layout_height="match_parent"

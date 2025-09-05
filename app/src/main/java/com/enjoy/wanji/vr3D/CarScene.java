@@ -4,16 +4,21 @@ import android.content.Context;
 import android.graphics.Color;
 import android.util.Log;
 import android.view.MotionEvent;
+import android.view.animation.AccelerateDecelerateInterpolator;
 
 import com.enjoy.wanji.R;
 
 import org.rajawali3d.Object3D;
+import org.rajawali3d.animation.Animation;
+import org.rajawali3d.animation.Animation3D;
+import org.rajawali3d.animation.TranslateAnimation3D;
 import org.rajawali3d.lights.DirectionalLight;
 import org.rajawali3d.loader.LoaderOBJ;
 import org.rajawali3d.loader.ParsingException;
 import org.rajawali3d.materials.Material;
 import org.rajawali3d.materials.methods.DiffuseMethod;
 import org.rajawali3d.materials.textures.Texture;
+import org.rajawali3d.math.vector.Vector3;
 import org.rajawali3d.primitives.Cube;
 import org.rajawali3d.primitives.Plane;
 import org.rajawali3d.renderer.Renderer;
@@ -21,7 +26,9 @@ import org.rajawali3d.renderer.Renderer;
 public class CarScene extends Renderer {
 
     private Object3D carModel;
-    private Object3D ground;
+    private Animation3D carAnimation;
+    private boolean isAnimating = false;
+//    private Object3D ground;
 
     public CarScene(Context context){
         super(context);
@@ -62,11 +69,10 @@ public class CarScene extends Renderer {
             material.enableLighting(true);
             material.setDiffuseMethod(new DiffuseMethod.Lambert());
             carModel.setMaterial(material);
-
 //            carModel.setColor(R.color.grey);
 
             // 调整车辆大小和位置
-            carModel.setScale(0.15f);
+            carModel.setScale(0.13f);
             carModel.setPosition(0, 0, 0.8); //  z 正直 靠近观察者方向
             carModel.setRotY(180); // 调整朝向
 
@@ -129,12 +135,9 @@ public class CarScene extends Renderer {
         for (int i = -20; i <= 20; i += 2) {
             Plane line = new Plane(0.15f, 0.8f, 1, 1);
             line.setMaterial(lineMaterial);
-//            line.setRotX(-90);
-//            line.setRotZ(-90);
-//            line.setRotY(90);
             line.setRotation(0,0,90);
             line.setY(-0.1f); // 稍微高于地面  z--向观察者
-            line.setPosition(-1.2, 0f, i);
+            line.setPosition(-1.1, 0f, i);
             getCurrentScene().addChild(line);
 
 
@@ -143,7 +146,7 @@ public class CarScene extends Renderer {
 //            line.setRotX(-90);
             lineR.setRotation(0,0,90);
             lineR.setY(-0.1f); // 稍微高于地面  z--向观察者
-            lineR.setPosition(1.2, 0f, i);
+            lineR.setPosition(1.1, 0f, i);
             getCurrentScene().addChild(lineR);
         }
 
@@ -198,5 +201,41 @@ public class CarScene extends Renderer {
 
         carModel = carBody;
 
+    }
+
+
+    /**
+     * 测试移动车辆
+     */
+    private void createCarAnimation() {
+        // 创建车辆左右移动的动画
+        carAnimation = new TranslateAnimation3D(
+                new Vector3(-3, -1, -4), // 起始位置
+                new Vector3(3, -1, -4)   // 结束位置
+        );
+        carAnimation.setDurationMilliseconds(4000);
+        carAnimation.setRepeatMode(Animation.RepeatMode.REVERSE_INFINITE);
+        carAnimation.setInterpolator(new AccelerateDecelerateInterpolator());
+        carAnimation.setTransformable3D(carModel);
+    }
+
+    public void startCarAnimation() {
+        if (carAnimation != null && !isAnimating) {
+            carAnimation.play();
+            isAnimating = true;
+        }
+    }
+
+    public void stopCarAnimation() {
+        if (carAnimation != null && isAnimating) {
+            carAnimation.pause();
+            isAnimating = false;
+        }
+    }
+
+    public void resetCarPosition() {
+        if (carModel != null) {
+            carModel.setPosition(0, -1, -4);
+        }
     }
 }
