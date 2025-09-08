@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?><!--档位数字显示选中时的背景-->
+<animation-list  xmlns:android="http://schemas.android.com/apk/res/android"
+   android:oneshot="false">           <!--  false 循环播放 -->
+    <item android:drawable="@drawable/turn_right_off"
+        android:duration="50" />
+    <item android:drawable="@drawable/turn_right_on"
+       android:duration="500" />
+    <item android:drawable="@drawable/turn_right_off"
+        android:duration="450" />
+</animation-list>
+

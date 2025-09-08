@@ -17,14 +17,17 @@ public class DataStorageFromPC {
     public static volatile double lon = 0;
     public static volatile double lat = 0;
     public static String heading = "0";
-    public static String speedStr = "00km/h";
+    public static String speedStr = "0";
+    public static String speedLimitStr = "100";  //限速度数值
     public static int velocity = 0;  //速度数值
+    public static int speedLimit = 100;  //限速度数值
     public static volatile long rtk = 0;
     public static String objDis = "---m";  //障碍物距离单位
     public static int brakePadel = 0;   //刹车信号
     public static int accBrake = 0;  //刹车提醒  0-无  1-有
     //v2x
     public static double lightColor = 0;  //0:无 1：红灯 2：绿灯 3：黄灯
+
     public static int v2xType = 0;  //默认0  1--16各类预警(具体看表)  2---
 
     public static int mode = 1; //app模式 1--显示订阅的信息模式      2--采集地图模式
@@ -37,11 +40,17 @@ public class DataStorageFromPC {
     //故障等级  语音提示加弹窗   为两位或三位，第一位是故障分类 后两位是故障码，具体见文档
     public static int error = 0;
 
+    //转向  0-无  1--左转 2--右转
+    public static int turnLight = 0;
+
+    // 0-P  1-R  2-N  3-D
+    public static volatile String Gear = "P";
+
     public static volatile long actuatorTimeStamp = System.currentTimeMillis();  //actuator的时间戳
-    private static int carWorkMode = 0;   //0--等待中 1,清扫       2,去车库       3,去垃圾站
+
     public static volatile String battery = "0V";   //电压
     public static volatile int batterySoc = 0; //电量
-    public static volatile String soc = "00%";   //电量
+    public static volatile String soc = "00";   //电量 %
     private static long carWorkModeUpdateStamp = System.currentTimeMillis();
     public static volatile int pathError = 0; //报警   0--无   1---报警
     public static volatile int sysError = 0;//故障报警 gps无数据或gps状态为0--1  激光雷达无数据--2   毫米波雷达无数据--3  超声波雷达无数据--4  无数据--5-10

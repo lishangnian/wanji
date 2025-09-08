@@ -12,6 +12,7 @@ import android.content.IntentFilter;
 import android.content.pm.ActivityInfo;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
+import android.graphics.drawable.AnimationDrawable;
 import android.location.Location;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
@@ -25,14 +26,9 @@ import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.WindowManager;
-import android.widget.Button;
-import android.widget.CompoundButton;
 import android.widget.EditText;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.RadioButton;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.amap.api.location.AMapLocation;
@@ -46,7 +42,6 @@ import com.amap.api.maps.MapView;
 import com.amap.api.maps.UiSettings;
 import com.amap.api.maps.model.BitmapDescriptor;
 import com.amap.api.maps.model.BitmapDescriptorFactory;
-import com.amap.api.maps.model.CameraPosition;
 import com.amap.api.maps.model.LatLng;
 import com.amap.api.maps.model.LatLngBounds;
 import com.amap.api.maps.model.Marker;
@@ -67,12 +62,10 @@ import com.enjoy.wanji.entity.DataStorage;
 import com.enjoy.wanji.entity.DataStorageCollectMap;
 import com.enjoy.wanji.entity.DataStorageFromPC;
 import com.enjoy.wanji.entity.DataStorageToPC;
-import com.enjoy.wanji.entity.DataStorageUtil;
 import com.enjoy.wanji.entity.ErrorContentEnum;
 import com.enjoy.wanji.entity.V2xTypeEnum;
 import com.enjoy.wanji.service.EnjoySocketService;
 import com.enjoy.wanji.util.AMapUtil;
-import com.enjoy.wanji.util.EnjoyDialogUtil;
 import com.enjoy.wanji.util.ToastUtil;
 import com.enjoy.wanji.vr3D.CarScene;
 
@@ -107,7 +100,11 @@ public class MainActivity1 extends Activity implements LocationSource, AMapLocat
     /********************************************************************************/
     static AlertDialog.Builder errorDialog = null;
     static MyDialogPopWindow dialogPopWindow = null;
-    TextView titleTxt, msgTxt;
+    TextView titleTxt, msgTxt, speedTxt, speedLimitTxt, gearTxt, socTxt;
+
+    ImageView connectImg, leftLight, rightLight, driveImg;
+    AnimationDrawable leftAnimation, rightAnimation;
+
 
     private ProgressDialog progDialog = null;
     private GeocodeSearch geocoderSearch;
@@ -224,7 +221,19 @@ public class MainActivity1 extends Activity implements LocationSource, AMapLocat
     private void initView() {
 
         DataStorage.mode = 1;    //订阅模式 1--显示订阅信息模式 2--采集地图模式
+        connectImg = findViewById(R.id.connect_flag);
+        leftLight = findViewById(R.id.turn_left_light_img);
+        rightLight = findViewById(R.id.turn_right_light_img);
+        leftLight.setImageResource(R.drawable.turn_left_animation);
+        rightLight.setImageResource(R.drawable.turn_right_animation);
+        leftAnimation = (AnimationDrawable) leftLight.getDrawable();
+        rightAnimation = (AnimationDrawable) rightLight.getDrawable();
 
+        driveImg = findViewById(R.id.auto_drive_img);
+        speedTxt = findViewById(R.id.speed_txt);
+        speedLimitTxt = findViewById(R.id.limit_speed_txt);
+        gearTxt = findViewById(R.id.gear_txt);
+        socTxt = findViewById(R.id.soc_txt);
 
         if (aMap == null) {
             aMap = mapView.getMap();
@@ -396,7 +405,7 @@ public class MainActivity1 extends Activity implements LocationSource, AMapLocat
     private void myHandleMessage(int msgWhat) {
         switch (msgWhat) {
             case Common.ACTION_REFRESH:
-                refresh("after delete");  //删除轨迹后的
+//                refresh("after delete");  //删除轨迹后的
                 break;
             /**
              case Common.ACTION_UI_UPDATE_PARK:
@@ -409,9 +418,10 @@ public class MainActivity1 extends Activity implements LocationSource, AMapLocat
             case Common.ACTION_UI_UPDATE: //更新UI
                 //连接状态
                 if (Global.connectFlag) {
-                    //todo 改变logo连接颜色
+                    //改变连接logo连接颜色
+                    connectImg.setImageDrawable(getResources().getDrawable(R.drawable.connect));
                 } else {
-                    //todo 改变logo连接颜色
+                    connectImg.setImageDrawable(getResources().getDrawable(R.drawable.disconnect));
                     //红绿灯
 //                    trafficLight.setImageDrawable(getResources().getDrawable(R.drawable.light_null));
                 }
@@ -442,18 +452,89 @@ public class MainActivity1 extends Activity implements LocationSource, AMapLocat
                     Log.i("aaaaaaaaaaa", "更新gps rtk = " + DataStorageFromPC.rtk);
 
                 }
+                //设置电量
+                if (!Global.connectFlag) { //未连接
+                    socTxt.setText(R.string.soc_default);
+                }else {
+                    socTxt.setText(DataStorageFromPC.soc);
+                }
+                //设置速度
+                if (!Global.connectFlag) { //未连接
+                     speedTxt.setText("0");
+                }else {
+                    speedTxt.setText(DataStorageFromPC.speedStr);
+                }
 
                 //驾驶状态
+                if (!Global.connectFlag) { //未连接
+                    driveImg.setImageDrawable(getResources().getDrawable(R.drawable.no_auto_drive));
+                }else {
+                    if (0 == DataStorageFromPC.driverStatus){  // 人工
+                        driveImg.setImageDrawable(getResources().getDrawable(R.drawable.no_auto_drive));
+                    }else {  //1 自动
+                        driveImg.setImageDrawable(getResources().getDrawable(R.drawable.auto_drive));
+                    }
+                }
+
+                //档位
+                gearTxt.setText(DataStorageFromPC.Gear);
+                if ("P".equals(DataStorageFromPC.Gear) || "R".equals(DataStorageFromPC.Gear)){
+                    gearTxt.setTextColor(Color.RED);
+                }else {
+                    gearTxt.setTextColor(Color.GREEN);
+                }
 
 
-                //设置电量
+
+                //设置转向  0--无  1--左转  2--右转
+//                leftAnimation.start();
+//                rightAnimation.start();
+                if (!Global.connectFlag){
+                    if (leftAnimation.isRunning()){
+                        leftAnimation.stop();
+                    }
+                    if (rightAnimation.isRunning()){
+                        rightAnimation.stop();
+                    }
+                }else {
+                    if (0 == DataStorageFromPC.turnLight){ //无转向
+                        if (leftAnimation.isRunning()){
+                            leftAnimation.stop();
+                        }
+                        if (rightAnimation.isRunning()){
+                            rightAnimation.stop();
+                        }
+                    }else if (1 == DataStorageFromPC.turnLight){  //左转
+                        if (!leftAnimation.isRunning()){
+                            leftAnimation.start();
+                        }
+                        if (rightAnimation.isRunning()){
+                            rightAnimation.stop();
+                        }
+                    }else if (2 == DataStorageFromPC.turnLight){  //右转
+                        if (!rightAnimation.isRunning()){
+                            rightAnimation.start();
+                        }
+                        if (leftAnimation.isRunning()){
+                            leftAnimation.stop();
+                        }
+                    }
+                }
+                //限速
+                if (DataStorageFromPC.velocity > DataStorageFromPC.speedLimit){  //当前速度大于限速
+                    //显示限速
+                    speedLimitTxt.setText(DataStorageFromPC.speedLimitStr);
+                    speedLimitTxt.setVisibility(View.VISIBLE); //可见
+                }else {
+                    speedLimitTxt.setVisibility(View.GONE);  //不可见
+                }
 
                 //GPS速度等数据
 
                 //重载按钮
 
                 //故障报警
-                attentionDialogShow();
+//                attentionDialogShow();
 
                 Log.i(TAG, "主页面UI更新");
                 break;

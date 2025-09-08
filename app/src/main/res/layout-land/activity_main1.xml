@@ -23,17 +23,48 @@
             android:orientation="vertical"
             android:layout_weight="2">
             <!--    速度显示-->
-            <TextView
-                android:id="@+id/speed_txt"
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
+                android:orientation="horizontal"
                 android:layout_weight="3"
-                android:gravity="bottom|center_horizontal"
-                android:paddingBottom="0dp"
-                android:text="0"
-                android:textColor="@color/black"
-                android:textSize="128sp" />
+                >
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:gravity="bottom|center_horizontal|end"
+                    >
+                    <TextView
+                        android:layout_width="124dp"
+                        android:layout_height="124dp"
+                        android:gravity="center"
+                        android:id="@+id/limit_speed_txt"
+                        android:text="100"
+                        android:background="@drawable/limit_speed"
+                        android:textColor="@color/black"
+                        android:textSize="64sp" />
+                </LinearLayout>
 
+
+                <TextView
+                    android:id="@+id/speed_txt"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:gravity="center_horizontal"
+                    android:text="0"
+                    android:textColor="@color/black"
+                    android:textSize="120sp" />
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:gravity="center_horizontal|end"
+                    android:paddingBottom="0dp"
+                    android:textColor="@color/black"
+                    android:textSize="64sp" />
+            </LinearLayout>
 
             <!--档位 速度 电量-->
             <LinearLayout
@@ -69,7 +100,7 @@
                 <TextView
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:id="@+id/soc"
+                    android:id="@+id/soc_txt"
                     android:layout_weight="1"
                     android:textColor="@color/black"
                     android:gravity="center_horizontal"
@@ -77,11 +108,17 @@
                     android:text="@string/soc_default"
                     />
             </LinearLayout>
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="2dp"
+                android:background="@color/colorBlue"
+                />
             <!--        驾驶标志与转向灯-->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:layout_weight="2"
+                android:paddingTop="4dp"
                 android:orientation="horizontal">
                 <LinearLayout
                     android:layout_width="0dp"
@@ -130,7 +167,11 @@
                         />
                 </LinearLayout>
             </LinearLayout>
-
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="2dp"
+                android:background="@color/colorBlue"
+                />
         </LinearLayout>
 
 <!--        3D显示画面-->

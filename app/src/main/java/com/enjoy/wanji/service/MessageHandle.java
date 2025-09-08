@@ -19,7 +19,7 @@ public class MessageHandle {
     public static void handle(String topicName, JSONObject jsonObj) {
         switch (topicName) {
             case TopicAndParams.topicRecvSensorgps:
-                long rtkStatus = (long) jsonObj.get("status");     //定位状态  4-好；5-一般；0-差
+//                long rtkStatus = (long) jsonObj.get("status");     //定位状态  4-好；5-一般；0-差
                 double lon = (double) jsonObj.get("lon");
                 double lat = (double) jsonObj.get("lat");
                 String heading = String.valueOf((double) jsonObj.get("heading"));
@@ -27,14 +27,17 @@ public class MessageHandle {
                 DataStorageFromPC.lon = lon;
                 DataStorageFromPC.lat = lat;
                 DataStorageFromPC.heading = heading;
-                DataStorageFromPC.rtk = rtkStatus;
+//                DataStorageFromPC.rtk = rtkStatus;
                 break;
             case TopicAndParams.topicRecvActuator:
                 Log.i(tag, "收到驾驶状态信息" + jsonObj.toString());
                 int speedInt = (int) ((double) jsonObj.get("speed") * 3.6);
-                String speed = speedInt >= 10 ? speedInt + "" : "0" + speedInt + "";
                 int driverStatus = Integer.valueOf(jsonObj.get("sysstatus").toString());  //驾驶状态 0-人工； 1-自动
-                int error = Integer.valueOf(jsonObj.get("error").toString());   //2，故障等级2 语音提示加弹框
+
+                int gear = Integer.valueOf(jsonObj.get("gear").toString()); //档位 0-P  1-R  2-N  3-D
+                int turnLight = Integer.valueOf(jsonObj.get("turnlight").toString());  //转向 0--无  1--左转  2--右转
+
+               // int error = Integer.valueOf(jsonObj.get("error").toString());   //2，故障等级2 语音提示加弹框
                 Object socObj = jsonObj.get("soc");
 
                 if (socObj != null) {
@@ -54,14 +57,22 @@ public class MessageHandle {
                         DataStorageFromPC.driverStatusTip = 1;//进入自驾
                     }
                 }
-
+                //档位 0-P  1-R  2-N  3-D
+                if (gear == 0){
+                    DataStorageFromPC.Gear = "P";
+                }else if (gear == 1){
+                    DataStorageFromPC.Gear = "R";
+                } else if (gear == 2){
+                    DataStorageFromPC.Gear = "N";
+                } else if (gear == 3){
+                    DataStorageFromPC.Gear = "D";
+                }
+                //转向 0--无  1--左转  2--右转
+                DataStorageFromPC.turnLight = turnLight;
                 DataStorageFromPC.driverStatus = driverStatus;
-
-                DataStorageFromPC.speedStr = speed + "km/h";
-                DataStorageFromPC.error = error;
+                DataStorageFromPC.speedStr = String.valueOf(speedInt);
+//                DataStorageFromPC.error = error;
                 DataStorageFromPC.velocity = speedInt;
-
-
                 break;
             case TopicAndParams.topicRecvLonlatmMappoints:        //轨迹点
 
@@ -82,6 +93,8 @@ public class MessageHandle {
                 }
                 DataStorageFromPC.zoneNameJsonListMap.put(zoneName, roadsJsonList);
                 break;
+            /**
+             *
             case TopicAndParams.topicRecvControllon:  //获取障碍物距离
                 double objDis = (double) jsonObj.get("objdis");  //单位米
                 //刹车注意，当actuator发出的自动驾驶状态为1，且acc 由大于零跳变成小于零时触发
@@ -103,14 +116,17 @@ public class MessageHandle {
                 }
                 DataStorageFromPC.brakePadel = brakePedal;
                 break;
+             ***/
             case TopicAndParams.topicRecvV2xapp: //V2x  红绿灯和限速
                 //  trafficLight  0:无 1：红灯 2：绿灯 3：黄灯
 //
-                int v2xType = Integer.valueOf(jsonObj.get("v2xtype").toString());  //类型
+//                int v2xType = Integer.valueOf(jsonObj.get("v2xtype").toString());  //类型
                 int trafficLight = Integer.valueOf(jsonObj.get("color").toString());
-                int speedLimit = Integer.valueOf(jsonObj.get("speedlimit").toString());
+                int speedLimitInt = (int) ((double) jsonObj.get("speedlimit") * 3.6);  //限速
                 DataStorageFromPC.lightColor = trafficLight;
-                DataStorageFromPC.v2xType = v2xType;
+//                DataStorageFromPC.v2xType = v2xType;
+                DataStorageFromPC.speedLimit = speedLimitInt;
+                DataStorageFromPC.speedLimitStr = String.valueOf(speedLimitInt);
                 break;
         }
     }

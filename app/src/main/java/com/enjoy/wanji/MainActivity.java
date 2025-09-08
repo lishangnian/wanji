@@ -653,7 +653,7 @@ public class MainActivity extends Activity implements LocationSource, AMapLocati
                     auto_drive_img.setImageResource(R.drawable.no_auto_drive);
                 } else {
                     if (DataStorageFromPC.driverStatus == 0) { //非自动驾驶状态
-                        auto_drive_img.setImageResource(R.drawable.manual_drive_img);
+                        auto_drive_img.setImageResource(R.drawable.no_auto_drive);
                     } else {                         //自动驾驶状态
                         auto_drive_img.setImageResource(R.drawable.auto_drive_img);
                     }

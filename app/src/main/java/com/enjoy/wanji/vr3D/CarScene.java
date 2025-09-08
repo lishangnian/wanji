@@ -25,7 +25,7 @@ import org.rajawali3d.renderer.Renderer;
 
 public class CarScene extends Renderer {
 
-    private Object3D carModel;
+    private Object3D carModel, leftModel, rightModel;
     private Animation3D carAnimation;
     private boolean isAnimating = false;
 //    private Object3D ground;
@@ -41,49 +41,82 @@ public class CarScene extends Renderer {
         getCurrentScene().setBackgroundColor(1f,1f,1f, 0.7f);
 
         //添加灯光
-        DirectionalLight directionalLight = new DirectionalLight(1,-1,-1);
-        directionalLight.setColor(1,1,1);
-        directionalLight.setPower(2.5f);
-        getCurrentScene().addLight(directionalLight);
+//        DirectionalLight directionalLight = new DirectionalLight(1,-1,-1);
+//        directionalLight.setColor(1,1,1);
+//        directionalLight.setPower(1.0f);
+//        getCurrentScene().addLight(directionalLight);
+        //基础光
+        DirectionalLight ambientLight = new DirectionalLight(1, 1, 1);
+        ambientLight.setPower(0.2f); // 环境光强度通常较低
+        getCurrentScene().addLight(ambientLight);
 
-        DirectionalLight fillLight = new DirectionalLight(-1,-1,1);
-        directionalLight.setColor(0.5f,0.5f,0.5f);
-        directionalLight.setPower(0.8f);
+        //定向光源
+//        DirectionalLight fillLight = new DirectionalLight(-1,-1,1);
+//        fillLight.setColor(0.5f,0.5f,0.5f);
+//        fillLight.setPower(0.8f);
+//        getCurrentScene().addLight(fillLight);
+
+        //平行光
+        DirectionalLight keyLight = new DirectionalLight(0, -5f, -2.0f); // 方向向量
+        keyLight.setPosition(0, 100, 0); // 位置对平行光不重要，方向才重要
+        keyLight.setPower(0.6f); // 光的强度
+        keyLight.setColor(1.0f, 1.0f, 0.9f); // 可选：设置光的颜色（略偏暖黄）
+        getCurrentScene().addLight(keyLight);
+
+        // （可选）添加补光/填充光 - 减弱主光产生的阴影
+        DirectionalLight fillLight = new DirectionalLight(-0.5f, -0.5f, 0.5f);
+        fillLight.setPower(0.3f);
         getCurrentScene().addLight(fillLight);
-//
-//        ground = createRoadWithLines();
-//        getCurrentScene().addChild(ground);
+
 
         addLaneLines(); //车道线
 
 
         try {
-            LoaderOBJ loader  = new LoaderOBJ(mContext.getResources(), mTextureManager, R.raw.car);
-            loader.parse();
+            LoaderOBJ loader  = new LoaderOBJ(this, R.raw.car);
+            LoaderOBJ leftLoader = new LoaderOBJ(this,R.raw.car);
+            LoaderOBJ rightLoader = new LoaderOBJ(this,R.raw.car);
+            loader.parse();   //解析模型
+            leftLoader.parse();
+            rightLoader.parse();
             carModel = loader.getParsedObject();
+            leftModel = leftLoader.getParsedObject();
+            rightModel = rightLoader.getParsedObject();
 
-//            float[] colorArr = {0.753f, 0.753f, 0.753f, 0.9f};
-            // 设置车辆材质（如果没有纹理，使用默认材质）
-            Material material = new Material();
-            material.setColor(Color.GRAY); // 灰色
-            material.enableLighting(true);
-            material.setDiffuseMethod(new DiffuseMethod.Lambert());
-            carModel.setMaterial(material);
+            float[] colorArr = {0.7216f, 0.7608f, 0.8000f, 0.9f}; //灰色
+            float[] colorARR = {0.9922f, 0.9333f, 0.9569f, 1.0f}; //珠光白
+//            float[] colorARR = {1f, 0f, 0f, 1.0f}; //红色
+            updateCarModel(carModel, colorARR);
+            updateCarModel(leftModel, colorArr);
+            updateCarModel(rightModel, colorArr);
+
+
+//            carModel.setMaterial(material);
 //            carModel.setColor(R.color.grey);
 
             // 调整车辆大小和位置
-            carModel.setScale(0.13f);
-            carModel.setPosition(0, 0, 0.8); //  z 正直 靠近观察者方向
+            carModel.setScale(0.08f);
+            carModel.setPosition(0, 0, 1.2); //  z 正直 靠近观察者方向
             carModel.setRotY(180); // 调整朝向
 
+            leftModel.setScale(0.08f);
+            leftModel.setPosition(-1.2, 0, -1.5); //
+            leftModel.setRotY(180); // 调整朝向
+
+            rightModel.setScale(0.08f);
+            rightModel.setPosition(1.2, 0, -2.8);
+            rightModel.setRotY(180); // 调整朝向
+
             getCurrentScene().addChild(carModel);
+            getCurrentScene().addChild(leftModel);
+            getCurrentScene().addChild(rightModel);
 
         }catch (ParsingException pe){
             Log.e("objTag","parsing carObj error:",pe.fillInStackTrace());
         }
 
         // 设置摄像机位置（固定）  x-右  y-高  z-纵深 靠近观察者为正
-        getCurrentCamera().setPosition(0, 4, 6);
+        getCurrentCamera().setPosition(0, 2.1, 4.6);
         getCurrentCamera().setLookAt(0, 0, 0);
 
     }
@@ -132,21 +165,21 @@ public class CarScene extends Renderer {
 //        lineMaterial.setColor(0xFFFFFFFF); // 白色线条
 
         // 中心虚线
-        for (int i = -20; i <= 20; i += 2) {
-            Plane line = new Plane(0.15f, 0.8f, 1, 1);
+        for (int i = -28; i <= 28; i += 2) {
+            Plane line = new Plane(0.08f, 0.8f, 1, 1);
             line.setMaterial(lineMaterial);
             line.setRotation(0,0,90);
             line.setY(-0.1f); // 稍微高于地面  z--向观察者
-            line.setPosition(-1.1, 0f, i);
+            line.setPosition(-0.6, 0f, i);
             getCurrentScene().addChild(line);
 
 
-            Plane lineR = new Plane(0.15f, 0.8f, 1, 1);
+            Plane lineR = new Plane(0.08f, 0.8f, 1, 1);
             lineR.setMaterial(lineMaterial);
 //            line.setRotX(-90);
             lineR.setRotation(0,0,90);
             lineR.setY(-0.1f); // 稍微高于地面  z--向观察者
-            lineR.setPosition(1.1, 0f, i);
+            lineR.setPosition(0.6, 0f, i);
             getCurrentScene().addChild(lineR);
         }
 
@@ -203,6 +236,20 @@ public class CarScene extends Renderer {
 
     }
 
+    private void updateCarModel(Object3D model3D, float[] colorARR){
+        if (model3D != null && model3D.getNumChildren() > 0){
+            for(int i = 0; i < model3D.getNumChildren(); i++){
+                Object3D child = model3D.getChildAt(i);
+
+                // 设置车辆材质（如果没有纹理，使用默认材质）
+                Material material = new Material();
+                material.setColor(colorARR); // 灰色
+                material.enableLighting(true);
+                material.setDiffuseMethod(new DiffuseMethod.Lambert());
+                child.setMaterial(material);
+            }
+        }
+    }
 
     /**
      * 测试移动车辆
