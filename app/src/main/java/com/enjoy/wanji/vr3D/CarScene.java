@@ -17,16 +17,16 @@ import org.rajawali3d.loader.LoaderOBJ;
 import org.rajawali3d.loader.ParsingException;
 import org.rajawali3d.materials.Material;
 import org.rajawali3d.materials.methods.DiffuseMethod;
-import org.rajawali3d.materials.textures.Texture;
 import org.rajawali3d.math.vector.Vector3;
 import org.rajawali3d.primitives.Cube;
 import org.rajawali3d.primitives.Plane;
 import org.rajawali3d.renderer.Renderer;
 
+
 public class CarScene extends Renderer {
 
     private Object3D carModel, leftModel, rightModel;
-    private Animation3D carAnimation;
+    private TranslateAnimation3D carAnimation;
     private boolean isAnimating = false;
 //    private Object3D ground;
 
@@ -46,7 +46,7 @@ public class CarScene extends Renderer {
 //        directionalLight.setPower(1.0f);
 //        getCurrentScene().addLight(directionalLight);
         //基础光
-        DirectionalLight ambientLight = new DirectionalLight(1, 1, 1);
+        DirectionalLight ambientLight = new DirectionalLight(-1, 1, 1);
         ambientLight.setPower(0.2f); // 环境光强度通常较低
         getCurrentScene().addLight(ambientLight);
 
@@ -57,25 +57,37 @@ public class CarScene extends Renderer {
 //        getCurrentScene().addLight(fillLight);
 
         //平行光
-        DirectionalLight keyLight = new DirectionalLight(0, -5f, -2.0f); // 方向向量
+        DirectionalLight keyLight = new DirectionalLight(0, -1.8f, -2.0f); // 方向向量
         keyLight.setPosition(0, 100, 0); // 位置对平行光不重要，方向才重要
-        keyLight.setPower(0.6f); // 光的强度
+        keyLight.setPower(0.7f); // 光的强度
         keyLight.setColor(1.0f, 1.0f, 0.9f); // 可选：设置光的颜色（略偏暖黄）
         getCurrentScene().addLight(keyLight);
 
         // （可选）添加补光/填充光 - 减弱主光产生的阴影
-        DirectionalLight fillLight = new DirectionalLight(-0.5f, -0.5f, 0.5f);
+        DirectionalLight fillLight = new DirectionalLight(1f, -0.5f, 0.5f);
         fillLight.setPower(0.3f);
         getCurrentScene().addLight(fillLight);
 
 
         addLaneLines(); //车道线
 
+        initModel3D();
+
+        // 设置摄像机位置（固定）  x-右  y-高  z-纵深 靠近观察者为正
+        getCurrentCamera().setPosition(0, 2.1, 5.0);
+        getCurrentCamera().setLookAt(0, 0, 0);
+
+//        createCarAnimation();   //创建动画
+
+    }
+
+    public void initModel3D(){
 
         try {
             LoaderOBJ loader  = new LoaderOBJ(this, R.raw.car);
             LoaderOBJ leftLoader = new LoaderOBJ(this,R.raw.car);
             LoaderOBJ rightLoader = new LoaderOBJ(this,R.raw.car);
+
             loader.parse();   //解析模型
             leftLoader.parse();
             rightLoader.parse();
@@ -87,12 +99,9 @@ public class CarScene extends Renderer {
             float[] colorARR = {0.9922f, 0.9333f, 0.9569f, 1.0f}; //珠光白
 //            float[] colorARR = {1f, 0f, 0f, 1.0f}; //红色
             updateCarModel(carModel, colorARR);
+
             updateCarModel(leftModel, colorArr);
             updateCarModel(rightModel, colorArr);
-
-
-//            carModel.setMaterial(material);
-//            carModel.setColor(R.color.grey);
 
             // 调整车辆大小和位置
             carModel.setScale(0.08f);
@@ -114,11 +123,6 @@ public class CarScene extends Renderer {
         }catch (ParsingException pe){
             Log.e("objTag","parsing carObj error:",pe.fillInStackTrace());
         }
-
-        // 设置摄像机位置（固定）  x-右  y-高  z-纵深 靠近观察者为正
-        getCurrentCamera().setPosition(0, 2.1, 4.6);
-        getCurrentCamera().setLookAt(0, 0, 0);
-
     }
 
 
@@ -140,22 +144,6 @@ public class CarScene extends Renderer {
 
     }
 
-    private Object3D createRoadWithLines() {
-        // 创建地面
-        Plane ground = new Plane(20.0f, 20.0f, 1, 1);
-        Material groundMaterial = new Material();
-        groundMaterial.setColor(0xF0FFFF); // 深灰色地面   ADD8E6
-        ground.setMaterial(groundMaterial);
-//        ground.setRotX(-90);
-        ground.setRotY(-90);
-//        ground.setRotZ(180);
-        ground.setY(-1);
-
-        // 添加车道线
-        addLaneLines();
-
-        return ground;
-    }
 
 
     private void addLaneLines() {
@@ -243,7 +231,7 @@ public class CarScene extends Renderer {
 
                 // 设置车辆材质（如果没有纹理，使用默认材质）
                 Material material = new Material();
-                material.setColor(colorARR); // 灰色
+                material.setColor(colorARR);
                 material.enableLighting(true);
                 material.setDiffuseMethod(new DiffuseMethod.Lambert());
                 child.setMaterial(material);
@@ -255,22 +243,40 @@ public class CarScene extends Renderer {
      * 测试移动车辆
      */
     private void createCarAnimation() {
-        // 创建车辆左右移动的动画
+        // 创建车辆前后移动的动画
         carAnimation = new TranslateAnimation3D(
-                new Vector3(-3, -1, -4), // 起始位置
-                new Vector3(3, -1, -4)   // 结束位置
+                new Vector3(-1.2, 0, -24), // 起始位置
+                new Vector3(-1.2, 10, 24)   // 结束位置
         );
         carAnimation.setDurationMilliseconds(4000);
         carAnimation.setRepeatMode(Animation.RepeatMode.REVERSE_INFINITE);
         carAnimation.setInterpolator(new AccelerateDecelerateInterpolator());
-        carAnimation.setTransformable3D(carModel);
+        carAnimation.setTransformable3D(leftModel);
+        Log.i("objTag","car animation created");
     }
 
     public void startCarAnimation() {
+        boolean ss  = carAnimation == null;
+        Log.i("objTag","animation:"+ ss +", isAnimating:"+ isAnimating);
+
+
         if (carAnimation != null && !isAnimating) {
             carAnimation.play();
             isAnimating = true;
+            Log.i("objTag","car animation start play");
         }
+    }
+
+    // 测试模型移动
+    public void startMoveLeft(){
+        Vector3 vector3 = leftModel.getPosition();
+        Log.i("objTag","start to move left z = :" + vector3.z);
+        double z = vector3.z +0.1;
+        if (z > 1.5){
+            z = -20;
+        }
+        vector3.z = z;
+        leftModel.setPosition(vector3);
     }
 
     public void stopCarAnimation() {
@@ -281,8 +287,12 @@ public class CarScene extends Renderer {
     }
 
     public void resetCarPosition() {
-        if (carModel != null) {
-            carModel.setPosition(0, -1, -4);
+//        if (carModel != null) {
+//            carModel.setPosition(0, -1, -4);
+//        }
+
+        if (leftModel != null) {
+            carModel.setPosition(-1.2, 0, -24);
         }
     }
 }

@@ -23,5 +23,9 @@ public class Common {
     public static final int ACTION_UI_LOCATION = 688;
     public static final int ACTION_REFRESH = 689;
 
+    public static final int ACTION_UI_3D = 690;
+
     public static final int ACTION_UPDATE_COLLECT = 800;
+
+    public static final int ACTION_INIT_VIEW_DELAY = 801;
 }

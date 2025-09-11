@@ -141,6 +141,10 @@ public class MyClientUtil {
         client.send(str);
         Log.i(tag, "发送订阅消息" + str);
 
+        str = MyStringUtil.subscribeTopicStr(TopicAndParams.topicRecvTrafficPart); //交通参与者
+        client.send(str);
+        Log.i(tag, "发送订阅消息" + str);
+
 //        str = MyStringUtil.subscribeTopicStr(TopicAndParams.recvTopicGlobalPlanning); // 轨迹点
 //        client.send(str);
 //        Log.i(tag, "发送订阅消息" + str);

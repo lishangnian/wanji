@@ -1,11 +1,17 @@
 package com.enjoy.wanji.entity;
 
+import com.enjoy.wanji.vr3D.Object_3D;
+
 import org.json.simple.JSONObject;
 
+import java.util.ArrayDeque;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ConcurrentLinkedDeque;
+import java.util.concurrent.ConcurrentLinkedQueue;
+import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
@@ -19,8 +25,8 @@ public class DataStorageFromPC {
     public static String heading = "0";
     public static String speedStr = "0";
     public static String speedLimitStr = "100";  //限速度数值
-    public static int velocity = 0;  //速度数值
-    public static int speedLimit = 100;  //限速度数值
+    public static volatile int velocity = 0;  //速度数值
+    public static volatile int speedLimit = 100;  //限速度数值
     public static volatile long rtk = 0;
     public static String objDis = "---m";  //障碍物距离单位
     public static int brakePadel = 0;   //刹车信号
@@ -61,4 +67,6 @@ public class DataStorageFromPC {
     public static volatile Map<String, JSONObject> roadsMap = new LinkedHashMap<>();     //使用LinkedHashMap会按插入顺序排列, key为轨迹园区名
     //key是园区   value是list，存放园区里各个的轨迹
     public static volatile Map<String, List<JSONObject>> zoneNameJsonListMap = new LinkedHashMap<>();
+
+    public static volatile ConcurrentLinkedQueue<Object_3D>  SensorObjQueue = new ConcurrentLinkedQueue<>();
 }

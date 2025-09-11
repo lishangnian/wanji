@@ -5,6 +5,7 @@ import android.util.Log;
 
 import com.enjoy.wanji.data.TopicAndParams;
 import com.enjoy.wanji.entity.DataStorageFromPC;
+import com.enjoy.wanji.vr3D.Object_3D;
 
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -35,7 +36,7 @@ public class MessageHandle {
                 int driverStatus = Integer.valueOf(jsonObj.get("sysstatus").toString());  //驾驶状态 0-人工； 1-自动
 
                 int gear = Integer.valueOf(jsonObj.get("gear").toString()); //档位 0-P  1-R  2-N  3-D
-                int turnLight = Integer.valueOf(jsonObj.get("turnlight").toString());  //转向 0--无  1--左转  2--右转
+                int turnLight = Integer.valueOf(jsonObj.get("turnLight").toString());  //转向 0--无  1--左转  2--右转
 
                // int error = Integer.valueOf(jsonObj.get("error").toString());   //2，故障等级2 语音提示加弹框
                 Object socObj = jsonObj.get("soc");
@@ -73,6 +74,20 @@ public class MessageHandle {
                 DataStorageFromPC.speedStr = String.valueOf(speedInt);
 //                DataStorageFromPC.error = error;
                 DataStorageFromPC.velocity = speedInt;
+                break;
+            case TopicAndParams.topicRecvTrafficPart:       //交通参与者，3D动画
+                Object sensorObjects = jsonObj.get("obs");
+                if ( sensorObjects != null){
+                    JSONArray objectArray = (JSONArray) sensorObjects;
+                    for (Object ob : objectArray){
+                        JSONObject obJson = (JSONObject) ob;
+                        Object_3D ob3D =  transOb_2Object_3D(obJson);
+                        //原点在后轮中心  右是正， 前是正
+                        Log.i(tag, "get obj class:" + ob3D.getClassification() +", id:"+ob3D.getId() +
+                                ", x:"+ ob3D.getX()+ ", y:" + ob3D.getY()+
+                                 ", with:" + ob3D.getWidth()+", length:" + ob3D.getLength());
+                         }
+                }
                 break;
             case TopicAndParams.topicRecvLonlatmMappoints:        //轨迹点
 
@@ -122,12 +137,29 @@ public class MessageHandle {
 //
 //                int v2xType = Integer.valueOf(jsonObj.get("v2xtype").toString());  //类型
                 int trafficLight = Integer.valueOf(jsonObj.get("color").toString());
-                int speedLimitInt = (int) ((double) jsonObj.get("speedlimit") * 3.6);  //限速
+                int speedLimitInt = (int) (Integer.valueOf(jsonObj.get("speedlimit").toString()) * 3.6);  //限速  m/s
                 DataStorageFromPC.lightColor = trafficLight;
 //                DataStorageFromPC.v2xType = v2xType;
                 DataStorageFromPC.speedLimit = speedLimitInt;
                 DataStorageFromPC.speedLimitStr = String.valueOf(speedLimitInt);
                 break;
         }
+    }
+
+    private static Object_3D transOb_2Object_3D(JSONObject obJson){
+        Object_3D object3D = new Object_3D();
+        object3D.setId(Integer.valueOf(obJson.get("id").toString()));
+        object3D.setClassification(Integer.valueOf(obJson.get("classification").toString()));
+        object3D.setX(Float.parseFloat(obJson.get("x").toString()));    //float #横坐标  单位m
+        object3D.setY(Float.parseFloat(obJson.get("y").toString()));
+        object3D.setWidth(Float.parseFloat(obJson.get("width").toString()));
+        object3D.setLength(Float.parseFloat(obJson.get("length").toString()));
+        DataStorageFromPC.SensorObjQueue.offer(object3D);
+
+        if (DataStorageFromPC.SensorObjQueue.size() > 5){
+            DataStorageFromPC.SensorObjQueue.poll();  //多的话删除首元素
+        }
+
+        return object3D;
     }
 }

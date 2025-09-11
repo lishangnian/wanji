@@ -13,6 +13,7 @@ import com.enjoy.wanji.Global;
 import com.enjoy.wanji.data.Common;
 import com.enjoy.wanji.data.TopicAndParams;
 import com.enjoy.wanji.entity.DataStorage;
+import com.enjoy.wanji.entity.DataStorageFromPC;
 import com.enjoy.wanji.util.ToastUtil;
 
 import org.java_websocket.client.WebSocketClient;
@@ -151,10 +152,12 @@ public class EnjoySocketService extends IntentService {
                     // 连接成功
                     Global.connectFlag = true;
                     Log.i(connectTag, "ros connect success");
-                    //发送广播
-                    sendCast(Common.MAIN_RECEIVER_ACTION, Common.ACTION_UI_UPDATE);
                     Log.i(connectTag, "广播connect success");
                     Global.connectTip = 1;  //连接成功，语音提示标记
+
+                    //发送广播
+                    sendCast(Common.MAIN_RECEIVER_ACTION, Common.ACTION_UI_UPDATE);
+
                 }
 
                 //收到消息
@@ -183,6 +186,8 @@ public class EnjoySocketService extends IntentService {
                             sendCast(Common.MAIN_RECEIVER_ACTION, Common.ACTION_UI_ROADS_SHOW);
                         } else if (nameTopic.equals(TopicAndParams.topicRecvV2xapp)) { //接收v2x
                             sendCast(Common.MAIN_RECEIVER_ACTION, Common.ACTION_UI_V2X);
+                        }else if (nameTopic.equals(TopicAndParams.topicRecvTrafficPart)){   //交通参与者
+                            sendCast(Common.MAIN_RECEIVER_ACTION, Common.ACTION_UI_3D);
                         } else if (nameTopic.equals(TopicAndParams.topicRecvSensorgps)) {  //更新位置定位
                             if (System.currentTimeMillis() % 1000 < 200) {  //gps频率高，这里降一下，防止频繁更新轨迹
                                 sendCast(Common.MAIN_RECEIVER_ACTION, Common.ACTION_UI_LOCATION);
@@ -210,11 +215,22 @@ public class EnjoySocketService extends IntentService {
                     //发送广播
                     sendCast(Common.MAIN_RECEIVER_ACTION, Common.ACTION_UI_UPDATE);
                     Log.i(connectTag, "广播disconnect");
-
                     synchronized (connectObjLock) {
                         connectObjLock.notify();  //唤醒连接线程
                         Log.i(connectTag, "Connect Thread notify");
                     }
+                    /**  测试 模型移动
+                     *
+
+                    for (int j = 0; j <20; j ++){
+                        try {
+                            Thread.sleep(200);
+                        } catch (InterruptedException e) {
+                            throw new RuntimeException(e);
+                        }
+                        sendCast(Common.MAIN_RECEIVER_ACTION, Common.ACTION_UI_UPDATE);
+                    }
+                     */
                 }
 
                 @Override

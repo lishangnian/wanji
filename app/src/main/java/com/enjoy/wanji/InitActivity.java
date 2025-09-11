@@ -19,7 +19,8 @@ public class InitActivity extends Activity {
 
     EditText ipEdt;
     Button ipBtn;
-    final String ipHead = "192.168.";
+//    final String ipHead = "192.168.";
+    final String ipHead = "123.56.";
 
 
     @Override
@@ -55,7 +56,6 @@ public class InitActivity extends Activity {
                     return;
                 }
                 if (!MyStringUtil.isNumeric(ipTailArr[0]) || !MyStringUtil.isNumeric(ipTailArr[1])) {
-                    Log.i("aaaaaaaaaaa","ipTailArr Numeric error" );
                     ToastUtil.showShort(InitActivity.this, "IP输入格式有误");
                     return;
                 }
@@ -66,7 +66,7 @@ public class InitActivity extends Activity {
                 //跳转
                 Intent intent = new Intent(InitActivity.this, MainActivity1.class);
                 startActivity(intent);
-                Log.i("init tag","start to MainActivity1 *******");
+
                 finish();
 
             }

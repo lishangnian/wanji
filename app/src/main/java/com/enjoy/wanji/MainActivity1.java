@@ -13,6 +13,7 @@ import android.content.pm.ActivityInfo;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.drawable.AnimationDrawable;
+import android.graphics.drawable.Drawable;
 import android.location.Location;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
@@ -132,12 +133,14 @@ public class MainActivity1 extends Activity implements LocationSource, AMapLocat
     private static Lock stopGoLock = new ReentrantLock();
 
     MainActivityDataReceiver mainActivityDataReceiver;
+    private Bundle instanceState;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         //设置本activity长亮
-        getWindow().setFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON, WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON,
+                WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         setContentView(R.layout.activity_main1);
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_USER_LANDSCAPE); //设置屏幕格式为横屏
         /*
@@ -147,26 +150,20 @@ public class MainActivity1 extends Activity implements LocationSource, AMapLocat
          * */
         //Demo中为了其他界面可以使用下载的离线地图，使用默认位置存储，屏蔽了自定义设置
 //        MapsInitializer.sdcardDir =OffLineMapUtils.getSdCacheDir(this);
+        instanceState = savedInstanceState;
         mContext = getApplicationContext();
         mapView = findViewById(R.id.map); //获取地图控件引用
-        mapView.onCreate(savedInstanceState);// 此方法必须重写  创建地图
+//        mapView.onCreate(savedInstanceState);// 此方法必须重写  创建地图,改方法耗时约200ms，放在initViewDelay里
 
+        //3D动画界面初始化
         surfaceView = findViewById(R.id.rajawali_surface);
-        carScene = new CarScene(this);
+        carScene = new CarScene(mContext);
         surfaceView.setSurfaceRenderer(carScene);
-
         //初始化控件
         initView();
-        //注册广播接收器
-        mainActivityDataReceiver = new MainActivityDataReceiver();
-        //接收器设置指定action
-        IntentFilter filter = new IntentFilter();
-        filter.addAction(Common.MAIN_RECEIVER_ACTION);
-        registerReceiver(mainActivityDataReceiver, filter);
-        //启动服务连接
-        Intent intent = new Intent(MainActivity1.this, EnjoySocketService.class);
-        intent.putExtra(Common.ACTION_NAME, Common.ACTION_CONNECT);
-        startService(intent);
+
+        //再初始化 耗时的组件
+        handler.sendEmptyMessageDelayed(Common.ACTION_INIT_VIEW_DELAY, 2000);
 
     }
 
@@ -235,6 +232,25 @@ public class MainActivity1 extends Activity implements LocationSource, AMapLocat
         gearTxt = findViewById(R.id.gear_txt);
         socTxt = findViewById(R.id.soc_txt);
 
+        progDialog = new ProgressDialog(this);
+
+
+        //路线选择下拉框部分
+//        final List<String> parkList = new ArrayList<>();
+//        for (int i = 1; i <= 3; i++) {
+//            parkList.add(i + "");
+//        }
+
+        handler = new Handler() {
+            @Override
+            public void handleMessage(Message msg) {
+                myHandleMessage(msg.what);
+            }
+        };
+    }
+
+    private void delayInitView(){
+        mapView.onCreate(instanceState);// 此方法必须重写  创建地图
         if (aMap == null) {
             aMap = mapView.getMap();
             geoMarker = aMap.addMarker(new MarkerOptions().anchor(0.5f, 0.5f)
@@ -261,20 +277,16 @@ public class MainActivity1 extends Activity implements LocationSource, AMapLocat
             /**
              *
 
-            aMap.moveCamera(CameraUpdateFactory.newCameraPosition(new CameraPosition(
-                    latLng1,       //目标位置的经纬度
-                    20,          //缩放级别
-                    80,  //可视区域的倾斜角，单位为度
-                    0   //可视区域指向方向，单位为角度。从正北向顺时针计算，0-360
-            )));
+             aMap.moveCamera(CameraUpdateFactory.newCameraPosition(new CameraPosition(
+             latLng1,       //目标位置的经纬度
+             20,          //缩放级别
+             80,  //可视区域的倾斜角，单位为度
+             0   //可视区域指向方向，单位为角度。从正北向顺时针计算，0-360
+             )));
              */
             aMap.setMyLocationRotateAngle(90);
 
         }
-
-
-        //故障图片
-//        errorImg = findViewById(R.id.error_img);
 
 
         AMapLocationClient.updatePrivacyAgree(mContext, true);
@@ -286,36 +298,19 @@ public class MainActivity1 extends Activity implements LocationSource, AMapLocat
 //            throw new RuntimeException(e);
         }
         geocoderSearch.setOnGeocodeSearchListener(this);
-        progDialog = new ProgressDialog(this);
 
-        //泊车
-        /**
-         parkBtn.setOnClickListener(new View.OnClickListener() {  //发5秒1，再变0触发加载回停车场地图
-         @Override public void onClick(View v) {
-         DataStorageToPC.setPark();
-         parkBtn.setTextColor(Color.WHITE);
-         parkBtn.setBackground(getResources().getDrawable(R.drawable.button_shape_activate));
-         //5秒后更新返回非点击状态
-         handler.sendEmptyMessageDelayed(Common.ACTION_UI_UPDATE_PARK, 5500);
-         }
-         });
-         **/
+        //注册广播接收器
+        mainActivityDataReceiver = new MainActivityDataReceiver();
+        //接收器设置指定action
+        IntentFilter filter = new IntentFilter();
+        filter.addAction(Common.MAIN_RECEIVER_ACTION);
+        registerReceiver(mainActivityDataReceiver, filter);
 
-        //路线选择下拉框部分
-        final List<String> parkList = new ArrayList<>();
-        for (int i = 1; i <= 3; i++) {
-            parkList.add(i + "");
-        }
-
-
-        handler = new Handler() {
-            @Override
-            public void handleMessage(Message msg) {
-                myHandleMessage(msg.what);
-            }
-        };
+        //启动连接
+        Intent intent = new Intent(MainActivity1.this, EnjoySocketService.class);
+        intent.putExtra(Common.ACTION_NAME, Common.ACTION_CONNECT);
+        startService(intent);
     }
-
 
     /**
      * 园区重命名编辑框
@@ -397,6 +392,8 @@ public class MainActivity1 extends Activity implements LocationSource, AMapLocat
         }
     }
 
+
+
     /**
      * 处理message
      *
@@ -404,6 +401,9 @@ public class MainActivity1 extends Activity implements LocationSource, AMapLocat
      */
     private void myHandleMessage(int msgWhat) {
         switch (msgWhat) {
+            case Common.ACTION_INIT_VIEW_DELAY:  //初始化耗时组件
+                delayInitView();
+                break;
             case Common.ACTION_REFRESH:
 //                refresh("after delete");  //删除轨迹后的
                 break;
@@ -415,11 +415,27 @@ public class MainActivity1 extends Activity implements LocationSource, AMapLocat
              }
              break;
              **/
+
+            /**
+            case Common.ACTION_UI_CONNECT:
+                ToastUtil.showLong(this,"connect SUCCESS! \n connectFlag:"+ Global.connectFlag);
+                break;
+            case Common.ACTION_UI_DIS_CONNECT:
+                ToastUtil.showLong(this,"dis connect ! \n connectFlag:"+ Global.connectFlag);
+                break;
+            case Common.ACTION_UI_CONNECT_ERR:
+                ToastUtil.showLong(this,"connect ERROR! \n connectFlag:"+ Global.connectFlag);
+                break;
+                **/
+
             case Common.ACTION_UI_UPDATE: //更新UI
+//                carScene.startMoveLeft();   // 测试 模型移动
+                Log.i(TAG,"更新UI");
                 //连接状态
                 if (Global.connectFlag) {
                     //改变连接logo连接颜色
                     connectImg.setImageDrawable(getResources().getDrawable(R.drawable.connect));
+                    Log.i(TAG,"更新UI  连接标志");
                 } else {
                     connectImg.setImageDrawable(getResources().getDrawable(R.drawable.disconnect));
                     //红绿灯
@@ -447,11 +463,7 @@ public class MainActivity1 extends Activity implements LocationSource, AMapLocat
                 //障碍物
 
                 //  GPS显示
-                if (!Global.connectFlag) {
-                } else {
-                    Log.i("aaaaaaaaaaa", "更新gps rtk = " + DataStorageFromPC.rtk);
 
-                }
                 //设置电量
                 if (!Global.connectFlag) { //未连接
                     socTxt.setText(R.string.soc_default);
@@ -461,6 +473,8 @@ public class MainActivity1 extends Activity implements LocationSource, AMapLocat
                 //设置速度
                 if (!Global.connectFlag) { //未连接
                      speedTxt.setText("0");
+                    Log.i(TAG,"更新speed:" + DataStorageFromPC.speedStr);
+//                    speedTxt.setText(DataStorageFromPC.speedStr);
                 }else {
                     speedTxt.setText(DataStorageFromPC.speedStr);
                 }
@@ -477,39 +491,50 @@ public class MainActivity1 extends Activity implements LocationSource, AMapLocat
                 }
 
                 //档位
-                gearTxt.setText(DataStorageFromPC.Gear);
-                if ("P".equals(DataStorageFromPC.Gear) || "R".equals(DataStorageFromPC.Gear)){
-                    gearTxt.setTextColor(Color.RED);
+                if (Global.connectFlag){
+                    gearTxt.setText(DataStorageFromPC.Gear);
+                    if ("P".equals(DataStorageFromPC.Gear) || "R".equals(DataStorageFromPC.Gear)){
+                        gearTxt.setTextColor(Color.RED);
+                    }else {
+                        gearTxt.setTextColor(Color.GREEN);
+                    }
                 }else {
-                    gearTxt.setTextColor(Color.GREEN);
+                    gearTxt.setTextColor(Color.GRAY);
                 }
 
-
-
                 //设置转向  0--无  1--左转  2--右转
-//                leftAnimation.start();
-//                rightAnimation.start();
                 if (!Global.connectFlag){
                     if (leftAnimation.isRunning()){
                         leftAnimation.stop();
+                        leftLight.setImageResource(R.drawable.turn_left_animation);
+                        leftAnimation = (AnimationDrawable) leftLight.getDrawable();
                     }
                     if (rightAnimation.isRunning()){
                         rightAnimation.stop();
+                        rightLight.setImageResource(R.drawable.turn_right_animation);
+                        rightAnimation = (AnimationDrawable) rightLight.getDrawable();
                     }
                 }else {
                     if (0 == DataStorageFromPC.turnLight){ //无转向
                         if (leftAnimation.isRunning()){
                             leftAnimation.stop();
+                            leftLight.setImageResource(R.drawable.turn_left_animation);
+                            leftAnimation = (AnimationDrawable) leftLight.getDrawable();
                         }
                         if (rightAnimation.isRunning()){
                             rightAnimation.stop();
+                            rightLight.setImageResource(R.drawable.turn_right_animation);
+                            rightAnimation = (AnimationDrawable) rightLight.getDrawable();
                         }
+
                     }else if (1 == DataStorageFromPC.turnLight){  //左转
                         if (!leftAnimation.isRunning()){
                             leftAnimation.start();
                         }
                         if (rightAnimation.isRunning()){
                             rightAnimation.stop();
+                            rightLight.setImageResource(R.drawable.turn_right_animation);
+                            rightAnimation = (AnimationDrawable) rightLight.getDrawable();
                         }
                     }else if (2 == DataStorageFromPC.turnLight){  //右转
                         if (!rightAnimation.isRunning()){
@@ -517,6 +542,8 @@ public class MainActivity1 extends Activity implements LocationSource, AMapLocat
                         }
                         if (leftAnimation.isRunning()){
                             leftAnimation.stop();
+                            leftLight.setImageResource(R.drawable.turn_left_animation);
+                            leftAnimation = (AnimationDrawable) leftLight.getDrawable();
                         }
                     }
                 }
@@ -529,6 +556,15 @@ public class MainActivity1 extends Activity implements LocationSource, AMapLocat
                     speedLimitTxt.setVisibility(View.GONE);  //不可见
                 }
 
+//                if (System.currentTimeMillis() - 3000 > testTimestamp){
+//                    testTimestamp = System.currentTimeMillis();
+//                    ToastUtil.showShort(this,"Connect:" + Global.connectFlag
+//                            +"\n speed:" + DataStorageFromPC.speedStr
+//                    + "\n Gear:" + DataStorageFromPC.Gear +"\n turnLight:" + DataStorageFromPC.turnLight
+//                    +"\n soc:" +DataStorageFromPC.soc);
+//                }
+
+
                 //GPS速度等数据
 
                 //重载按钮
@@ -537,6 +573,11 @@ public class MainActivity1 extends Activity implements LocationSource, AMapLocat
 //                attentionDialogShow();
 
                 Log.i(TAG, "主页面UI更新");
+                break;
+            case Common.ACTION_UI_3D:   //更新3D动画
+                if (DataStorageFromPC.SensorObjQueue.size() > 5){
+                    DataStorageFromPC.SensorObjQueue.poll();  //获取并删除队首元素
+                }
                 break;
             case Common.ACTION_UI_LOCATION:   //更新位置定位
                 double lon = DataStorageFromPC.lon;
@@ -619,10 +660,10 @@ public class MainActivity1 extends Activity implements LocationSource, AMapLocat
         EnjoyTrainShipApplication.mediaLock.unlock();
     }
 
-    String testTag = "hhhhhhhhhhhhh";
+    String attentionTag = "attentionTag";
 
     private void attentionDialogShowImp(int type, int key) {
-        Log.i(testTag, "type =" + type + ". key = " + key);
+        Log.i(attentionTag, "type =" + type + ". key = " + key);
         if (type == 0 && (System.currentTimeMillis() - AttentionInfo.timestamp) > 2500) {  //没有任何弹框消息，且距离上次弹框时间超过2.5秒
             if (dialogPopWindow != null && dialogPopWindow.isShowing()) {
                 dialogPopWindow.dismiss();
@@ -636,7 +677,7 @@ public class MainActivity1 extends Activity implements LocationSource, AMapLocat
         //如果此次弹框信息和上次的一样，且弹框还在，就直接报语音
         if (type == AttentionInfo.type && key == AttentionInfo.attentionKey
                 && dialogPopWindow != null && dialogPopWindow.isShowing()) {
-            Log.i(testTag, "语音唤醒线程开始唤醒1");
+            Log.i(attentionTag, "语音唤醒线程开始唤醒1");
             notifyMediaThread();
             return;
         }
@@ -676,7 +717,7 @@ public class MainActivity1 extends Activity implements LocationSource, AMapLocat
         titleTxt.setText(AttentionInfo.title);
         msgTxt.setText(AttentionInfo.message);
         dialogPopWindow.showAtLocation(findViewById(R.id.activity_main), Gravity.CENTER, 0, 0);
-        Log.i(testTag, "语音唤醒线程开始唤醒2");
+        Log.i(attentionTag, "语音唤醒线程开始唤醒2");
         notifyMediaThread();
     }
 
@@ -689,7 +730,7 @@ public class MainActivity1 extends Activity implements LocationSource, AMapLocat
             public void run() {
                 //唤醒媒体播放线程
                 synchronized (EnjoyTrainShipApplication.mediaObj) {
-                    Log.i(testTag, "语音唤醒线程开始唤醒3");
+                    Log.i(attentionTag, "语音唤醒线程开始唤醒3");
                     EnjoyTrainShipApplication.mediaObj.notify();
                 }
             }
@@ -761,7 +802,10 @@ public class MainActivity1 extends Activity implements LocationSource, AMapLocat
         DataStorage.mode = 1;
 
         super.onResume();
-        mapView.onResume();
+        if (mapView != null){
+            mapView.onResume();
+        }
+
         if (surfaceView != null){
             surfaceView.onResume();
         }
