@@ -1,7 +1,6 @@
 package com.enjoy.wanji.vr3D;
 
 import android.content.Context;
-import android.graphics.Color;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.animation.AccelerateDecelerateInterpolator;
@@ -10,7 +9,6 @@ import com.enjoy.wanji.R;
 
 import org.rajawali3d.Object3D;
 import org.rajawali3d.animation.Animation;
-import org.rajawali3d.animation.Animation3D;
 import org.rajawali3d.animation.TranslateAnimation3D;
 import org.rajawali3d.lights.DirectionalLight;
 import org.rajawali3d.loader.LoaderOBJ;
@@ -22,14 +20,20 @@ import org.rajawali3d.primitives.Cube;
 import org.rajawali3d.primitives.Plane;
 import org.rajawali3d.renderer.Renderer;
 
+import java.util.ArrayList;
+import java.util.List;
+
 
 public class CarScene extends Renderer {
 
-    private Object3D carModel, leftModel, rightModel;
+    private Object3D carModel;
     private TranslateAnimation3D carAnimation;
     private boolean isAnimating = false;
-//    private Object3D ground;
 
+    List<Plane> lineList = new ArrayList<>();
+//    private Object3D ground;
+    float[] colorGrayArr = {0.7216f, 0.7608f, 0.8000f, 0.9f}; //灰色
+    float[] colorPearArr = {0.9922f, 0.9333f, 0.9569f, 1.0f};; //灰色
     public CarScene(Context context){
         super(context);
     }
@@ -68,10 +72,14 @@ public class CarScene extends Renderer {
         fillLight.setPower(0.3f);
         getCurrentScene().addLight(fillLight);
 
-
         addLaneLines(); //车道线
 
-        initModel3D();
+        //初始化本车
+        carModel = initVehicleModel3D(R.raw.car, colorPearArr);
+        carModel.setScale(0.08f);
+        carModel.setPosition(0, 0, 1.2); //  z 正直 靠近观察者方向
+        carModel.setRotY(180); // 调整朝向
+        getCurrentScene().addChild(carModel);
 
         // 设置摄像机位置（固定）  x-右  y-高  z-纵深 靠近观察者为正
         getCurrentCamera().setPosition(0, 2.1, 5.0);
@@ -81,48 +89,54 @@ public class CarScene extends Renderer {
 
     }
 
-    public void initModel3D(){
 
+    private Object3D initVehicleModel3D(int resourceId, float[] colorARR){
+        Object3D model = null;
         try {
-            LoaderOBJ loader  = new LoaderOBJ(this, R.raw.car);
-            LoaderOBJ leftLoader = new LoaderOBJ(this,R.raw.car);
-            LoaderOBJ rightLoader = new LoaderOBJ(this,R.raw.car);
-
+            LoaderOBJ loader  = new LoaderOBJ(this, resourceId);
+//            LoaderOBJ leftLoader = new LoaderOBJ(this,R.raw.car);
             loader.parse();   //解析模型
-            leftLoader.parse();
-            rightLoader.parse();
-            carModel = loader.getParsedObject();
-            leftModel = leftLoader.getParsedObject();
-            rightModel = rightLoader.getParsedObject();
+            model = loader.getParsedObject();
 
-            float[] colorArr = {0.7216f, 0.7608f, 0.8000f, 0.9f}; //灰色
-            float[] colorARR = {0.9922f, 0.9333f, 0.9569f, 1.0f}; //珠光白
-//            float[] colorARR = {1f, 0f, 0f, 1.0f}; //红色
-            updateCarModel(carModel, colorARR);
+            updateCarModel(model, colorARR);
 
-            updateCarModel(leftModel, colorArr);
-            updateCarModel(rightModel, colorArr);
 
             // 调整车辆大小和位置
-            carModel.setScale(0.08f);
-            carModel.setPosition(0, 0, 1.2); //  z 正直 靠近观察者方向
-            carModel.setRotY(180); // 调整朝向
+//            model.setScale(0.08f);
+//            model.setPosition(0, 0, 1.2); //  z 正直 靠近观察者方向
+//            model.setRotY(180); // 调整朝向
 
-            leftModel.setScale(0.08f);
-            leftModel.setPosition(-1.2, 0, -1.5); //
-            leftModel.setRotY(180); // 调整朝向
 
-            rightModel.setScale(0.08f);
-            rightModel.setPosition(1.2, 0, -2.8);
-            rightModel.setRotY(180); // 调整朝向
+//            leftModel.setScale(0.08f);
+//            leftModel.setPosition(-1.2, 0, -1.5); //
+//            leftModel.setRotY(180); // 调整朝向
+//
+//            rightModel.setScale(0.08f);
+//            rightModel.setPosition(1.2, 0, -2.8);
+//            rightModel.setRotY(180); // 调整朝向
 
-            getCurrentScene().addChild(carModel);
-            getCurrentScene().addChild(leftModel);
-            getCurrentScene().addChild(rightModel);
+//            getCurrentScene().addChild(carModel);
 
         }catch (ParsingException pe){
             Log.e("objTag","parsing carObj error:",pe.fillInStackTrace());
         }
+        return model;
+    }
+
+    //初始化交通参与者
+    public void initModelNPC(){
+        //创建未知物体  初始化三个
+        for (int i =0; i < 3; i++){
+            Object3D body = initVehicleModel3D(R.raw.car, colorGrayArr);
+            body.setScale(0.08f);
+//        body.setPosition(-1.2, 0, -1.5); //
+            body.setPosition(0,-100,0); //  初始位置把他放到地底下，看不见
+            body.setRotY(180); // 调整朝向
+            body.setVisible(false);  //设置不可见
+            getCurrentScene().addChild(body);
+            ContainerObject3D.ModelWaite2VehicleQueue.offer(body);
+        }
+
     }
 
 
@@ -153,22 +167,23 @@ public class CarScene extends Renderer {
 //        lineMaterial.setColor(0xFFFFFFFF); // 白色线条
 
         // 中心虚线
-        for (int i = -28; i <= 28; i += 2) {
+        for (int i = -20; i <= 20; i += 2) {
             Plane line = new Plane(0.08f, 0.8f, 1, 1);
             line.setMaterial(lineMaterial);
             line.setRotation(0,0,90);
-            line.setY(-0.1f); // 稍微高于地面  z--向观察者
+            line.setY(-0.08f); // 稍微高于地面  z--向观察者
             line.setPosition(-0.6, 0f, i);
             getCurrentScene().addChild(line);
 
 
             Plane lineR = new Plane(0.08f, 0.8f, 1, 1);
             lineR.setMaterial(lineMaterial);
-//            line.setRotX(-90);
             lineR.setRotation(0,0,90);
-            lineR.setY(-0.1f); // 稍微高于地面  z--向观察者
+            lineR.setY(-0.08f); // 稍微高于地面  z--向观察者
             lineR.setPosition(0.6, 0f, i);
             getCurrentScene().addChild(lineR);
+            lineList.add(line);
+            lineList.add(lineR);
         }
 
         // 车道边界线
@@ -176,17 +191,17 @@ public class CarScene extends Renderer {
 //        addSolidLine(-3.5f); // 左边线
     }
 
-    private void addSolidLine(float xPosition) {
-        Material lineMaterial = new Material();
-        lineMaterial.setColor(0xFFFFFFFF);
-
-        Plane line = new Plane(0.1f, 20.0f, 1, 1);
-        line.setMaterial(lineMaterial);
-//        line.setRotX(-90);
-        line.setY(-0.9f);
-        line.setPosition(xPosition, -0.9f, 0);
-        getCurrentScene().addChild(line);
+    public void updateLinesMove(double z){
+        for (Plane line: lineList){
+            Vector3 v = line.getPosition();
+            v.z = v.z + z;
+            if (v.z > 20){
+                v.z = -20;
+            }
+            line.setPosition(v);
+        }
     }
+
     private void createCarModel(){
         float[] floatArr = {0.2f,0.6f,0.9f};
 
@@ -251,7 +266,7 @@ public class CarScene extends Renderer {
         carAnimation.setDurationMilliseconds(4000);
         carAnimation.setRepeatMode(Animation.RepeatMode.REVERSE_INFINITE);
         carAnimation.setInterpolator(new AccelerateDecelerateInterpolator());
-        carAnimation.setTransformable3D(leftModel);
+//        carAnimation.setTransformable3D(leftModel);
         Log.i("objTag","car animation created");
     }
 
@@ -268,16 +283,16 @@ public class CarScene extends Renderer {
     }
 
     // 测试模型移动
-    public void startMoveLeft(){
-        Vector3 vector3 = leftModel.getPosition();
-        Log.i("objTag","start to move left z = :" + vector3.z);
-        double z = vector3.z +0.1;
-        if (z > 1.5){
-            z = -20;
-        }
-        vector3.z = z;
-        leftModel.setPosition(vector3);
-    }
+//    public void startMoveLeft(){
+//        Vector3 vector3 = leftModel.getPosition();
+//        Log.i("objTag","start to move left z = :" + vector3.z);
+//        double z = vector3.z +0.1;
+//        if (z > 1.5){
+//            z = -20;
+//        }
+//        vector3.z = z;
+//        leftModel.setPosition(vector3);
+//    }
 
     public void stopCarAnimation() {
         if (carAnimation != null && isAnimating) {
@@ -291,8 +306,8 @@ public class CarScene extends Renderer {
 //            carModel.setPosition(0, -1, -4);
 //        }
 
-        if (leftModel != null) {
-            carModel.setPosition(-1.2, 0, -24);
-        }
+//        if (leftModel != null) {
+//            carModel.setPosition(-1.2, 0, -24);
+//        }
     }
 }

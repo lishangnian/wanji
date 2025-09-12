@@ -1,6 +1,6 @@
 package com.enjoy.wanji.vr3D;
 
-public class Object_3D {
+public class TrafficObj {
     private int id;   //跟踪id
     private int classification ; //类别   0--未知  1--行人 2--机动车
     //原点在后轮中心  右是正， 前是正
@@ -22,6 +22,9 @@ public class Object_3D {
         return classification;
     }
 
+    /**
+     *    0--未知  1--行人		2--机动车
+     */
     public void setClassification(int classification) {
         this.classification = classification;
     }

@@ -1,17 +1,10 @@
 package com.enjoy.wanji.entity;
 
-import com.enjoy.wanji.vr3D.Object_3D;
-
 import org.json.simple.JSONObject;
 
-import java.util.ArrayDeque;
-import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.ConcurrentLinkedDeque;
-import java.util.concurrent.ConcurrentLinkedQueue;
-import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
@@ -68,5 +61,4 @@ public class DataStorageFromPC {
     //key是园区   value是list，存放园区里各个的轨迹
     public static volatile Map<String, List<JSONObject>> zoneNameJsonListMap = new LinkedHashMap<>();
 
-    public static volatile ConcurrentLinkedQueue<Object_3D>  SensorObjQueue = new ConcurrentLinkedQueue<>();
 }

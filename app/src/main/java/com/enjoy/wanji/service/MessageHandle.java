@@ -5,7 +5,9 @@ import android.util.Log;
 
 import com.enjoy.wanji.data.TopicAndParams;
 import com.enjoy.wanji.entity.DataStorageFromPC;
-import com.enjoy.wanji.vr3D.Object_3D;
+import com.enjoy.wanji.vr3D.ContainerObject3D;
+import com.enjoy.wanji.vr3D.ModelAgent;
+import com.enjoy.wanji.vr3D.TrafficObj;
 
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -76,18 +78,32 @@ public class MessageHandle {
                 DataStorageFromPC.velocity = speedInt;
                 break;
             case TopicAndParams.topicRecvTrafficPart:       //交通参与者，3D动画
-                Object sensorObjects = jsonObj.get("obs");
-                if ( sensorObjects != null){
-                    JSONArray objectArray = (JSONArray) sensorObjects;
-                    for (Object ob : objectArray){
-                        JSONObject obJson = (JSONObject) ob;
-                        Object_3D ob3D =  transOb_2Object_3D(obJson);
-                        //原点在后轮中心  右是正， 前是正
-                        Log.i(tag, "get obj class:" + ob3D.getClassification() +", id:"+ob3D.getId() +
-                                ", x:"+ ob3D.getX()+ ", y:" + ob3D.getY()+
-                                 ", with:" + ob3D.getWidth()+", length:" + ob3D.getLength());
-                         }
+                if (EnjoySocketService.UpdateUIModelLock.tryLock()){   //先获取锁，避免动画正在处理，有线程安全问题
+                    try {
+                        Object sensorObjects = jsonObj.get("obs");
+                        //清空上次传来的检测物
+                        ContainerObject3D.Obj0UnknownList.clear();
+                        ContainerObject3D.Obj1PedestrianList.clear();
+                        ContainerObject3D.Obj2VehicleList.clear();
+
+                        if ( sensorObjects != null){
+                            JSONArray objectArray = (JSONArray) sensorObjects;
+                            for (Object ob : objectArray){
+                                JSONObject obJson = (JSONObject) ob;
+                                TrafficObj ob3D =  transOb_2Object_3D(obJson);
+                                //原点在后轮中心  右是正， 前是正
+                                Log.i(tag, "get obj class:" + ob3D.getClassification() +", id:"+ob3D.getId() +
+                                        ", x:"+ ob3D.getX()+ ", y:" + ob3D.getY()+
+                                        ", with:" + ob3D.getWidth()+", length:" + ob3D.getLength());
+                            }
+                        }
+                    }finally {
+                        EnjoySocketService.UpdateUIModelLock.unlock();  //释放锁
+                    }
+                }else {
+                    Log.i(tag,"Lock not get data: 数据接收未获取锁");
                 }
+
                 break;
             case TopicAndParams.topicRecvLonlatmMappoints:        //轨迹点
 
@@ -146,20 +162,25 @@ public class MessageHandle {
         }
     }
 
-    private static Object_3D transOb_2Object_3D(JSONObject obJson){
-        Object_3D object3D = new Object_3D();
-        object3D.setId(Integer.valueOf(obJson.get("id").toString()));
-        object3D.setClassification(Integer.valueOf(obJson.get("classification").toString()));
-        object3D.setX(Float.parseFloat(obJson.get("x").toString()));    //float #横坐标  单位m
-        object3D.setY(Float.parseFloat(obJson.get("y").toString()));
-        object3D.setWidth(Float.parseFloat(obJson.get("width").toString()));
-        object3D.setLength(Float.parseFloat(obJson.get("length").toString()));
-        DataStorageFromPC.SensorObjQueue.offer(object3D);
+    private static TrafficObj transOb_2Object_3D(JSONObject obJson){
 
-        if (DataStorageFromPC.SensorObjQueue.size() > 5){
-            DataStorageFromPC.SensorObjQueue.poll();  //多的话删除首元素
+       int classification = Integer.valueOf(obJson.get("classification").toString());
+
+        TrafficObj trafficObj = new TrafficObj();
+        trafficObj.setId(Integer.valueOf(obJson.get("id").toString()));
+        trafficObj.setClassification(classification);
+        trafficObj.setX(Float.parseFloat(obJson.get("x").toString()));    //float #横坐标  单位m
+        trafficObj.setY(Float.parseFloat(obJson.get("y").toString()));
+        trafficObj.setWidth(Float.parseFloat(obJson.get("width").toString()));
+        trafficObj.setLength(Float.parseFloat(obJson.get("length").toString()));
+
+        if (classification == 0){
+            ContainerObject3D.Obj0UnknownList.add(trafficObj);
+        }else if (classification == 1){
+            ContainerObject3D.Obj1PedestrianList.add(trafficObj);
+        }else {
+            ContainerObject3D.Obj2VehicleList.add(trafficObj);
         }
-
-        return object3D;
+        return trafficObj;
     }
 }

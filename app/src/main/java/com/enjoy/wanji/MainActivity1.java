@@ -69,6 +69,7 @@ import com.enjoy.wanji.service.EnjoySocketService;
 import com.enjoy.wanji.util.AMapUtil;
 import com.enjoy.wanji.util.ToastUtil;
 import com.enjoy.wanji.vr3D.CarScene;
+import com.enjoy.wanji.vr3D.ModelAgent;
 
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -288,7 +289,6 @@ public class MainActivity1 extends Activity implements LocationSource, AMapLocat
 
         }
 
-
         AMapLocationClient.updatePrivacyAgree(mContext, true);
         AMapLocationClient.updatePrivacyShow(mContext, true, true);
         try {
@@ -298,6 +298,8 @@ public class MainActivity1 extends Activity implements LocationSource, AMapLocat
 //            throw new RuntimeException(e);
         }
         geocoderSearch.setOnGeocodeSearchListener(this);
+
+        carScene.initModelNPC();  //初始化3D中的NPC
 
         //注册广播接收器
         mainActivityDataReceiver = new MainActivityDataReceiver();
@@ -477,6 +479,7 @@ public class MainActivity1 extends Activity implements LocationSource, AMapLocat
 //                    speedTxt.setText(DataStorageFromPC.speedStr);
                 }else {
                     speedTxt.setText(DataStorageFromPC.speedStr);
+                    carScene.updateLinesMove(DataStorageFromPC.velocity / 180f);
                 }
 
                 //驾驶状态
@@ -575,9 +578,7 @@ public class MainActivity1 extends Activity implements LocationSource, AMapLocat
                 Log.i(TAG, "主页面UI更新");
                 break;
             case Common.ACTION_UI_3D:   //更新3D动画
-                if (DataStorageFromPC.SensorObjQueue.size() > 5){
-                    DataStorageFromPC.SensorObjQueue.poll();  //获取并删除队首元素
-                }
+                ModelAgent.updatePosition();
                 break;
             case Common.ACTION_UI_LOCATION:   //更新位置定位
                 double lon = DataStorageFromPC.lon;
@@ -992,20 +993,24 @@ public class MainActivity1 extends Activity implements LocationSource, AMapLocat
     private void addCarMarker(double lat, double lot, float heading) {
         Log.i(TAG, "addCarMarker() called with: lat = [" + lat + "], lot = [" + lot + "], heading = [" + heading + "]");
         if (carMarker != null) {
-            carMarker.remove();
+//            carMarker.remove();
 //            carMarker.setPosition(new LatLng(lat, lot));
 //            carMarker.setRotateAngle(360 - heading);
 //            return;
 
-        }
-        //绘制marker
-        carMarker = aMap.addMarker(new MarkerOptions()
-                .position(new LatLng(lat, lot))
-                .icon(BitmapDescriptorFactory.fromBitmap(BitmapFactory
-                        .decodeResource(getResources(), R.mipmap.bus)))
-                .draggable(true));
-        carMarker.setRotateAngle(360 - heading);
+            carMarker.setPosition(new LatLng(lat, lot));
+            carMarker.setRotateAngle(360 - heading + 90);
 
+        }else {
+            //绘制marker
+            carMarker = aMap.addMarker(new MarkerOptions()
+                    .position(new LatLng(lat, lot))
+                    .icon(BitmapDescriptorFactory.fromBitmap(BitmapFactory
+                            .decodeResource(getResources(), R.mipmap.car)))
+                    .draggable(true));
+//        carMarker.setRotateAngle(360 - heading);
+            carMarker.setRotateAngle(360 - heading + 90);
+        }
     }
 
 

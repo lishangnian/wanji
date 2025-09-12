@@ -29,6 +29,7 @@ import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.locks.ReentrantLock;
 
 
 public class EnjoySocketService extends IntentService {
@@ -40,6 +41,7 @@ public class EnjoySocketService extends IntentService {
     private static String tag = "service_tag";
     private static String connectTag = "connectTag";
     private static Object connectObjLock = new Object();  //连接锁
+    public static ReentrantLock UpdateUIModelLock = new ReentrantLock();   //读取交通物和更新3D动画的锁
     public static WebSocketClient client = null;
     private static Thread connectThread = null;
     private static Thread sendLoopThread = null;
