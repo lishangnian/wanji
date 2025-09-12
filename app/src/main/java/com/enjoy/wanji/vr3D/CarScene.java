@@ -212,43 +212,6 @@ public class CarScene extends Renderer {
         }
     }
 
-    private void createCarModel(){
-        float[] floatArr = {0.2f,0.6f,0.9f};
-
-        //创建立方体代替车
-        Cube carBody = new Cube(1.5f,true,true);
-        Material material = new Material();
-        material.setColor(floatArr);
-        material.enableLighting(true);
-        carBody.setMaterial(material);
-        carBody.setPosition(0, -1 ,-4);
-        getCurrentScene().addChild(carBody);
-
-        //添加轮子
-        Cube wheel1 = new Cube(0.5f,true,true);
-        wheel1.setMaterial(material);
-        wheel1.setPosition(-0.8f, -1.4f, -2.5f);
-        getCurrentScene().addChild(wheel1);
-
-        Cube wheel2 = new Cube(0.5f,true,true);
-        wheel2.setMaterial(material);
-        wheel2.setPosition(0.8f, -1.4f, -2.5f);
-        getCurrentScene().addChild(wheel2);
-
-        Cube wheel3 = new Cube(0.5f,true,true);
-        wheel3.setMaterial(material);
-        wheel3.setPosition(-0.8f, -1.4f, 0.5f);
-        getCurrentScene().addChild(wheel3);
-
-        Cube wheel4 = new Cube(0.5f,true,true);
-        wheel4.setMaterial(material);
-        wheel4.setPosition(0.8f, -1.4f, -2.5f);
-        getCurrentScene().addChild(wheel4);
-
-        carModel = carBody;
-
-    }
-
     private void updateCarModel(Object3D model3D, float[] colorARR){
         if (model3D != null && model3D.getNumChildren() > 0){
             for(int i = 0; i < model3D.getNumChildren(); i++){

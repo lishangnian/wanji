@@ -3,7 +3,10 @@
     android:shape="rectangle"> <!-- 形状为矩形 -->
 
     <!-- 设置圆角半径 -->
-    <corners android:radius="16dp" />
+    <corners
+        android:topLeftRadius="16dp"
+        android:topRightRadius="16dp"
+        />
 
     <!-- 设置背景填充色 -->
     <solid android:color="@color/white" />
@@ -14,10 +17,10 @@
         android:color="@color/grey" />
 
     <!-- (可选) 设置内边距 -->
-    <padding
-        android:left="2dp"
-        android:top="2dp"
-        android:right="2dp"
-        android:bottom="2dp" />
+<!--    <padding-->
+<!--        android:left="2dp"-->
+<!--        android:top="2dp"-->
+<!--        android:right="2dp"-->
+<!--        android:bottom="2dp" />-->
 
 </shape>

@@ -22,7 +22,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:orientation="vertical"
-                android:background="@color/lightWhite"
+                android:background="@drawable/bg_rounded_corner_up"
                 android:layout_weight="2">
                 <!--    速度显示-->
                 <LinearLayout
@@ -216,6 +216,9 @@
         android:layout_width="0dp"
         android:layout_height="match_parent"
         android:background="@drawable/bg_rounded_corner"
+        android:layout_marginLeft="8dp"
+        android:layout_marginStart="8dp"
+        android:padding="6dp"
         android:layout_weight="2">
         <com.amap.api.maps.MapView
             android:id="@+id/map"
