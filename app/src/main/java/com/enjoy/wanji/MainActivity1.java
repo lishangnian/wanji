@@ -95,8 +95,6 @@ public class MainActivity1 extends Activity implements LocationSource, AMapLocat
     private CarScene carScene;
 
 
-
-
     private UiSettings uiSettings;
 
     /********************************************************************************/
@@ -104,7 +102,7 @@ public class MainActivity1 extends Activity implements LocationSource, AMapLocat
     static MyDialogPopWindow dialogPopWindow = null;
     TextView titleTxt, msgTxt, speedTxt, speedLimitTxt, gearTxt, socTxt;
 
-    ImageView connectImg, leftLight, rightLight, driveImg;
+    ImageView connectImg, leftLight, rightLight, driveImg, socImg;
     AnimationDrawable leftAnimation, rightAnimation;
 
 
@@ -172,44 +170,43 @@ public class MainActivity1 extends Activity implements LocationSource, AMapLocat
     /**
      * 绘制轨迹
      *
-     * @param zoneName
+     * @param
      */
-    private void drawRoadInMap(String zoneName) {
-        List<JSONObject> jsonList = DataStorageFromPC.zoneNameJsonListMap.get(zoneName);
-        if (jsonList == null || jsonList.size() == 0) {
-            return;
-        }
+    private void drawRoadInMap( ) {
+//        List<JSONObject> jsonList = DataStorageFromPC.zoneNameJsonListMap.get(zoneName);
+//        if (jsonList == null || jsonList.size() == 0) {
+//            return;
+//        }
         //清除已有的轨迹
         for (Polyline line : polylineList) {
             line.remove();
         }
 
-        for (JSONObject jsonObject : jsonList) {
+        JSONObject jsonObject = DataStorageFromPC.mappingJSON;
 
-            List<LatLng> temp = new ArrayList();
-            JSONArray pointsArray = (JSONArray) jsonObject.get("points");
-            if (pointsArray == null || pointsArray.isEmpty()) {
-                continue;
-//                return;
-            }
-
-            //clearMarkers();   //清除 始终点标记
-            int size = pointsArray.size();
-            for (int i = 0; i < size; i++) {
-                JSONObject pointJson = (JSONObject) pointsArray.get(i);
-                double lat = (Double) pointJson.get("lat");
-                double lon = (Double) pointJson.get("lon");
-                LatLng latLngPoint = ChangeLatlon.transform(lat, lon);
-                temp.add(latLngPoint);
-            }
-            addStartEndMarker(temp.get(0), temp.get(temp.size() - 1));
-            PolylineOptions po = new PolylineOptions().addAll(temp).setUseTexture(true).setCustomTexture(normalRouteBlue)
-                    .width(20).color(Color.argb(255, 0, 255, 1));
-            Polyline poly = aMap.addPolyline(po);
-            polylineList.add(poly);
+        List<LatLng> temp = new ArrayList();
+        JSONArray pointsArray = (JSONArray) jsonObject.get("points");
+        if (pointsArray == null || pointsArray.isEmpty()) {
+                Log.i(TAG,"轨迹点没有啊！！");
+                return;
         }
 
-        Log.i(TAG, "画路线完成" + zoneName);
+        //clearMarkers();   //清除 始终点标记
+        int size = pointsArray.size();
+        for (int i = 0; i < size; i++) {
+            JSONObject pointJson = (JSONObject) pointsArray.get(i);
+            double lat = (Double) pointJson.get("lat");
+            double lon = (Double) pointJson.get("lon");
+            LatLng latLngPoint = ChangeLatlon.transform(lat, lon);
+            temp.add(latLngPoint);
+        }
+        addStartEndMarker(temp.get(0), temp.get(temp.size() - 1));
+        PolylineOptions po = new PolylineOptions().addAll(temp).setUseTexture(true).setCustomTexture(normalRouteBlue)
+                .width(15).color(Color.argb(255, 0, 255, 1));
+        Polyline poly = aMap.addPolyline(po);
+        polylineList.add(poly);
+
+        Log.i(TAG, "画路线完成");
     }
 
 
@@ -228,6 +225,7 @@ public class MainActivity1 extends Activity implements LocationSource, AMapLocat
         rightAnimation = (AnimationDrawable) rightLight.getDrawable();
 
         driveImg = findViewById(R.id.auto_drive_img);
+        socImg = findViewById(R.id.soc_img);
         speedTxt = findViewById(R.id.speed_txt);
         speedLimitTxt = findViewById(R.id.limit_speed_txt);
         gearTxt = findViewById(R.id.gear_txt);
@@ -250,7 +248,7 @@ public class MainActivity1 extends Activity implements LocationSource, AMapLocat
         };
     }
 
-    private void delayInitView(){
+    private void delayInitView() {
         mapView.onCreate(instanceState);// 此方法必须重写  创建地图
         if (aMap == null) {
             aMap = mapView.getMap();
@@ -262,7 +260,7 @@ public class MainActivity1 extends Activity implements LocationSource, AMapLocat
                             .defaultMarker(BitmapDescriptorFactory.HUE_RED)));
             //设置地图属性
             setUpMap();
-            aMap.animateCamera(CameraUpdateFactory.zoomTo(16)); //放大等级
+            aMap.animateCamera(CameraUpdateFactory.zoomTo(20)); //放大等级
             this.normalRouteBlue = BitmapDescriptorFactory.fromAsset("blue.png");
             this.normalRouteGreen = BitmapDescriptorFactory.fromAsset("green.png");
             this.normalRouteYellow = BitmapDescriptorFactory.fromAsset("yellow.png");
@@ -294,7 +292,7 @@ public class MainActivity1 extends Activity implements LocationSource, AMapLocat
         try {
             geocoderSearch = new GeocodeSearch(this);
         } catch (AMapException e) {
-            Log.e(TAG,"new GeocodeSearch error");
+            Log.e(TAG, "new GeocodeSearch error");
 //            throw new RuntimeException(e);
         }
         geocoderSearch.setOnGeocodeSearchListener(this);
@@ -395,7 +393,6 @@ public class MainActivity1 extends Activity implements LocationSource, AMapLocat
     }
 
 
-
     /**
      * 处理message
      *
@@ -409,6 +406,10 @@ public class MainActivity1 extends Activity implements LocationSource, AMapLocat
             case Common.ACTION_REFRESH:
 //                refresh("after delete");  //删除轨迹后的
                 break;
+            case Common.ACTION_UI_CONNECT:        //连接成功
+                //加载轨迹
+                Global.loadRoadsFlag = true;
+                break;
             /**
              case Common.ACTION_UI_UPDATE_PARK:
              if (DataStorageToPC.getPark() < 1) {  //泊车按钮显示为默认状态
@@ -419,25 +420,24 @@ public class MainActivity1 extends Activity implements LocationSource, AMapLocat
              **/
 
             /**
-            case Common.ACTION_UI_CONNECT:
-                ToastUtil.showLong(this,"connect SUCCESS! \n connectFlag:"+ Global.connectFlag);
-                break;
-            case Common.ACTION_UI_DIS_CONNECT:
-                ToastUtil.showLong(this,"dis connect ! \n connectFlag:"+ Global.connectFlag);
-                break;
-            case Common.ACTION_UI_CONNECT_ERR:
-                ToastUtil.showLong(this,"connect ERROR! \n connectFlag:"+ Global.connectFlag);
-                break;
-                **/
+             case Common.ACTION_UI_CONNECT:
+             ToastUtil.showLong(this,"connect SUCCESS! \n connectFlag:"+ Global.connectFlag);
+             break;
+             case Common.ACTION_UI_DIS_CONNECT:
+             ToastUtil.showLong(this,"dis connect ! \n connectFlag:"+ Global.connectFlag);
+             break;
+             case Common.ACTION_UI_CONNECT_ERR:
+             ToastUtil.showLong(this,"connect ERROR! \n connectFlag:"+ Global.connectFlag);
+             break;
+             **/
 
             case Common.ACTION_UI_UPDATE: //更新UI
-//                carScene.startMoveLeft();   // 测试 模型移动
-                Log.i(TAG,"更新UI");
+                Log.i(TAG, "更新UI");
                 //连接状态
                 if (Global.connectFlag) {
                     //改变连接logo连接颜色
                     connectImg.setImageDrawable(getResources().getDrawable(R.drawable.connect));
-                    Log.i(TAG,"更新UI  连接标志");
+                    Log.i(TAG, "更新UI  连接标志");
                 } else {
                     connectImg.setImageDrawable(getResources().getDrawable(R.drawable.disconnect));
                     //红绿灯
@@ -469,15 +469,25 @@ public class MainActivity1 extends Activity implements LocationSource, AMapLocat
                 //设置电量
                 if (!Global.connectFlag) { //未连接
                     socTxt.setText(R.string.soc_default);
-                }else {
+                    socImg.setImageDrawable(getResources().getDrawable(R.drawable.soc1));
+                } else {
                     socTxt.setText(DataStorageFromPC.soc);
+                    if (DataStorageFromPC.batterySoc <= 20 ){
+                        socImg.setImageDrawable(getResources().getDrawable(R.drawable.soc1));
+                    }else if (DataStorageFromPC.batterySoc > 20 && DataStorageFromPC.batterySoc <=50){
+                        socImg.setImageDrawable(getResources().getDrawable(R.drawable.soc2));
+                    }else if (DataStorageFromPC.batterySoc > 50 && DataStorageFromPC.batterySoc <=80){
+                        socImg.setImageDrawable(getResources().getDrawable(R.drawable.soc3));
+                    }else {
+                        socImg.setImageDrawable(getResources().getDrawable(R.drawable.soc4));
+                    }
                 }
                 //设置速度
                 if (!Global.connectFlag) { //未连接
-                     speedTxt.setText("0");
-                    Log.i(TAG,"更新speed:" + DataStorageFromPC.speedStr);
+                    speedTxt.setText("0");
+                    Log.i(TAG, "更新speed:" + DataStorageFromPC.speedStr);
 //                    speedTxt.setText(DataStorageFromPC.speedStr);
-                }else {
+                } else {
                     speedTxt.setText(DataStorageFromPC.speedStr);
                     carScene.updateLinesMove(DataStorageFromPC.velocity / 180f);
                 }
@@ -485,65 +495,65 @@ public class MainActivity1 extends Activity implements LocationSource, AMapLocat
                 //驾驶状态
                 if (!Global.connectFlag) { //未连接
                     driveImg.setImageDrawable(getResources().getDrawable(R.drawable.no_auto_drive));
-                }else {
-                    if (0 == DataStorageFromPC.driverStatus){  // 人工
+                } else {
+                    if (0 == DataStorageFromPC.driverStatus) {  // 人工
                         driveImg.setImageDrawable(getResources().getDrawable(R.drawable.no_auto_drive));
-                    }else {  //1 自动
+                    } else {  //1 自动
                         driveImg.setImageDrawable(getResources().getDrawable(R.drawable.auto_drive));
                     }
                 }
 
                 //档位
-                if (Global.connectFlag){
+                if (Global.connectFlag) {
                     gearTxt.setText(DataStorageFromPC.Gear);
-                    if ("P".equals(DataStorageFromPC.Gear) || "R".equals(DataStorageFromPC.Gear)){
+                    if ("P".equals(DataStorageFromPC.Gear) || "R".equals(DataStorageFromPC.Gear)) {
                         gearTxt.setTextColor(Color.RED);
-                    }else {
-                        gearTxt.setTextColor(Color.GREEN);
+                    } else {
+                        gearTxt.setTextColor(getResources().getColor(R.color.deepGreen));
                     }
-                }else {
+                } else {
                     gearTxt.setTextColor(Color.GRAY);
                 }
 
                 //设置转向  0--无  1--左转  2--右转
-                if (!Global.connectFlag){
-                    if (leftAnimation.isRunning()){
+                if (!Global.connectFlag) {
+                    if (leftAnimation.isRunning()) {
                         leftAnimation.stop();
                         leftLight.setImageResource(R.drawable.turn_left_animation);
                         leftAnimation = (AnimationDrawable) leftLight.getDrawable();
                     }
-                    if (rightAnimation.isRunning()){
+                    if (rightAnimation.isRunning()) {
                         rightAnimation.stop();
                         rightLight.setImageResource(R.drawable.turn_right_animation);
                         rightAnimation = (AnimationDrawable) rightLight.getDrawable();
                     }
-                }else {
-                    if (0 == DataStorageFromPC.turnLight){ //无转向
-                        if (leftAnimation.isRunning()){
+                } else {
+                    if (0 == DataStorageFromPC.turnLight) { //无转向
+                        if (leftAnimation.isRunning()) {
                             leftAnimation.stop();
                             leftLight.setImageResource(R.drawable.turn_left_animation);
                             leftAnimation = (AnimationDrawable) leftLight.getDrawable();
                         }
-                        if (rightAnimation.isRunning()){
+                        if (rightAnimation.isRunning()) {
                             rightAnimation.stop();
                             rightLight.setImageResource(R.drawable.turn_right_animation);
                             rightAnimation = (AnimationDrawable) rightLight.getDrawable();
                         }
 
-                    }else if (1 == DataStorageFromPC.turnLight){  //左转
-                        if (!leftAnimation.isRunning()){
+                    } else if (1 == DataStorageFromPC.turnLight) {  //左转
+                        if (!leftAnimation.isRunning()) {
                             leftAnimation.start();
                         }
-                        if (rightAnimation.isRunning()){
+                        if (rightAnimation.isRunning()) {
                             rightAnimation.stop();
                             rightLight.setImageResource(R.drawable.turn_right_animation);
                             rightAnimation = (AnimationDrawable) rightLight.getDrawable();
                         }
-                    }else if (2 == DataStorageFromPC.turnLight){  //右转
-                        if (!rightAnimation.isRunning()){
+                    } else if (2 == DataStorageFromPC.turnLight) {  //右转
+                        if (!rightAnimation.isRunning()) {
                             rightAnimation.start();
                         }
-                        if (leftAnimation.isRunning()){
+                        if (leftAnimation.isRunning()) {
                             leftAnimation.stop();
                             leftLight.setImageResource(R.drawable.turn_left_animation);
                             leftAnimation = (AnimationDrawable) leftLight.getDrawable();
@@ -551,25 +561,19 @@ public class MainActivity1 extends Activity implements LocationSource, AMapLocat
                     }
                 }
                 //限速
-                if (DataStorageFromPC.velocity > DataStorageFromPC.speedLimit){  //当前速度大于限速
+                if (DataStorageFromPC.velocity > DataStorageFromPC.speedLimit) {  //当前速度大于限速
                     //显示限速
                     speedLimitTxt.setText(DataStorageFromPC.speedLimitStr);
                     speedLimitTxt.setVisibility(View.VISIBLE); //可见
-                }else {
+                    //设置限速外圈颜色变化
+                    if (System.currentTimeMillis() % 1000 > 500){
+                        speedLimitTxt.setBackground(getResources().getDrawable(R.drawable.limit_speed));
+                    }else {
+                        speedLimitTxt.setBackground(getResources().getDrawable(R.drawable.limit_speed0));
+                    }
+                } else {
                     speedLimitTxt.setVisibility(View.GONE);  //不可见
                 }
-
-//                if (System.currentTimeMillis() - 3000 > testTimestamp){
-//                    testTimestamp = System.currentTimeMillis();
-//                    ToastUtil.showShort(this,"Connect:" + Global.connectFlag
-//                            +"\n speed:" + DataStorageFromPC.speedStr
-//                    + "\n Gear:" + DataStorageFromPC.Gear +"\n turnLight:" + DataStorageFromPC.turnLight
-//                    +"\n soc:" +DataStorageFromPC.soc);
-//                }
-
-
-                //GPS速度等数据
-
                 //重载按钮
 
                 //故障报警
@@ -606,8 +610,7 @@ public class MainActivity1 extends Activity implements LocationSource, AMapLocat
                 }
                 break;
             case Common.ACTION_UI_ROADS_SHOW:  //更新轨迹
-                String roadName = Common.ZONE_HEAD + DataStorageToPC.zoneName;
-                drawRoadInMap(roadName);
+                drawRoadInMap( );
                 break;
             case Common.ACTION_UI_V2X:  //v2x
                 //0:无 1：红灯 2：绿灯 3：黄灯
@@ -803,11 +806,11 @@ public class MainActivity1 extends Activity implements LocationSource, AMapLocat
         DataStorage.mode = 1;
 
         super.onResume();
-        if (mapView != null){
+        if (mapView != null) {
             mapView.onResume();
         }
 
-        if (surfaceView != null){
+        if (surfaceView != null) {
             surfaceView.onResume();
         }
 
@@ -832,7 +835,7 @@ public class MainActivity1 extends Activity implements LocationSource, AMapLocat
     protected void onPause() {
         super.onPause();
         mapView.onPause();
-        if (surfaceView != null){
+        if (surfaceView != null) {
             surfaceView.onPause();
         }
 
@@ -913,24 +916,24 @@ public class MainActivity1 extends Activity implements LocationSource, AMapLocat
         /**
          *
 
-        if (mAMapLocationManager == null) {
-            mAMapLocationManager = LocationManagerProxy.getInstance(this);
-            Log.e("tag", "激活定位");
-            /*
-             * mAMapLocManager.setGpsEnable(false);
-             * 1.0.2版本新增方法，设置true表示混合定位中包含gps定位，false表示纯网络定位，默认是true Location
-             * API定位采用GPS和网络混合定位方式
-             * ，第一个参数是定位provider，第二个参数时间最短是2000毫秒，第三个参数距离间隔单位是米，第四个参数是定位监听者
-             */
+         if (mAMapLocationManager == null) {
+         mAMapLocationManager = LocationManagerProxy.getInstance(this);
+         Log.e("tag", "激活定位");
+         /*
+         * mAMapLocManager.setGpsEnable(false);
+         * 1.0.2版本新增方法，设置true表示混合定位中包含gps定位，false表示纯网络定位，默认是true Location
+         * API定位采用GPS和网络混合定位方式
+         * ，第一个参数是定位provider，第二个参数时间最短是2000毫秒，第三个参数距离间隔单位是米，第四个参数是定位监听者
+         */
         /**
          *
-            mAMapLocationManager.requestLocationUpdates(
-                    LocationProviderProxy.AMapNetwork, 2000, 10, this);
-//                // API定位采用GPS定位方式，第一个参数是定位provider，第二个参数时间最短是2000毫秒，第三个参数距离间隔单位是米，第四个参数是定位监听者
-//                mAMapLocationManager.requestLocationUpdates(
-//                        LocationManagerProxy.GPS_PROVIDER, 2000, 10, this);
-        }
-             */
+         mAMapLocationManager.requestLocationUpdates(
+         LocationProviderProxy.AMapNetwork, 2000, 10, this);
+         //                // API定位采用GPS定位方式，第一个参数是定位provider，第二个参数时间最短是2000毫秒，第三个参数距离间隔单位是米，第四个参数是定位监听者
+         //                mAMapLocationManager.requestLocationUpdates(
+         //                        LocationManagerProxy.GPS_PROVIDER, 2000, 10, this);
+         }
+         */
     }
 
     /**
@@ -943,11 +946,11 @@ public class MainActivity1 extends Activity implements LocationSource, AMapLocat
         /**
          *
 
-        if (mAMapLocationManager != null) {
-            mAMapLocationManager.removeUpdates(this);
-            mAMapLocationManager.destory();
-        }
-        mAMapLocationManager = null;
+         if (mAMapLocationManager != null) {
+         mAMapLocationManager.removeUpdates(this);
+         mAMapLocationManager.destory();
+         }
+         mAMapLocationManager = null;
          */
     }
 
@@ -999,18 +1002,18 @@ public class MainActivity1 extends Activity implements LocationSource, AMapLocat
 //            return;
 
             carMarker.setPosition(new LatLng(lat, lot));
-            carMarker.setRotateAngle(360 - heading + 90);
+            carMarker.setRotateAngle(360 - heading);
 
-        }else {
+        } else {
             //绘制marker
             carMarker = aMap.addMarker(new MarkerOptions()
                     .position(new LatLng(lat, lot))
                     .icon(BitmapDescriptorFactory.fromBitmap(BitmapFactory
                             .decodeResource(getResources(), R.mipmap.car)))
                     .draggable(true));
-//        carMarker.setRotateAngle(360 - heading);
-            carMarker.setRotateAngle(360 - heading + 90);
+            carMarker.setRotateAngle(360 - heading);
         }
+        carMarker.setZIndex(100f);
     }
 
 

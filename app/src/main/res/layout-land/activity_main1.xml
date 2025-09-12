@@ -1,196 +1,221 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/activity_main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/grey"
-    android:orientation="horizontal"
-    >
+    android:orientation="horizontal">
 
 <!--    android:background="@drawable/collect_roads_background"-->
 <!--    ros连接状态信号图标  自动驾驶状态图形   车速  剩余电量    档位（字母）
             转向灯     红绿灯     限速标志    超速提醒（超过限速值弹出）  -->
     <LinearLayout
-        android:layout_width="0dp"
-        android:layout_height="match_parent"
-        android:layout_weight="1"
-        android:orientation="vertical">
-<!--        文字与图标现实部分-->
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:orientation="vertical"
-            android:layout_weight="2">
-            <!--    速度显示-->
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="@drawable/bg_rounded_corner"
+            android:orientation="vertical">
+            <!--        文字与图标现实部分-->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
-                android:orientation="horizontal"
-                android:layout_weight="3"
-                >
+                android:orientation="vertical"
+                android:background="@color/lightWhite"
+                android:layout_weight="2">
+                <!--    速度显示-->
                 <LinearLayout
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1"
-                    android:gravity="bottom|center_horizontal|end"
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:orientation="horizontal"
+                    android:layout_weight="3"
                     >
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:gravity="bottom|center_horizontal|end"
+                        >
+                        <TextView
+                            android:layout_width="124dp"
+                            android:layout_height="124dp"
+                            android:gravity="center"
+                            android:id="@+id/limit_speed_txt"
+                            android:text="100"
+                            android:background="@drawable/limit_speed"
+                            android:textColor="@color/black"
+                            android:textSize="64sp" />
+                    </LinearLayout>
+
+
                     <TextView
-                        android:layout_width="124dp"
-                        android:layout_height="124dp"
-                        android:gravity="center"
-                        android:id="@+id/limit_speed_txt"
-                        android:text="100"
-                        android:background="@drawable/limit_speed"
+                        android:id="@+id/speed_txt"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:gravity="center_horizontal"
+                        android:text="0"
+                        android:textColor="@color/black"
+                        android:textSize="120sp" />
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:gravity="center_horizontal|end"
+                        android:paddingBottom="0dp"
                         android:textColor="@color/black"
                         android:textSize="64sp" />
                 </LinearLayout>
 
-
-                <TextView
-                    android:id="@+id/speed_txt"
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1"
-                    android:gravity="center_horizontal"
-                    android:text="0"
-                    android:textColor="@color/black"
-                    android:textSize="120sp" />
-                <TextView
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1"
-                    android:gravity="center_horizontal|end"
-                    android:paddingBottom="0dp"
-                    android:textColor="@color/black"
-                    android:textSize="64sp" />
-            </LinearLayout>
-
-            <!--档位 速度 电量-->
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:orientation="horizontal"
-                android:layout_gravity="center_vertical"
-                android:layout_weight="2"
-                >
-                <!--            显示档位-->
-                <TextView
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:id="@+id/gear_txt"
-                    android:layout_weight="1"
-                    android:textColor="@color/red"
-                    android:gravity="center"
-                    android:textFontWeight="@android:integer/config_longAnimTime"
-                    android:textSize="72sp"
-                    android:text="@string/gear_p"
-                    />
-                <!--            速度单位-->
-                <TextView
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:gravity="center_horizontal|top"
-                    android:textColor="@color/black"
-                    android:textSize="64sp"
-                    android:text="@string/km_h"
-                    />
-                <!--            电量显示-->
-                <TextView
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:id="@+id/soc_txt"
-                    android:layout_weight="1"
-                    android:textColor="@color/black"
-                    android:gravity="center_horizontal"
-                    android:textSize="64sp"
-                    android:text="@string/soc_default"
-                    />
-            </LinearLayout>
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="2dp"
-                android:background="@color/colorBlue"
-                />
-            <!--        驾驶标志与转向灯-->
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_weight="2"
-                android:paddingTop="4dp"
-                android:orientation="horizontal">
+                <!--档位 速度 电量-->
                 <LinearLayout
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:gravity="center_horizontal"
-                    android:layout_weight="1">
-                    <ImageView
-                        android:layout_width="64dp"
-                        android:layout_height="64dp"
-                        android:id="@+id/auto_drive_img"
-                        android:src="@drawable/no_auto_drive"
-                        />
-                </LinearLayout>
-                <!--            转向灯-->
-                <LinearLayout
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="2"
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
                     android:orientation="horizontal"
-                    android:gravity="center_horizontal"
+                    android:layout_gravity="center_vertical"
+                    android:layout_weight="2"
                     >
-                    <ImageView
-                        android:layout_width="72dp"
-                        android:layout_height="72dp"
-                        android:id="@+id/turn_left_light_img"
-                        android:src="@drawable/turn_left_on"
+                    <!--            显示档位-->
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/gear_txt"
+                        android:layout_weight="1"
+                        android:textColor="@color/red"
+                        android:gravity="center"
+                        android:textFontWeight="@android:integer/config_longAnimTime"
+                        android:textSize="72sp"
+                        android:text="@string/gear_p"
                         />
-                    <ImageView
-                        android:layout_width="72dp"
-                        android:layout_height="72dp"
-                        android:id="@+id/turn_right_light_img"
-                        android:src="@drawable/turn_right_on"
+                    <!--            速度单位-->
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:gravity="center_horizontal|top"
+                        android:textColor="@color/colorDark"
+                        android:textSize="64sp"
+                        android:text="@string/km_h"
                         />
+                    <!--            电量显示-->
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:layout_gravity="center_vertical"
+                        android:gravity="center_vertical|end"
+                        android:orientation="horizontal">
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent"
+                            android:id="@+id/soc_txt"
+                            android:textColor="@color/black"
+                            android:gravity="center_horizontal"
+                            android:textSize="52sp"
+                            android:text="@string/soc_default"
+                            />
+                        <ImageView
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent"
+                            android:layout_gravity="end|center_horizontal|bottom"
+                            android:id="@+id/soc_img"
+                            android:src="@drawable/soc1"
+                            android:layout_marginEnd="5dp"
+                            android:layout_marginRight="5dp"
+                            />
+                    </LinearLayout>
+
                 </LinearLayout>
-                <!--            连接标志-->
+
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="2dp"
+                    android:background="@color/colorLightBlue"
+                    />
+                <!--        驾驶标志与转向灯-->
                 <LinearLayout
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:gravity="center_horizontal">
-                    <ImageView
-                        android:layout_width="64dp"
-                        android:layout_height="64dp"
-                        android:id="@+id/connect_flag"
-                        android:src="@drawable/disconnect"
-                        />
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="2"
+                    android:paddingTop="4dp"
+                    android:orientation="horizontal">
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:gravity="center_horizontal"
+                        android:layout_weight="1">
+                        <ImageView
+                            android:layout_width="64dp"
+                            android:layout_height="64dp"
+                            android:id="@+id/auto_drive_img"
+                            android:src="@drawable/no_auto_drive"
+                            />
+                    </LinearLayout>
+                    <!--            转向灯-->
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="2"
+                        android:orientation="horizontal"
+                        android:gravity="center_horizontal"
+                        >
+                        <ImageView
+                            android:layout_width="72dp"
+                            android:layout_height="72dp"
+                            android:id="@+id/turn_left_light_img"
+                            android:src="@drawable/turn_left_on"
+                            android:layout_marginRight="2dp"
+                            android:layout_marginEnd="2dp" />
+                        <ImageView
+                            android:layout_width="72dp"
+                            android:layout_height="72dp"
+                            android:id="@+id/turn_right_light_img"
+                            android:src="@drawable/turn_right_on"
+                            android:layout_marginLeft="2dp"
+                            android:layout_marginStart="2dp" />
+                    </LinearLayout>
+                    <!--            连接标志-->
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:gravity="center_horizontal">
+                        <ImageView
+                            android:layout_width="64dp"
+                            android:layout_height="64dp"
+                            android:id="@+id/connect_flag"
+                            android:src="@drawable/disconnect"
+                            />
+                    </LinearLayout>
                 </LinearLayout>
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="2dp"
+                    android:background="@color/colorLightBlue"
+                    />
             </LinearLayout>
-            <View
+
+            <!--        3D显示画面-->
+            <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="2dp"
-                android:background="@color/colorBlue"
-                />
+                android:layout_height="0dp"
+                android:layout_weight="4">
+                <org.rajawali3d.view.SurfaceView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:id="@+id/rajawali_surface"
+                    ></org.rajawali3d.view.SurfaceView>
+            </LinearLayout>
         </LinearLayout>
 
-<!--        3D显示画面-->
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="4">
-             <org.rajawali3d.view.SurfaceView
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:id="@+id/rajawali_surface"
-                 ></org.rajawali3d.view.SurfaceView>
-        </LinearLayout>
-    </LinearLayout>
 
 <!--    右侧地图部分-->
     <LinearLayout
         android:layout_width="0dp"
         android:layout_height="match_parent"
+        android:background="@drawable/bg_rounded_corner"
         android:layout_weight="2">
         <com.amap.api.maps.MapView
             android:id="@+id/map"

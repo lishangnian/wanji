@@ -19,8 +19,8 @@ public class InitActivity extends Activity {
 
     EditText ipEdt;
     Button ipBtn;
-    final String ipHead = "192.168.";
-//    final String ipHead = "123.56.";
+//    final String ipHead = "192.168.";
+    final String ipHead = "123.56.";
 
 
     @Override

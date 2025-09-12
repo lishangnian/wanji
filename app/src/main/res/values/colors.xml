@@ -7,6 +7,7 @@
     <color name="btn_song">#eab66d</color>
     <color name="darkBlue">	#191970</color>
 
+    <color name="colorLightBlue">#CC307EFE</color>
     <color name="colorBlue">#307EFE</color>
     <color name="colorDark">#737373</color>
     <color name="colorBlack">#535353</color>
@@ -17,6 +18,8 @@
     <color name="red">#ff0000</color>
     <color name="green">#00ff00</color>
     <color name="yellow">#FFFF00</color>
+    <color name="deepGreen">#32cd32</color>
+    <color name="lightWhite">#ccfafafa</color>
     <color name="colorDeepBlack">#000000</color>
 
 

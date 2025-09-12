@@ -1,0 +1,42 @@
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <!-- 外层发光阴影 -->
+    <item>
+        <shape android:shape="rectangle">
+            <corners android:radius="68dp" />
+            <stroke
+                android:width="10dp"
+                android:color="#33FF0000" /> <!-- 红色发光 -->
+        </shape>
+    </item>
+
+    <!-- 中层发光 -->
+    <item
+        android:left="2dp"
+        android:top="2dp"
+        android:right="2dp"
+        android:bottom="2dp">
+        <shape android:shape="rectangle">
+            <corners android:radius="66dp" />
+            <stroke
+                android:width="6dp"
+                android:color="#66FF0000" /> <!-- 更明显的红色 -->
+        </shape>
+    </item>
+
+    <!-- 内层实际边框 -->
+    <item
+        android:left="4dp"
+        android:top="4dp"
+        android:right="4dp"
+        android:bottom="4dp">
+        <shape android:shape="rectangle">
+            <corners android:radius="64dp" />
+            <stroke
+                android:width="4dp"
+                android:color="#FFFF0000" /> <!-- 实心红色边框 -->
+            <solid android:color="@android:color/transparent" />
+        </shape>
+    </item>
+
+</layer-list>

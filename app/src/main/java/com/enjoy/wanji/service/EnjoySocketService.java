@@ -34,9 +34,6 @@ import java.util.concurrent.locks.ReentrantLock;
 
 public class EnjoySocketService extends IntentService {
 
-    //        String rosIP = "192.168.1.100";
-//    String rosIP = "192.168.6.117";
-//    String rosIP = "192.168.6.115";
     String rosIP = EnjoyTrainShipApplication.sharedPreferences.getString(Common.ROS_IP, "");
     private static String tag = "service_tag";
     private static String connectTag = "connectTag";
@@ -159,7 +156,7 @@ public class EnjoySocketService extends IntentService {
 
                     //发送广播
                     sendCast(Common.MAIN_RECEIVER_ACTION, Common.ACTION_UI_UPDATE);
-
+                    sendCast(Common.MAIN_RECEIVER_ACTION, Common.ACTION_UI_CONNECT);  //发送连接成功
                 }
 
                 //收到消息
@@ -221,18 +218,6 @@ public class EnjoySocketService extends IntentService {
                         connectObjLock.notify();  //唤醒连接线程
                         Log.i(connectTag, "Connect Thread notify");
                     }
-                    /**  测试 模型移动
-                     *
-
-                    for (int j = 0; j <20; j ++){
-                        try {
-                            Thread.sleep(200);
-                        } catch (InterruptedException e) {
-                            throw new RuntimeException(e);
-                        }
-                        sendCast(Common.MAIN_RECEIVER_ACTION, Common.ACTION_UI_UPDATE);
-                    }
-                     */
                 }
 
                 @Override

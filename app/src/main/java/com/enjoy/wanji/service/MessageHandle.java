@@ -46,6 +46,7 @@ public class MessageHandle {
                 if (socObj != null) {
                     float soc = Float.parseFloat(socObj.toString());
                     int socInt = (int) soc;
+                    DataStorageFromPC.batterySoc = socInt;
                     if (socInt < 10) {
                         DataStorageFromPC.soc = "0" + socInt + "%";
                     } else {
@@ -106,6 +107,18 @@ public class MessageHandle {
 
                 break;
             case TopicAndParams.topicRecvLonlatmMappoints:        //轨迹点
+                Log.i(tag,"get map points:" + jsonObj.toString());
+//                lonlatmappoints
+                String mapName = jsonObj.get("mapname").toString();  //轨迹名称 maping1
+                String zoneName = jsonObj.get("zonename").toString();  //园区名称 yuanqu1
+                JSONArray pointsArray = (JSONArray) jsonObj.get("points");  //轨迹点
+                if (pointsArray == null || pointsArray.isEmpty()) {
+                    Log.e(tag, "接收轨迹点为空");
+                }
+                DataStorageFromPC.mappingJSON = jsonObj;
+
+                /**
+                 *
 
                 String zoneName = jsonObj.get("zonename").toString();  //园区名
 //                jsonObj.get(" mapname").toString(); //轨迹名
@@ -123,6 +136,8 @@ public class MessageHandle {
                     roadsJsonList.add(jsonObj);
                 }
                 DataStorageFromPC.zoneNameJsonListMap.put(zoneName, roadsJsonList);
+                **/
+
                 break;
             /**
              *

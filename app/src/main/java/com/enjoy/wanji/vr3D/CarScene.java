@@ -15,6 +15,7 @@ import org.rajawali3d.loader.LoaderOBJ;
 import org.rajawali3d.loader.ParsingException;
 import org.rajawali3d.materials.Material;
 import org.rajawali3d.materials.methods.DiffuseMethod;
+import org.rajawali3d.materials.methods.SpecularMethod;
 import org.rajawali3d.math.vector.Vector3;
 import org.rajawali3d.primitives.Cube;
 import org.rajawali3d.primitives.Plane;
@@ -32,8 +33,10 @@ public class CarScene extends Renderer {
 
     List<Plane> lineList = new ArrayList<>();
 //    private Object3D ground;
-    float[] colorGrayArr = {0.7216f, 0.7608f, 0.8000f, 0.9f}; //灰色
-    float[] colorPearArr = {0.9922f, 0.9333f, 0.9569f, 1.0f};; //灰色
+    float[] colorGrayArr = {0.7216f, 0.7608f, 0.8000f, 1f}; //灰色
+    float[] colorDarkGrayArr = {0.6627f, 0.6627f, 0.6627f, 1f}; //深灰色
+    float[] colorDeepGrayArr = {0.35f, 0.35f, 0.35f, 1f}; //较深灰色
+    float[] colorPearArr = {0.9922f, 0.9333f, 0.9569f, 1.0f};; //珠光白
     public CarScene(Context context){
         super(context);
     }
@@ -42,23 +45,14 @@ public class CarScene extends Renderer {
     protected void initScene() {
         //设置背景颜色
 //        getCurrentScene().setBackgroundColor(0.87f,0.87f,0.87f, 0.9f);
-        getCurrentScene().setBackgroundColor(1f,1f,1f, 0.7f);
+//        getCurrentScene().setBackgroundColor(1f,1f,1f, 0.7f);
+        getCurrentScene().setBackgroundColor(0.98f,0.98f,0.98f, 0.8f);
 
-        //添加灯光
-//        DirectionalLight directionalLight = new DirectionalLight(1,-1,-1);
-//        directionalLight.setColor(1,1,1);
-//        directionalLight.setPower(1.0f);
-//        getCurrentScene().addLight(directionalLight);
         //基础光
         DirectionalLight ambientLight = new DirectionalLight(-1, 1, 1);
         ambientLight.setPower(0.2f); // 环境光强度通常较低
         getCurrentScene().addLight(ambientLight);
 
-        //定向光源
-//        DirectionalLight fillLight = new DirectionalLight(-1,-1,1);
-//        fillLight.setColor(0.5f,0.5f,0.5f);
-//        fillLight.setPower(0.8f);
-//        getCurrentScene().addLight(fillLight);
 
         //平行光
         DirectionalLight keyLight = new DirectionalLight(0, -1.8f, -2.0f); // 方向向量
@@ -75,7 +69,8 @@ public class CarScene extends Renderer {
         addLaneLines(); //车道线
 
         //初始化本车
-        carModel = initVehicleModel3D(R.raw.car, colorPearArr);
+//        carModel = initVehicleModel3D(R.raw.car, colorDarkGrayArr);
+        carModel = initCenterCarModel(R.raw.car, colorDeepGrayArr);
         carModel.setScale(0.08f);
         carModel.setPosition(0, 0, 1.2); //  z 正直 靠近观察者方向
         carModel.setRotY(180); // 调整朝向
@@ -85,10 +80,45 @@ public class CarScene extends Renderer {
         getCurrentCamera().setPosition(0, 2.1, 5.0);
         getCurrentCamera().setLookAt(0, 0, 0);
 
-//        createCarAnimation();   //创建动画
 
     }
 
+    private Object3D initCenterCarModel(int resourceId, float[] colorARR){
+        Object3D model = null;
+        try {
+            LoaderOBJ loader  = new LoaderOBJ(this, resourceId);
+//            LoaderOBJ leftLoader = new LoaderOBJ(this,R.raw.car);
+            loader.parse();   //解析模型
+            model = loader.getParsedObject();
+
+            if (model != null && model.getNumChildren() > 0){
+                for(int i = 0; i < model.getNumChildren(); i++){
+                    Object3D child = model.getChildAt(i);
+
+                    // 设置车辆材质（如果没有纹理，使用默认材质）
+                    Material material = new Material();
+                    material.setColor(colorARR);
+                    material.enableLighting(true);
+                    material.setDiffuseMethod(new DiffuseMethod.Lambert());
+
+                    // 设置镜面反射 - 实现光滑表面
+                    SpecularMethod.Phong phong = new SpecularMethod.Phong();
+                    material.setSpecularMethod(phong);
+//                    material.setSpecularColor(0xFFFFFFFF); // 白色高光
+//                    material.setShininess(256); // 高光泽度，值越大表面越光滑
+                    // 启用颜色影响
+                    material.setColorInfluence(1.0f);
+
+                    child.setMaterial(material);
+                }
+            }
+        }catch (ParsingException pe){
+            Log.e("objTag","parsing carObj error:",pe.fillInStackTrace());
+        }
+
+        return model;
+
+    }
 
     private Object3D initVehicleModel3D(int resourceId, float[] colorARR){
         Object3D model = null;
@@ -97,25 +127,7 @@ public class CarScene extends Renderer {
 //            LoaderOBJ leftLoader = new LoaderOBJ(this,R.raw.car);
             loader.parse();   //解析模型
             model = loader.getParsedObject();
-
             updateCarModel(model, colorARR);
-
-
-            // 调整车辆大小和位置
-//            model.setScale(0.08f);
-//            model.setPosition(0, 0, 1.2); //  z 正直 靠近观察者方向
-//            model.setRotY(180); // 调整朝向
-
-
-//            leftModel.setScale(0.08f);
-//            leftModel.setPosition(-1.2, 0, -1.5); //
-//            leftModel.setRotY(180); // 调整朝向
-//
-//            rightModel.setScale(0.08f);
-//            rightModel.setPosition(1.2, 0, -2.8);
-//            rightModel.setRotY(180); // 调整朝向
-
-//            getCurrentScene().addChild(carModel);
 
         }catch (ParsingException pe){
             Log.e("objTag","parsing carObj error:",pe.fillInStackTrace());
@@ -127,7 +139,7 @@ public class CarScene extends Renderer {
     public void initModelNPC(){
         //创建未知物体  初始化三个
         for (int i =0; i < 3; i++){
-            Object3D body = initVehicleModel3D(R.raw.car, colorGrayArr);
+            Object3D body = initVehicleModel3D(R.raw.car, colorPearArr);
             body.setScale(0.08f);
 //        body.setPosition(-1.2, 0, -1.5); //
             body.setPosition(0,-100,0); //  初始位置把他放到地底下，看不见
@@ -158,13 +170,11 @@ public class CarScene extends Renderer {
 
     }
 
-
-
     private void addLaneLines() {
         // 创建车道线材质
         Material lineMaterial = new Material();
         lineMaterial.setColor(0x00bfff); // 蓝色线条
-//        lineMaterial.setColor(0xFFFFFFFF); // 白色线条
+//        lineMaterial.setColor(0xFFFFFF); // 白色线条
 
         // 中心虚线
         for (int i = -20; i <= 20; i += 2) {

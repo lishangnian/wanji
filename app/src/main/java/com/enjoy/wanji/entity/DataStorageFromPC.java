@@ -61,4 +61,6 @@ public class DataStorageFromPC {
     //key是园区   value是list，存放园区里各个的轨迹
     public static volatile Map<String, List<JSONObject>> zoneNameJsonListMap = new LinkedHashMap<>();
 
+    public static volatile JSONObject mappingJSON = new JSONObject();  //轨迹
+
 }

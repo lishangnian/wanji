@@ -18,6 +18,7 @@ public class Common {
 
     public static final int ACTION_UI_UPDATE_PARK = 100;
     public static final int ACTION_UI_UPDATE = 666;
+    public static final int ACTION_UI_CONNECT = 667;
     public static final int ACTION_UI_ROADS_SHOW = 668;
     public static final int ACTION_UI_V2X = 678;
     public static final int ACTION_UI_LOCATION = 688;
