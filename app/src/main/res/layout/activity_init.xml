@@ -6,7 +6,7 @@
     android:paddingTop="150dp"
     android:paddingLeft="150dp"
     android:background="@color/grey"
-    android:paddingStart="200dp"
+    android:paddingStart="150dp"
     android:orientation="vertical">
 
 
@@ -16,6 +16,7 @@
         android:layout_marginLeft="0dp"
         android:layout_marginRight="0dp"
         android:layout_gravity="center_vertical"
+        android:gravity="center_vertical"
         android:orientation="horizontal">
 
         <TextView
@@ -26,31 +27,37 @@
             android:text="Server IP:" />
 
         <TextView
-            android:layout_width="wrap_content"
+            android:layout_width="80dp"
             android:layout_height="40dp"
             android:textAlignment="center"
             android:layout_marginLeft="10dp"
             android:text="192.168."
-            android:textColor="@color/black"
+            android:textColor="@color/lightBlack"
             android:textSize="18sp"
-            android:gravity="center_horizontal" />
+            android:layout_gravity="center_vertical|center_horizontal"
+            android:gravity="center_horizontal|center_vertical" />
 
         <EditText
             android:layout_width="90dp"
             android:layout_height="40dp"
             android:textAlignment="center"
             android:id="@+id/ip_edt"
-            android:textColor="@color/black"
+            android:textColor="@color/lightBlack"
+            android:background="@drawable/button_shape_default"
             android:textSize="18sp"
             android:hint="@string/rename_ip"
-            android:gravity="center_horizontal" />
+            android:layout_gravity="center_vertical|center_horizontal"
+            android:gravity="center_horizontal|center_vertical"/>
         <Button
-            android:layout_width="100dp"
+            android:layout_width="85dp"
             android:layout_height="40dp"
             android:layout_marginLeft="30dp"
             android:textAlignment="center"
-            android:gravity="center_horizontal"
-            android:textColor="@color/checkColorBlue"
+            android:layout_gravity="center_horizontal|center_vertical"
+            android:background="@drawable/button_shape_activate"
+            android:textColor="@color/lightWhite"
+            android:textFontWeight="800"
+            android:textSize="20sp"
             android:id="@+id/ip_btn"
             android:text="确定" />
     </LinearLayout>

@@ -5,6 +5,7 @@
     android:layout_height="80dp"
     android:paddingHorizontal="20dp"
     android:paddingVertical="10dp"
+    android:gravity="center_vertical|center_horizontal"
     android:background="@drawable/dialog_win_style"
     android:orientation="vertical"
     >
@@ -22,7 +23,6 @@
             android:text="@string/alarm"
             android:textColor="@color/alarmColorRed"
             android:textAlignment="center"
-            android:background="@color/white"
             android:layout_gravity="left"
             tools:ignore="RtlCompat" />
 
@@ -33,7 +33,7 @@
             android:layout_gravity="center"
             android:layout_marginTop="20dp"
             android:text=""
-            android:textColor="@color/yellow"
+            android:textColor="@color/lightBlack"
             android:textSize="32sp" />
 
         <Button
@@ -42,6 +42,8 @@
             android:id="@+id/cancel_btn"
             android:layout_marginTop="20dp"
             android:layout_gravity="center_horizontal"
+            android:background="@drawable/button_shape_default"
+            android:textColor="@color/colorLightBlue"
             android:text="取消"
             android:textSize="28sp"
             />
