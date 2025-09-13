@@ -43,7 +43,7 @@
             android:textAlignment="center"
             android:id="@+id/ip_edt"
             android:textColor="@color/lightBlack"
-            android:background="@drawable/button_shape_default"
+            android:background="@drawable/dittext_bottom_border"
             android:textSize="18sp"
             android:hint="@string/rename_ip"
             android:layout_gravity="center_vertical|center_horizontal"
