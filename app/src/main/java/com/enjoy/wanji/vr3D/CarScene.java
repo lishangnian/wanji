@@ -33,6 +33,7 @@ public class CarScene extends Renderer {
     List<Plane> lineList = new ArrayList<>();
 //    private Object3D ground;
     float[] colorGrayArr = {0.7216f, 0.7608f, 0.8000f, 1f}; //灰色
+    float[] colorLightGrayArr = {0.835f, 0.835f, 0.835f, 1f}; //灰色
     float[] colorDarkGrayArr = {0.6627f, 0.6627f, 0.6627f, 1f}; //深灰色
     float[] colorDeepGrayArr = {0.35f, 0.35f, 0.35f, 1f}; //较深灰色
     float[] colorPearArr = {0.9922f, 0.9333f, 0.9569f, 1.0f};; //珠光白
@@ -45,33 +46,32 @@ public class CarScene extends Renderer {
         //设置背景颜色
 //        getCurrentScene().setBackgroundColor(0.87f,0.87f,0.87f, 0.9f);
 //        getCurrentScene().setBackgroundColor(1f,1f,1f, 0.7f);
-        getCurrentScene().setBackgroundColor(0.98f,0.98f,0.98f, 0.8f);
-
-        //基础光
-        DirectionalLight ambientLight = new DirectionalLight( );
-        ambientLight.setPosition(0,10,0);
-        ambientLight.setLookAt(0,0,0);
-        ambientLight.setColor(1,1,1);  //白色光
-        ambientLight.setPower(0.5f); // 环境光强度通常较低
-        getCurrentScene().addLight(ambientLight);
+        getCurrentScene().setBackgroundColor(0.98f,0.98f,0.98f, 0.1f);
 
 
-        //平行光
-        DirectionalLight keyLight = new DirectionalLight(0, -1.8f, -2.0f); // 方向向量
-        keyLight.setPosition(0, 100, 0); // 位置对平行光不重要，方向才重要
+        //平行光  从右边x   从上边来
+        DirectionalLight keyLight = new DirectionalLight(1.5, -1.8f, -2.0f); // 方向向量
         keyLight.setPower(0.7f); // 光的强度
         keyLight.setColor(1.0f, 1.0f, 0.9f); // 可选：设置光的颜色（略偏暖黄）
         getCurrentScene().addLight(keyLight);
+        //从左边  从上边
+        DirectionalLight light = new DirectionalLight(-1.5, 1.8f, 1.5f); // 方向向量
+        light.setPower(0.48f); // 光的强度
+        light.setColor(1.0f, 1.0f, 0.9f); // 可选：设置光的颜色（略偏暖黄）
+        getCurrentScene().addLight(light);
+
 
         // （可选）添加补光/填充光 - 减弱主光产生的阴影
-        DirectionalLight fillLight = new DirectionalLight(1f, -0.5f, 0.5f);
+        DirectionalLight fillLight = new DirectionalLight(-2.5f, -1.5f, 3f);
         fillLight.setPower(0.3f);
+        fillLight.setColor(1f,1f,1f);
         getCurrentScene().addLight(fillLight);
+
 
         addLaneLines(); //车道线
 
         //初始化本车
-        carModel = initVehicleModel3D(R.raw.car, colorDarkGrayArr);
+        carModel = initCenterCarModel(R.raw.car, colorLightGrayArr);
 //        carModel = initCenterCarModel(R.raw.car, colorDeepGrayArr);
         carModel.setScale(0.08f);
         carModel.setPosition(0, 0, 1.2); //  z 正直 靠近观察者方向
@@ -111,12 +111,13 @@ public class CarScene extends Renderer {
                     material.setDiffuseMethod(new DiffuseMethod.Lambert());
 
                     // 设置镜面反射 - 实现光滑表面
-                    SpecularMethod.Phong phong = new SpecularMethod.Phong();
-                    material.setSpecularMethod(phong);
-//                    material.setSpecularColor(0xFFFFFFFF); // 白色高光
-//                    material.setShininess(256); // 高光泽度，值越大表面越光滑
+//                    SpecularMethod.Phong phong = new SpecularMethod.Phong();
+////                    phong.setSpecularColor();     //高光颜色
+//                    phong.setShininess(128);  //高光强度   值越大 反光点越小
+//                    material.setSpecularMethod(phong);
+
                     // 启用颜色影响
-                    material.setColorInfluence(0.8f);
+                    material.setColorInfluence(0.92f);
 
                     child.setMaterial(material);
                 }
@@ -216,7 +217,7 @@ public class CarScene extends Renderer {
 //        lineMaterial.setColor(0xFFFFFF); // 白色线条
 
         // 中心虚线
-        for (int i = -20; i <= 20; i += 2) {
+        for (int i = -20; i <= 6; i += 2) {
             Plane line = new Plane(0.08f, 0.8f, 1, 1);
             line.setMaterial(lineMaterial);
             line.setRotation(0,0,90);
@@ -244,7 +245,7 @@ public class CarScene extends Renderer {
         for (Plane line: lineList){
             Vector3 v = line.getPosition();
             v.z = v.z + z;
-            if (v.z > 20){
+            if (v.z > 6){
                 v.z = -20;
             }
             line.setPosition(v);
