@@ -261,7 +261,7 @@ public class MainActivity1 extends Activity implements LocationSource, AMapLocat
                             .defaultMarker(BitmapDescriptorFactory.HUE_RED)));
             //设置地图属性
             setUpMap();
-            aMap.animateCamera(CameraUpdateFactory.zoomTo(20)); //放大等级
+            aMap.animateCamera(CameraUpdateFactory.zoomTo(18)); //放大等级
             this.normalRouteBlue = BitmapDescriptorFactory.fromAsset("blue.png");
             this.normalRouteGreen = BitmapDescriptorFactory.fromAsset("green.png");
             this.normalRouteYellow = BitmapDescriptorFactory.fromAsset("yellow.png");
