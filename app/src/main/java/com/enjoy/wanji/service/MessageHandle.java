@@ -195,6 +195,19 @@ public class MessageHandle {
             ContainerObject3D.Obj1PedestrianList.add(trafficObj);
         }else {
             ContainerObject3D.Obj2VehicleList.add(trafficObj);
+
+
+           /**
+            * 测试使用
+            * **/
+            TrafficObj obj = new TrafficObj();
+            obj.setId(Integer.valueOf(obJson.get("id").toString()));
+            obj.setClassification(classification);
+            obj.setX(Float.parseFloat(obJson.get("x").toString()));    //float #横坐标  单位m
+            obj.setY(Float.parseFloat(obJson.get("y").toString())  - 6 );
+            obj.setWidth(Float.parseFloat(obJson.get("width").toString()));
+            obj.setLength(Float.parseFloat(obJson.get("length").toString()));
+            ContainerObject3D.Obj0UnknownList.add(obj);
         }
         return trafficObj;
     }

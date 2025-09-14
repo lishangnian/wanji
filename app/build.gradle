@@ -74,5 +74,6 @@ dependencies {
 //    implementation files('libs/eventbus.jar')
 //    implementation files('libs/butterknife-7.0.1.jar')
 
-    implementation 'org.rajawali3d:rajawali:1.1.970'
+//    implementation 'org.rajawali3d:rajawali:1.1.970'
+    implementation 'org.rajawali3d:rajawali:1.2.1970'
 }

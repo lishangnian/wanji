@@ -8,7 +8,7 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 public class ContainerObject3D {
     //0--未知  1--行人 2--机动车  待命定位中的model
     public static ConcurrentLinkedQueue<Object3D> ModelWaite0UnknownQueue = new ConcurrentLinkedQueue<>();
-    public static ConcurrentLinkedQueue<Object3D>  ModelWaitePedestrianQueue = new ConcurrentLinkedQueue<>();
+    public static ConcurrentLinkedQueue<Object3D> ModelWaite1PedestrianQueue = new ConcurrentLinkedQueue<>();
     public static ConcurrentLinkedQueue<Object3D> ModelWaite2VehicleQueue = new ConcurrentLinkedQueue<>();
 
     //活跃中的model

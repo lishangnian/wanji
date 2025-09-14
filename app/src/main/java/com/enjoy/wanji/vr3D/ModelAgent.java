@@ -5,6 +5,7 @@ import com.enjoy.wanji.service.EnjoySocketService;
 import org.rajawali3d.Object3D;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ConcurrentLinkedQueue;
 
 public class ModelAgent {
    public static List<Object3D> list = null;
@@ -13,7 +14,7 @@ public class ModelAgent {
     public static void updatePosition() {
         if (EnjoySocketService.UpdateUIModelLock.tryLock()){
             try {
-                updatePositionImp();
+                updatePositionImp0();
             }finally {
                 EnjoySocketService.UpdateUIModelLock.unlock();
             }
@@ -23,6 +24,11 @@ public class ModelAgent {
     }
 
 
+    private static void updatePositionImp0(){
+        updatePositionImp1(ContainerObject3D.Obj0UnknownList,ContainerObject3D.ModelActive0UnknownQueue,ContainerObject3D.ModelWaite0UnknownQueue);
+        updatePositionImp1(ContainerObject3D.Obj1PedestrianList,ContainerObject3D.ModelActive1PedestrianQueue,ContainerObject3D.ModelWaite1PedestrianQueue);
+        updatePositionImp1(ContainerObject3D.Obj2VehicleList,ContainerObject3D.ModelActive2VehicleQueue,ContainerObject3D.ModelWaite2VehicleQueue);
+    }
 
 
     //偏移量
@@ -30,35 +36,35 @@ public class ModelAgent {
     /**
      * 0-未知   1--行人   2--机动车
      */
-    private static void updatePositionImp() {
-        /***************** 2 类物检测定位 **********************/
+    private static void updatePositionImp1(List<TrafficObj> objList,
+                                           ConcurrentLinkedQueue<Object3D> activeQueue,
+                                           ConcurrentLinkedQueue<Object3D> waiteQueue) {
         //活跃的数量大于检测到的
-        while (ContainerObject3D.ModelActive2VehicleQueue.size() > ContainerObject3D.Obj2VehicleList.size()) {
+        while (activeQueue.size() > objList.size()) {
             //将活跃的移到等待中的
-            Object3D objModel = ContainerObject3D.ModelActive2VehicleQueue.poll();
+            Object3D objModel = activeQueue.poll();
             if (objModel!= null) {
                 objModel.setVisible(false);
-                ContainerObject3D.ModelWaite2VehicleQueue.offer(objModel);
+                waiteQueue.offer(objModel);
             }else break;
         }
         //活跃的数量小于检测到的
-        while (ContainerObject3D.ModelActive2VehicleQueue.size() < ContainerObject3D.Obj2VehicleList.size()) {
+        while (activeQueue.size() < objList.size()) {
             //将等待的移到活跃中中的
-            Object3D objModel = ContainerObject3D.ModelWaite2VehicleQueue.poll();
+            Object3D objModel = waiteQueue.poll();
             if (objModel != null) {
-                ContainerObject3D.ModelActive2VehicleQueue.offer(objModel);
+                activeQueue.offer(objModel);
             }else break;
         }
-        if (ContainerObject3D.Obj2VehicleList.size() > 0){
-            list = new ArrayList<>(ContainerObject3D.ModelActive2VehicleQueue);
+        if (objList.size() > 0){
+            list = new ArrayList<>(activeQueue);
             //更新位置   检测物种 X右是正， Y前是正
-            for (int i = 0; i < ContainerObject3D.Obj2VehicleList.size() && i < list.size(); i++) {
-                TrafficObj obj = ContainerObject3D.Obj2VehicleList.get(i);
+            for (int i = 0; i < objList.size() && i < list.size(); i++) {
+                TrafficObj obj = objList.get(i);
                 Object3D model =  list.get(i);
                 model.setVisible(true);
                 model.setPosition(obj.getX()/X_OffSet_K, 0, 0-obj.getY());
             }
         }
     }
-
 }

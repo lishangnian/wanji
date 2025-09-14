@@ -3,12 +3,10 @@ package com.enjoy.wanji.vr3D;
 import android.content.Context;
 import android.util.Log;
 import android.view.MotionEvent;
-import android.view.animation.AccelerateDecelerateInterpolator;
 
 import com.enjoy.wanji.R;
 
 import org.rajawali3d.Object3D;
-import org.rajawali3d.animation.Animation;
 import org.rajawali3d.animation.TranslateAnimation3D;
 import org.rajawali3d.lights.DirectionalLight;
 import org.rajawali3d.loader.LoaderOBJ;
@@ -28,6 +26,7 @@ import java.util.List;
 public class CarScene extends Renderer {
 
     private Object3D carModel;
+    private Object3D humanModel;
     private TranslateAnimation3D carAnimation;
     private boolean isAnimating = false;
 
@@ -49,8 +48,11 @@ public class CarScene extends Renderer {
         getCurrentScene().setBackgroundColor(0.98f,0.98f,0.98f, 0.8f);
 
         //基础光
-        DirectionalLight ambientLight = new DirectionalLight(-1, 1, 1);
-        ambientLight.setPower(0.2f); // 环境光强度通常较低
+        DirectionalLight ambientLight = new DirectionalLight( );
+        ambientLight.setPosition(0,10,0);
+        ambientLight.setLookAt(0,0,0);
+        ambientLight.setColor(1,1,1);  //白色光
+        ambientLight.setPower(0.5f); // 环境光强度通常较低
         getCurrentScene().addLight(ambientLight);
 
 
@@ -69,12 +71,19 @@ public class CarScene extends Renderer {
         addLaneLines(); //车道线
 
         //初始化本车
-//        carModel = initVehicleModel3D(R.raw.car, colorDarkGrayArr);
-        carModel = initCenterCarModel(R.raw.car, colorDeepGrayArr);
+        carModel = initVehicleModel3D(R.raw.car, colorDarkGrayArr);
+//        carModel = initCenterCarModel(R.raw.car, colorDeepGrayArr);
         carModel.setScale(0.08f);
         carModel.setPosition(0, 0, 1.2); //  z 正直 靠近观察者方向
         carModel.setRotY(180); // 调整朝向
         getCurrentScene().addChild(carModel);
+
+//        humanModel = new HumanModel();
+//        humanModel.setPosition(0,1.2,-1.2);
+//        humanModel.setScale(0.2);
+//        getCurrentScene().addChild(humanModel);
+
+
 
         // 设置摄像机位置（固定）  x-右  y-高  z-纵深 靠近观察者为正
         getCurrentCamera().setPosition(0, 2.1, 5.0);
@@ -107,7 +116,7 @@ public class CarScene extends Renderer {
 //                    material.setSpecularColor(0xFFFFFFFF); // 白色高光
 //                    material.setShininess(256); // 高光泽度，值越大表面越光滑
                     // 启用颜色影响
-                    material.setColorInfluence(1.0f);
+                    material.setColorInfluence(0.8f);
 
                     child.setMaterial(material);
                 }
@@ -120,6 +129,12 @@ public class CarScene extends Renderer {
 
     }
 
+    /**
+     * 初始化机动车模型
+     * @param resourceId
+     * @param colorARR
+     * @return
+     */
     private Object3D initVehicleModel3D(int resourceId, float[] colorARR){
         Object3D model = null;
         try {
@@ -127,7 +142,12 @@ public class CarScene extends Renderer {
 //            LoaderOBJ leftLoader = new LoaderOBJ(this,R.raw.car);
             loader.parse();   //解析模型
             model = loader.getParsedObject();
-            updateCarModel(model, colorARR);
+            model.setScale(0.08f);
+//        body.setPosition(-1.2, 0, -1.5); //
+            model.setPosition(0,-100,0); //  初始位置把他放到地底下，看不见
+            model.setRotY(180); // 调整朝向
+
+            updateModelMaterial(model, colorARR);
 
         }catch (ParsingException pe){
             Log.e("objTag","parsing carObj error:",pe.fillInStackTrace());
@@ -135,21 +155,40 @@ public class CarScene extends Renderer {
         return model;
     }
 
+    /**
+     * 初始化未知物模型
+     * @return
+     */
+    private Object3D intUnknowModel(){
+        Object3D unknowModel = new Cube(1,true,true);
+        unknowModel.setPosition(0,0.5,-1);
+        unknowModel.setScale(0.5);
+        updateModelMaterial(unknowModel, colorPearArr);
+        return unknowModel;
+    }
+
+
     //初始化交通参与者
     public void initModelNPC(){
-        //创建未知物体  初始化三个
+        //创建未知物体-3个 机动车33个
+
         for (int i =0; i < 3; i++){
             Object3D body = initVehicleModel3D(R.raw.car, colorPearArr);
-            body.setScale(0.08f);
-//        body.setPosition(-1.2, 0, -1.5); //
-            body.setPosition(0,-100,0); //  初始位置把他放到地底下，看不见
-            body.setRotY(180); // 调整朝向
             body.setVisible(false);  //设置不可见
             getCurrentScene().addChild(body);
             ContainerObject3D.ModelWaite2VehicleQueue.offer(body);
+
+            Object3D unknowModel = intUnknowModel();
+            unknowModel.setVisible(false);
+            getCurrentScene().addChild(unknowModel);
+            ContainerObject3D.ModelWaite0UnknownQueue.offer(unknowModel);
+
+
         }
 
     }
+
+
 
 
     @Override
@@ -212,75 +251,21 @@ public class CarScene extends Renderer {
         }
     }
 
-    private void updateCarModel(Object3D model3D, float[] colorARR){
+    private void updateModelMaterial(Object3D model3D, float[] colorARR){
+        // 设置车辆材质（如果没有纹理，使用默认材质）
+        Material material = new Material();
+        material.setColor(colorARR);
+        material.enableLighting(true);
+        material.setDiffuseMethod(new DiffuseMethod.Lambert());
+
         if (model3D != null && model3D.getNumChildren() > 0){
             for(int i = 0; i < model3D.getNumChildren(); i++){
                 Object3D child = model3D.getChildAt(i);
-
-                // 设置车辆材质（如果没有纹理，使用默认材质）
-                Material material = new Material();
-                material.setColor(colorARR);
-                material.enableLighting(true);
-                material.setDiffuseMethod(new DiffuseMethod.Lambert());
                 child.setMaterial(material);
             }
+        }else if (model3D != null){
+            model3D.setMaterial(material);
         }
     }
 
-    /**
-     * 测试移动车辆
-     */
-    private void createCarAnimation() {
-        // 创建车辆前后移动的动画
-        carAnimation = new TranslateAnimation3D(
-                new Vector3(-1.2, 0, -24), // 起始位置
-                new Vector3(-1.2, 10, 24)   // 结束位置
-        );
-        carAnimation.setDurationMilliseconds(4000);
-        carAnimation.setRepeatMode(Animation.RepeatMode.REVERSE_INFINITE);
-        carAnimation.setInterpolator(new AccelerateDecelerateInterpolator());
-//        carAnimation.setTransformable3D(leftModel);
-        Log.i("objTag","car animation created");
-    }
-
-    public void startCarAnimation() {
-        boolean ss  = carAnimation == null;
-        Log.i("objTag","animation:"+ ss +", isAnimating:"+ isAnimating);
-
-
-        if (carAnimation != null && !isAnimating) {
-            carAnimation.play();
-            isAnimating = true;
-            Log.i("objTag","car animation start play");
-        }
-    }
-
-    // 测试模型移动
-//    public void startMoveLeft(){
-//        Vector3 vector3 = leftModel.getPosition();
-//        Log.i("objTag","start to move left z = :" + vector3.z);
-//        double z = vector3.z +0.1;
-//        if (z > 1.5){
-//            z = -20;
-//        }
-//        vector3.z = z;
-//        leftModel.setPosition(vector3);
-//    }
-
-    public void stopCarAnimation() {
-        if (carAnimation != null && isAnimating) {
-            carAnimation.pause();
-            isAnimating = false;
-        }
-    }
-
-    public void resetCarPosition() {
-//        if (carModel != null) {
-//            carModel.setPosition(0, -1, -4);
-//        }
-
-//        if (leftModel != null) {
-//            carModel.setPosition(-1.2, 0, -24);
-//        }
-    }
 }

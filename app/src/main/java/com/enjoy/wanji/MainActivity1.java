@@ -685,6 +685,8 @@ public class MainActivity1 extends Activity implements LocationSource, AMapLocat
             notifyMediaThread();
             return;
         }
+
+
         AttentionInfo.type = type;
         AttentionInfo.attentionKey = key;
         if (type == AttentionTypeEnum.CONNECT_SUCCESS.key || type == AttentionTypeEnum.DISCONNECT.key
@@ -716,6 +718,12 @@ public class MainActivity1 extends Activity implements LocationSource, AMapLocat
         }
         if (titleTxt == null) {
             titleTxt = dialogPopWindow.getContentView().findViewById(R.id.title_txt);
+        }
+
+        if ("警告".equals(AttentionInfo.title)){
+            msgTxt.setTextColor(getResources().getColor(R.color.red));
+        }else {
+            msgTxt.setTextColor(getResources().getColor(R.color.lightBlack));
         }
 
         titleTxt.setText(AttentionInfo.title);
