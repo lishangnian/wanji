@@ -47,6 +47,7 @@ import com.amap.api.maps.model.LatLng;
 import com.amap.api.maps.model.LatLngBounds;
 import com.amap.api.maps.model.Marker;
 import com.amap.api.maps.model.MarkerOptions;
+import com.amap.api.maps.model.MyLocationStyle;
 import com.amap.api.maps.model.Polyline;
 import com.amap.api.maps.model.PolylineOptions;
 import com.amap.api.maps.model.VisibleRegion;
@@ -283,7 +284,6 @@ public class MainActivity1 extends Activity implements LocationSource, AMapLocat
              0   //可视区域指向方向，单位为角度。从正北向顺时针计算，0-360
              )));
              */
-            aMap.setMyLocationRotateAngle(90);
 
         }
 
@@ -416,18 +416,6 @@ public class MainActivity1 extends Activity implements LocationSource, AMapLocat
              parkBtn.setTextColor(Color.BLACK);
              parkBtn.setBackground(getResources().getDrawable(R.drawable.button_shape_default));
              }
-             break;
-             **/
-
-            /**
-             case Common.ACTION_UI_CONNECT:
-             ToastUtil.showLong(this,"connect SUCCESS! \n connectFlag:"+ Global.connectFlag);
-             break;
-             case Common.ACTION_UI_DIS_CONNECT:
-             ToastUtil.showLong(this,"dis connect ! \n connectFlag:"+ Global.connectFlag);
-             break;
-             case Common.ACTION_UI_CONNECT_ERR:
-             ToastUtil.showLong(this,"connect ERROR! \n connectFlag:"+ Global.connectFlag);
              break;
              **/
 
