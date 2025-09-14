@@ -21,7 +21,7 @@ public class MyDialogPopWindow extends PopupWindow {
     private Button cancelBtn;
 
 
-    public MyDialogPopWindow(Activity mContext, View.OnClickListener clickListener) {  //这里参数还可以传入ClickListener
+    public MyDialogPopWindow(Activity mContext, View.OnClickListener clickListener, boolean btnShow) {  //这里参数还可以传入ClickListener
         this.mContext = mContext;
 
         this.view = LayoutInflater.from(mContext).inflate(R.layout.dialog_win_layout, null);
@@ -43,6 +43,12 @@ public class MyDialogPopWindow extends PopupWindow {
 
         cancelBtn = view.findViewById(R.id.cancel_btn);
         cancelBtn.setOnClickListener(clickListener);
+        //设置取消按钮是否显示 警告类弹框按钮则显示
+        if (btnShow){
+            cancelBtn.setVisibility(View.VISIBLE);
+        }else {
+            cancelBtn.setVisibility(View.GONE);
+        }
     }
 
     /**

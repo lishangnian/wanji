@@ -34,12 +34,6 @@
             </intent-filter>
         </activity>
         <activity
-            android:name="com.enjoy.wanji.MainActivity"
-            android:launchMode="singleInstance"
-            android:screenOrientation="landscape"
-            android:theme="@android:style/Theme.NoTitleBar.Fullscreen">
-        </activity>
-        <activity
             android:name="com.enjoy.wanji.MainActivity1"
             android:launchMode="singleInstance"
             android:screenOrientation="landscape"
@@ -49,7 +43,8 @@
             android:name="com.enjoy.wanji.CollectRoadsActivity1"
             android:launchMode="standard"
             android:screenOrientation="landscape"
-            android:theme="@android:style/Theme.NoTitleBar.Fullscreen"></activity>
+            android:theme="@android:style/Theme.NoTitleBar.Fullscreen">
+        </activity>
 
         <meta-data
             android:name="com.amap.api.v2.apikey"

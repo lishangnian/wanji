@@ -101,6 +101,7 @@ public class MainActivity1 extends Activity implements LocationSource, AMapLocat
     /********************************************************************************/
     static AlertDialog.Builder errorDialog = null;
     static MyDialogPopWindow dialogPopWindow = null;
+    static boolean dialogWarning = false; //弹框是否为警告框
     TextView titleTxt, msgTxt, speedTxt, speedLimitTxt, gearTxt, socTxt;
 
     ImageView connectImg, leftLight, rightLight, driveImg, socImg;
@@ -680,8 +681,10 @@ public class MainActivity1 extends Activity implements LocationSource, AMapLocat
         if (type == AttentionTypeEnum.CONNECT_SUCCESS.key || type == AttentionTypeEnum.DISCONNECT.key
                 || type == AttentionTypeEnum.MANUAL_DRIVE.key || type == AttentionTypeEnum.AUTO_DRIVE.key) {
             AttentionInfo.title = "提示";
+            dialogWarning = false;
         } else {
             AttentionInfo.title = "警告";
+            dialogWarning = true;
         }
         String attentionMsg = AttentionContentEnum.getValue(key);
         if (attentionMsg == null || "".equals(attentionMsg)) {
@@ -699,7 +702,7 @@ public class MainActivity1 extends Activity implements LocationSource, AMapLocat
                 public void onClick(View v) {
                     dialogPopWindow.dismiss();
                 }
-            });
+            }, dialogWarning);
         }
         if (msgTxt == null) {
             msgTxt = dialogPopWindow.getContentView().findViewById(R.id.alarm_msg_txt);
@@ -708,7 +711,7 @@ public class MainActivity1 extends Activity implements LocationSource, AMapLocat
             titleTxt = dialogPopWindow.getContentView().findViewById(R.id.title_txt);
         }
 
-        if ("警告".equals(AttentionInfo.title)){
+        if (dialogWarning){
             msgTxt.setTextColor(getResources().getColor(R.color.red));
         }else {
             msgTxt.setTextColor(getResources().getColor(R.color.lightBlack));

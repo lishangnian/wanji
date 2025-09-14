@@ -101,9 +101,9 @@ public class CollectRoadsActivity1 extends Activity {
                     ToastUtil.showShort(CollectRoadsActivity1.this, "地图采集中，请结束后再返回");
                     return;
                 }
-                Intent backIntent = new Intent(CollectRoadsActivity1.this, MainActivity.class);
-                backIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                startActivity(backIntent);
+//                Intent backIntent = new Intent(CollectRoadsActivity1.this, MainActivity.class);
+//                backIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+//                startActivity(backIntent);
             }
         });
 
