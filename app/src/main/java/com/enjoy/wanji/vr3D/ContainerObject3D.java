@@ -22,7 +22,15 @@ public class ContainerObject3D {
     public static volatile LinkedList<TrafficObj> Obj1PedestrianList = new LinkedList<>();
     public static volatile LinkedList<TrafficObj> Obj2VehicleList = new LinkedList<>();
 
+    //用于存放预new的 trafficObj,避免每次接收都new一个
+    public static volatile ConcurrentLinkedQueue<TrafficObj> TrafficObjHomeQueue = new ConcurrentLinkedQueue<>();
 
+    //先new9个待用
+    static {
+        while (TrafficObjHomeQueue.size() <= 9){
+            TrafficObjHomeQueue.add(new TrafficObj());
+        }
+    }
 
 
 }

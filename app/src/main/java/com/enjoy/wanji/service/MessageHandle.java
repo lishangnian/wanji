@@ -6,14 +6,10 @@ import android.util.Log;
 import com.enjoy.wanji.data.TopicAndParams;
 import com.enjoy.wanji.entity.DataStorageFromPC;
 import com.enjoy.wanji.vr3D.ContainerObject3D;
-import com.enjoy.wanji.vr3D.ModelAgent;
 import com.enjoy.wanji.vr3D.TrafficObj;
 
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public class MessageHandle {
 
@@ -40,7 +36,7 @@ public class MessageHandle {
                 int gear = Integer.valueOf(jsonObj.get("gear").toString()); //档位 0-P  1-R  2-N  3-D
                 int turnLight = Integer.valueOf(jsonObj.get("turnLight").toString());  //转向 0--无  1--左转  2--右转
 
-               // int error = Integer.valueOf(jsonObj.get("error").toString());   //2，故障等级2 语音提示加弹框
+                // int error = Integer.valueOf(jsonObj.get("error").toString());   //2，故障等级2 语音提示加弹框
                 Object socObj = jsonObj.get("soc");
 
                 if (socObj != null) {
@@ -62,13 +58,13 @@ public class MessageHandle {
                     }
                 }
                 //档位 0-P  1-R  2-N  3-D
-                if (gear == 0){
+                if (gear == 0) {
                     DataStorageFromPC.Gear = "P";
-                }else if (gear == 1){
+                } else if (gear == 1) {
                     DataStorageFromPC.Gear = "R";
-                } else if (gear == 2){
+                } else if (gear == 2) {
                     DataStorageFromPC.Gear = "N";
-                } else if (gear == 3){
+                } else if (gear == 3) {
                     DataStorageFromPC.Gear = "D";
                 }
                 //转向 0--无  1--左转  2--右转
@@ -79,35 +75,42 @@ public class MessageHandle {
                 DataStorageFromPC.velocity = speedInt;
                 break;
             case TopicAndParams.topicRecvTrafficPart:       //交通参与者，3D动画
-                if (EnjoySocketService.UpdateUIModelLock.tryLock()){   //先获取锁，避免动画正在处理，有线程安全问题
+                if (EnjoySocketService.UpdateUIModelLock.tryLock()) {   //先获取锁，避免动画正在处理，有线程安全问题
                     try {
                         Object sensorObjects = jsonObj.get("obs");
+                        //把上次传来的物都返回到预留集合中
+                        ContainerObject3D.TrafficObjHomeQueue.addAll(ContainerObject3D.Obj0UnknownList);
+                        ContainerObject3D.TrafficObjHomeQueue.addAll(ContainerObject3D.Obj1PedestrianList);
+                        ContainerObject3D.TrafficObjHomeQueue.addAll(ContainerObject3D.Obj2VehicleList);
+
                         //清空上次传来的检测物
                         ContainerObject3D.Obj0UnknownList.clear();
                         ContainerObject3D.Obj1PedestrianList.clear();
                         ContainerObject3D.Obj2VehicleList.clear();
 
-                        if ( sensorObjects != null){
+                        if (sensorObjects != null) {
                             JSONArray objectArray = (JSONArray) sensorObjects;
-                            for (Object ob : objectArray){
+                            for (Object ob : objectArray) {
                                 JSONObject obJson = (JSONObject) ob;
-                                TrafficObj ob3D =  transOb_2Object_3D(obJson);
-                                //原点在后轮中心  右是正， 前是正
-                                Log.i(tag, "get obj class:" + ob3D.getClassification() +", id:"+ob3D.getId() +
-                                        ", x:"+ ob3D.getX()+ ", y:" + ob3D.getY()+
-                                        ", with:" + ob3D.getWidth()+", length:" + ob3D.getLength());
+                                TrafficObj ob3D = transOb_2Object_3D(obJson);
+                                if (ob3D != null){
+                                    //原点在后轮中心  右是正， 前是正
+                                    Log.i(tag, "get obj class:" + ob3D.getClassification() + ", id:" + ob3D.getId() +
+                                            ", x:" + ob3D.getX() + ", y:" + ob3D.getY() +
+                                            ", with:" + ob3D.getWidth() + ", length:" + ob3D.getLength());
+                                }
                             }
                         }
-                    }finally {
+                    } finally {
                         EnjoySocketService.UpdateUIModelLock.unlock();  //释放锁
                     }
-                }else {
-                    Log.i(tag,"Lock not get data: 数据接收未获取锁");
+                } else {
+                    Log.i(tag, "Lock not get data: 数据接收未获取锁");
                 }
 
                 break;
             case TopicAndParams.topicRecvLonlatmMappoints:        //轨迹点
-                Log.i(tag,"get map points:" + jsonObj.toString());
+                Log.i(tag, "get map points:" + jsonObj.toString());
 //                lonlatmappoints
                 String mapName = jsonObj.get("mapname").toString();  //轨迹名称 maping1
                 String zoneName = jsonObj.get("zonename").toString();  //园区名称 yuanqu1
@@ -120,48 +123,48 @@ public class MessageHandle {
                 /**
                  *
 
-                String zoneName = jsonObj.get("zonename").toString();  //园区名
-//                jsonObj.get(" mapname").toString(); //轨迹名
-                JSONArray pointsArray = (JSONArray) jsonObj.get("points");  //轨迹点
+                 String zoneName = jsonObj.get("zonename").toString();  //园区名
+                 //                jsonObj.get(" mapname").toString(); //轨迹名
+                 JSONArray pointsArray = (JSONArray) jsonObj.get("points");  //轨迹点
 
-                if (pointsArray == null || pointsArray.isEmpty()) {
-                    Log.e(tag, "接收轨迹点为空");
-                }
-                DataStorageFromPC.roadsMap.put(zoneName, jsonObj);
+                 if (pointsArray == null || pointsArray.isEmpty()) {
+                 Log.e(tag, "接收轨迹点为空");
+                 }
+                 DataStorageFromPC.roadsMap.put(zoneName, jsonObj);
 
-                //把同一个园区内的轨迹放在一个list中归类
-                List<JSONObject> roadsJsonList = DataStorageFromPC.zoneNameJsonListMap.get(zoneName);
-                if (roadsJsonList == null) {
-                    roadsJsonList = new ArrayList<>();
-                    roadsJsonList.add(jsonObj);
-                }
-                DataStorageFromPC.zoneNameJsonListMap.put(zoneName, roadsJsonList);
-                **/
+                 //把同一个园区内的轨迹放在一个list中归类
+                 List<JSONObject> roadsJsonList = DataStorageFromPC.zoneNameJsonListMap.get(zoneName);
+                 if (roadsJsonList == null) {
+                 roadsJsonList = new ArrayList<>();
+                 roadsJsonList.add(jsonObj);
+                 }
+                 DataStorageFromPC.zoneNameJsonListMap.put(zoneName, roadsJsonList);
+                 **/
 
                 break;
             /**
              *
-            case TopicAndParams.topicRecvControllon:  //获取障碍物距离
-                double objDis = (double) jsonObj.get("objdis");  //单位米
-                //刹车注意，当actuator发出的自动驾驶状态为1，且acc 由大于零跳变成小于零时触发
-                int brakePedal = Integer.parseInt(jsonObj.get("brakePedal").toString());
-                String objDisStr = String.format("%.1f", objDis);   //保留一位小数
-                if (objDis >= 100) {
-                    DataStorageFromPC.objDis = "---m";
-                } else if (objDis < 10) {
-                    DataStorageFromPC.objDis = "0" + objDisStr + "m";
-                } else {
-                    DataStorageFromPC.objDis = objDisStr + "m";
-                }
-                if (DataStorageFromPC.driverStatus > 0 && DataStorageFromPC.velocity / 3.6 > 1) {  //自驾状态 且速度大于1m/s
+             case TopicAndParams.topicRecvControllon:  //获取障碍物距离
+             double objDis = (double) jsonObj.get("objdis");  //单位米
+             //刹车注意，当actuator发出的自动驾驶状态为1，且acc 由大于零跳变成小于零时触发
+             int brakePedal = Integer.parseInt(jsonObj.get("brakePedal").toString());
+             String objDisStr = String.format("%.1f", objDis);   //保留一位小数
+             if (objDis >= 100) {
+             DataStorageFromPC.objDis = "---m";
+             } else if (objDis < 10) {
+             DataStorageFromPC.objDis = "0" + objDisStr + "m";
+             } else {
+             DataStorageFromPC.objDis = objDisStr + "m";
+             }
+             if (DataStorageFromPC.driverStatus > 0 && DataStorageFromPC.velocity / 3.6 > 1) {  //自驾状态 且速度大于1m/s
 
-                    //uint8    brakePedal  当actuator发出的自动驾驶状态为1，且车速大于1m/s，且brakepedal 由等于零跳变成大于零时触发
-                    if (DataStorageFromPC.brakePadel == 0 && brakePedal > 0) {
-                        DataStorageFromPC.accBrake = 1;  //刹车
-                    }
-                }
-                DataStorageFromPC.brakePadel = brakePedal;
-                break;
+             //uint8    brakePedal  当actuator发出的自动驾驶状态为1，且车速大于1m/s，且brakepedal 由等于零跳变成大于零时触发
+             if (DataStorageFromPC.brakePadel == 0 && brakePedal > 0) {
+             DataStorageFromPC.accBrake = 1;  //刹车
+             }
+             }
+             DataStorageFromPC.brakePadel = brakePedal;
+             break;
              ***/
             case TopicAndParams.topicRecvV2xapp: //V2x  红绿灯和限速
                 //  trafficLight  0:无 1：红灯 2：绿灯 3：黄灯
@@ -177,11 +180,17 @@ public class MessageHandle {
         }
     }
 
-    private static TrafficObj transOb_2Object_3D(JSONObject obJson){
+    static int classification;
 
-       int classification = Integer.valueOf(obJson.get("classification").toString());
+    private static TrafficObj transOb_2Object_3D(JSONObject obJson) {
 
-        TrafficObj trafficObj = new TrafficObj();
+        classification = Integer.valueOf(obJson.get("classification").toString());
+
+        TrafficObj trafficObj = ContainerObject3D.TrafficObjHomeQueue.poll();
+        if (trafficObj == null) {  //没有了，说明展示数量超出了，可不显示
+            return null;
+        }
+
         trafficObj.setId(Integer.valueOf(obJson.get("id").toString()));
         trafficObj.setClassification(classification);
         trafficObj.setX(Float.parseFloat(obJson.get("x").toString()));    //float #横坐标  单位m
@@ -189,17 +198,17 @@ public class MessageHandle {
         trafficObj.setWidth(Float.parseFloat(obJson.get("width").toString()));
         trafficObj.setLength(Float.parseFloat(obJson.get("length").toString()));
 
-        if (classification == 0){
+        if (classification == 0) {
             ContainerObject3D.Obj0UnknownList.add(trafficObj);
-        }else if (classification == 1){
+        } else if (classification == 1) {
             ContainerObject3D.Obj1PedestrianList.add(trafficObj);
-        }else {
+        } else {
             ContainerObject3D.Obj2VehicleList.add(trafficObj);
 
 
-           /**
-            * 测试使用
-            * **/
+            /**
+             * 测试使用
+             * **/
 //            TrafficObj obj = new TrafficObj();
 //            obj.setId(Integer.valueOf(obJson.get("id").toString()));
 //            obj.setClassification(classification);

@@ -134,6 +134,8 @@ public class EnjoySocketService extends IntentService {
     }
 
 
+
+    JSONParser parser = new JSONParser();
     /**
      * 连接ros服务
      *
@@ -142,6 +144,7 @@ public class EnjoySocketService extends IntentService {
      */
     private void connect(String ip, String port) {
         Log.i(connectTag, "start to connect ros ip =" + ip);
+
         try {
 //            Draft 是版本
             client = new WebSocketClient(new URI("ws://" + ip + ":" + port), new Draft_17()) {
@@ -163,20 +166,22 @@ public class EnjoySocketService extends IntentService {
                 @Override
                 public void onMessage(String s) {
                     Log.i(tag, "webSocket get message: " + s);
-                    JSONParser parser = new JSONParser();
-                    JSONObject jsonObj = null;
+
+                    JSONObject jsonObj, msgJson;
+                    Object nameObj, msgObj;
+                    String nameTopic;
+
                     try {
                         jsonObj = (JSONObject) parser.parse(s);
-                        Object nameObj = jsonObj.get("topic");
-                        String nameTopic = null;
+                        nameObj = jsonObj.get("topic");
                         if (nameObj != null) {
                             nameTopic = nameObj.toString();
                         } else {
                             return;
                         }
                         Log.i(tag, "收到订阅消息topic =" + nameTopic);
-                        Object msgObj = jsonObj.get("msg");
-                        JSONObject msgJson = msgObj == null ? null : (JSONObject) msgObj;
+                        msgObj = jsonObj.get("msg");
+                        msgJson = msgObj == null ? null : (JSONObject) msgObj;
                         if (msgObj == null) {
                             return;
                         }
