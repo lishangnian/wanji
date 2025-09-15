@@ -117,7 +117,7 @@ public class MainActivity1 extends Activity implements LocationSource, AMapLocat
     private Marker carMarker;
 
     private String heading;
-    private LatLng latLng = new LatLng(30.617127, 114.253258);
+//    private LatLng latLng = new LatLng(30.617127, 114.253258);
     private BitmapDescriptor normalRouteBlue = null;
     private BitmapDescriptor normalRouteGreen = null;
     private BitmapDescriptor normalRouteYellow = null;
@@ -579,14 +579,14 @@ public class MainActivity1 extends Activity implements LocationSource, AMapLocat
                 heading = DataStorageFromPC.heading;
                 if (lon > 0 && lat > 0) {
                     LatLng latLngPoint = ChangeLatlon.transform(lat, lon);
-                    latLng = new LatLng(latLngPoint.latitude, latLngPoint.longitude);
+//                    latLng = new LatLng(latLngPoint.latitude, latLngPoint.longitude);
 
                     // farLeft左上角  farRight右上角  nearLeft左下角 可从visibleRegion获取
                     VisibleRegion visibleRegion = aMap.getProjection().getVisibleRegion();
                     LatLngBounds latLngBounds = visibleRegion.latLngBounds;         //可视区域的四个顶点形成的经纬度范围
-                    if (DataStorageFromPC.velocity > 0 || !latLngBounds.contains(latLng)) {
+                    if (DataStorageFromPC.velocity > 0 || !latLngBounds.contains(latLngPoint)) {
                         //车速大于0或判断位置点是否在视角范围内，如果不是则定位在中心点
-                        aMap.animateCamera(CameraUpdateFactory.changeLatLng(latLng)); //设置当前点为中心位置
+                        aMap.animateCamera(CameraUpdateFactory.changeLatLng(latLngPoint)); //设置当前点为中心位置
                     }
                     //将此经纬度设置成公共的，也就是说，我们在有网络的情况下响应实际的坐标，无网络响应发送的经纬度，且发送的经纬度优先级高于一切。
                     addCarMarker(latLngPoint.latitude, latLngPoint.longitude, Float.valueOf(heading));
