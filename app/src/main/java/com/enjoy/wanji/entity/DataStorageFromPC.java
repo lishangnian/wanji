@@ -43,11 +43,14 @@ public class DataStorageFromPC {
     public static int turnLight = 0;
 
     // 0-P  1-R  2-N  3-D
-    public static volatile String Gear = "P";
+    public static volatile String Gear = GearEnum.P.value;
+    public static volatile int GearInt = GearEnum.P.key;
 
     public static volatile long actuatorTimeStamp = System.currentTimeMillis();  //actuator的时间戳
 
     public static volatile String battery = "0V";   //电压
+    public static volatile boolean UI_DATA_CHANGE = false;   //界面主数据变化标记
+    public static volatile boolean TRAFFIC_DATA_SEND = false;  //交通参与者变化
     public static volatile int batterySoc = 0; //电量
     public static volatile String soc = "00";   //电量 %
     private static long carWorkModeUpdateStamp = System.currentTimeMillis();

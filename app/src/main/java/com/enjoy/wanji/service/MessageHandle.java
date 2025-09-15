@@ -5,6 +5,7 @@ import android.util.Log;
 
 import com.enjoy.wanji.data.TopicAndParams;
 import com.enjoy.wanji.entity.DataStorageFromPC;
+import com.enjoy.wanji.entity.GearEnum;
 import com.enjoy.wanji.vr3D.ContainerObject3D;
 import com.enjoy.wanji.vr3D.TrafficObj;
 
@@ -32,49 +33,59 @@ public class MessageHandle {
                 Log.i(tag, "收到驾驶状态信息" + jsonObj.toString());
                 int speedInt = (int) ((double) jsonObj.get("speed") * 3.6);
                 int driverStatus = Integer.valueOf(jsonObj.get("sysstatus").toString());  //驾驶状态 0-人工； 1-自动
-
                 int gear = Integer.valueOf(jsonObj.get("gear").toString()); //档位 0-P  1-R  2-N  3-D
                 int turnLight = Integer.valueOf(jsonObj.get("turnLight").toString());  //转向 0--无  1--左转  2--右转
 
                 // int error = Integer.valueOf(jsonObj.get("error").toString());   //2，故障等级2 语音提示加弹框
                 Object socObj = jsonObj.get("soc");
 
+                //电量
                 if (socObj != null) {
                     float soc = Float.parseFloat(socObj.toString());
                     int socInt = (int) soc;
-                    DataStorageFromPC.batterySoc = socInt;
-                    if (socInt < 10) {
-                        DataStorageFromPC.soc = "0" + socInt + "%";
-                    } else {
-                        DataStorageFromPC.soc = socInt + "%";
+                    if (socInt != DataStorageFromPC.batterySoc){
+                        DataStorageFromPC.UI_DATA_CHANGE = true;
+                        DataStorageFromPC.batterySoc = socInt;
+                        if (socInt < 10) {
+                            DataStorageFromPC.soc = "0" + socInt + "%";
+                        } else {
+                            DataStorageFromPC.soc = socInt + "%";
+                        }
                     }
                 }
-
-                if (DataStorageFromPC.driverStatus != driverStatus) {  //跳变
+                //驾驶状态
+                if (DataStorageFromPC.driverStatus != driverStatus) {  // 0-人工  1--自动
                     if (DataStorageFromPC.driverStatus > 0) {   //当前
                         DataStorageFromPC.driverStatusTip = 2;//退出自驾
                     } else {
                         DataStorageFromPC.driverStatusTip = 1;//进入自驾
                     }
+                    DataStorageFromPC.driverStatus = driverStatus;
+                    DataStorageFromPC.UI_DATA_CHANGE = true;
                 }
                 //档位 0-P  1-R  2-N  3-D
-                if (gear == 0) {
-                    DataStorageFromPC.Gear = "P";
-                } else if (gear == 1) {
-                    DataStorageFromPC.Gear = "R";
-                } else if (gear == 2) {
-                    DataStorageFromPC.Gear = "N";
-                } else if (gear == 3) {
-                    DataStorageFromPC.Gear = "D";
+                if (gear != DataStorageFromPC.GearInt){
+                    DataStorageFromPC.GearInt = gear;
+                    DataStorageFromPC.Gear = GearEnum.getValue(gear);
+                    DataStorageFromPC.UI_DATA_CHANGE = true;
                 }
+                if (speedInt != DataStorageFromPC.velocity){
+                    DataStorageFromPC.speedStr = String.valueOf(speedInt);
+                    DataStorageFromPC.velocity = speedInt;
+                    DataStorageFromPC.UI_DATA_CHANGE = true;
+                }
+
                 //转向 0--无  1--左转  2--右转
-                DataStorageFromPC.turnLight = turnLight;
-                DataStorageFromPC.driverStatus = driverStatus;
-                DataStorageFromPC.speedStr = String.valueOf(speedInt);
-//                DataStorageFromPC.error = error;
-                DataStorageFromPC.velocity = speedInt;
+                if (turnLight != DataStorageFromPC.turnLight){
+                    DataStorageFromPC.turnLight = turnLight;
+                    DataStorageFromPC.UI_DATA_CHANGE = true;
+                }
                 break;
             case TopicAndParams.topicRecvTrafficPart:       //交通参与者，3D动画
+                if (DataStorageFromPC.TRAFFIC_DATA_SEND){
+                    DataStorageFromPC.TRAFFIC_DATA_SEND = false;
+                    return;
+                }
                 if (EnjoySocketService.UpdateUIModelLock.tryLock()) {   //先获取锁，避免动画正在处理，有线程安全问题
                     try {
                         Object sensorObjects = jsonObj.get("obs");
@@ -101,6 +112,7 @@ public class MessageHandle {
                                 }
                             }
                         }
+                        DataStorageFromPC.TRAFFIC_DATA_SEND = true;
                     } finally {
                         EnjoySocketService.UpdateUIModelLock.unlock();  //释放锁
                     }
@@ -174,8 +186,11 @@ public class MessageHandle {
                 int speedLimitInt = (int) (Integer.valueOf(jsonObj.get("speedlimit").toString()) * 3.6);  //限速  m/s
                 DataStorageFromPC.lightColor = trafficLight;
                 DataStorageFromPC.v2xType = v2xType;
-                DataStorageFromPC.speedLimit = speedLimitInt;
-                DataStorageFromPC.speedLimitStr = String.valueOf(speedLimitInt);
+                if (DataStorageFromPC.speedLimit != speedLimitInt){
+                    DataStorageFromPC.speedLimit = speedLimitInt;
+                    DataStorageFromPC.speedLimitStr = String.valueOf(speedLimitInt);
+                }
+
                 break;
         }
     }

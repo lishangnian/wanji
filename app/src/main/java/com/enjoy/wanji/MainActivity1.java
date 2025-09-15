@@ -408,8 +408,25 @@ public class MainActivity1 extends Activity implements LocationSource, AMapLocat
 //                refresh("after delete");  //删除轨迹后的
                 break;
             case Common.ACTION_UI_CONNECT:        //连接成功
+                //连接状态
+                if (Global.connectFlag) {
+                    //改变连接logo连接颜色
+                    connectImg.setImageDrawable(getResources().getDrawable(R.drawable.connect));
+                    Log.i(TAG, "更新连接标志 true");
+                } else {
+                    connectImg.setImageDrawable(getResources().getDrawable(R.drawable.disconnect));
+                }
                 //加载轨迹
                 Global.loadRoadsFlag = true;
+                break;
+            case Common.ACTION_UI_DISCONNECT:        //连接断开
+                if (Global.connectFlag) {
+                    connectImg.setImageDrawable(getResources().getDrawable(R.drawable.connect));
+                } else {
+                    connectImg.setImageDrawable(getResources().getDrawable(R.drawable.disconnect));
+                    Log.i(TAG, "更新连接标志 false");
+
+                }
                 break;
             /**
              case Common.ACTION_UI_UPDATE_PARK:
@@ -421,18 +438,6 @@ public class MainActivity1 extends Activity implements LocationSource, AMapLocat
              **/
 
             case Common.ACTION_UI_UPDATE: //更新UI
-                Log.i(TAG, "更新UI");
-                //连接状态
-                if (Global.connectFlag) {
-                    //改变连接logo连接颜色
-                    connectImg.setImageDrawable(getResources().getDrawable(R.drawable.connect));
-                    Log.i(TAG, "更新UI  连接标志");
-                } else {
-                    connectImg.setImageDrawable(getResources().getDrawable(R.drawable.disconnect));
-                    //红绿灯
-//                    trafficLight.setImageDrawable(getResources().getDrawable(R.drawable.light_null));
-                }
-
                 //更新stopgo的按钮显示
                 /*************************控显一体本项目不用*******
                  if (Global.connectFlag && System.currentTimeMillis() - 3000 > DataStorage.stopGoTimeStamp) {
@@ -451,9 +456,6 @@ public class MainActivity1 extends Activity implements LocationSource, AMapLocat
                  **************************/
 
 
-                //障碍物
-
-                //  GPS显示
 
                 //设置电量
                 if (!Global.connectFlag) { //未连接
@@ -461,6 +463,7 @@ public class MainActivity1 extends Activity implements LocationSource, AMapLocat
                     socImg.setImageDrawable(getResources().getDrawable(R.drawable.soc1));
                 } else {
                     socTxt.setText(DataStorageFromPC.soc);
+
                     if (DataStorageFromPC.batterySoc <= 20 ){
                         socImg.setImageDrawable(getResources().getDrawable(R.drawable.soc1));
                     }else if (DataStorageFromPC.batterySoc > 20 && DataStorageFromPC.batterySoc <=50){
@@ -478,7 +481,6 @@ public class MainActivity1 extends Activity implements LocationSource, AMapLocat
 //                    speedTxt.setText(DataStorageFromPC.speedStr);
                 } else {
                     speedTxt.setText(DataStorageFromPC.speedStr);
-                    carScene.updateLinesMove(DataStorageFromPC.velocity / 180f);
                 }
 
                 //驾驶状态
@@ -549,21 +551,6 @@ public class MainActivity1 extends Activity implements LocationSource, AMapLocat
                         }
                     }
                 }
-                //限速
-                if (DataStorageFromPC.velocity > DataStorageFromPC.speedLimit) {  //当前速度大于限速
-                    //显示限速
-                    speedLimitTxt.setText(DataStorageFromPC.speedLimitStr);
-                    speedLimitTxt.setVisibility(View.VISIBLE); //可见
-                    //设置限速外圈颜色变化
-                    if (System.currentTimeMillis() % 1000 > 500){
-                        speedLimitTxt.setBackground(getResources().getDrawable(R.drawable.limit_speed));
-                    }else {
-                        speedLimitTxt.setBackground(getResources().getDrawable(R.drawable.limit_speed0));
-                    }
-                } else {
-                    speedLimitTxt.setVisibility(View.GONE);  //不可见
-                }
-                //重载按钮
 
                 //故障报警
 //                attentionDialogShow();
@@ -572,6 +559,7 @@ public class MainActivity1 extends Activity implements LocationSource, AMapLocat
                 break;
             case Common.ACTION_UI_3D:   //更新3D动画
                 ModelAgent.updatePosition();
+                carScene.updateLinesMove(DataStorageFromPC.velocity / 180f);
                 break;
             case Common.ACTION_UI_LOCATION:   //更新位置定位
                 double lon = DataStorageFromPC.lon;
@@ -603,7 +591,21 @@ public class MainActivity1 extends Activity implements LocationSource, AMapLocat
                 break;
             case Common.ACTION_UI_V2X:  //v2x
                 //0:无 1：红灯 2：绿灯 3：黄灯
-
+                //限速
+                if (Global.connectFlag && DataStorageFromPC.velocity > DataStorageFromPC.speedLimit) {  //当前速度大于限速
+                    Log.i(TAG, "更新V2X");
+                    //显示限速
+                    speedLimitTxt.setText(DataStorageFromPC.speedLimitStr);
+                    speedLimitTxt.setVisibility(View.VISIBLE); //可见
+                    //设置限速外圈颜色变化
+                    if (System.currentTimeMillis() % 1000 > 500){
+                        speedLimitTxt.setBackground(getResources().getDrawable(R.drawable.limit_speed));
+                    }else {
+                        speedLimitTxt.setBackground(getResources().getDrawable(R.drawable.limit_speed0));
+                    }
+                } else {
+                    speedLimitTxt.setVisibility(View.GONE);  //不可见
+                }
                 attentionDialogShow();
                 break;
         }
@@ -702,7 +704,7 @@ public class MainActivity1 extends Activity implements LocationSource, AMapLocat
                 public void onClick(View v) {
                     dialogPopWindow.dismiss();
                 }
-            }, dialogWarning);
+            });
         }
         if (msgTxt == null) {
             msgTxt = dialogPopWindow.getContentView().findViewById(R.id.alarm_msg_txt);
@@ -716,6 +718,7 @@ public class MainActivity1 extends Activity implements LocationSource, AMapLocat
         }else {
             msgTxt.setTextColor(getResources().getColor(R.color.lightBlack));
         }
+        dialogPopWindow.setBtnWarning(dialogWarning);
 
         titleTxt.setText(AttentionInfo.title);
         msgTxt.setText(AttentionInfo.message);

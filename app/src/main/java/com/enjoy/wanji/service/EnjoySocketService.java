@@ -191,15 +191,19 @@ public class EnjoySocketService extends IntentService {
                         } else if (nameTopic.equals(TopicAndParams.topicRecvV2xapp)) { //接收v2x
                             sendCast(Common.MAIN_RECEIVER_ACTION, Common.ACTION_UI_V2X);
                         }else if (nameTopic.equals(TopicAndParams.topicRecvTrafficPart)){   //交通参与者
-                            sendCast(Common.MAIN_RECEIVER_ACTION, Common.ACTION_UI_3D);
+                            //稀疏一下，否则50ms频率太高，boolean在数据处理中交替变化
+                            if (DataStorageFromPC.TRAFFIC_DATA_SEND){
+                                sendCast(Common.MAIN_RECEIVER_ACTION, Common.ACTION_UI_3D);
+                            }
                         } else if (nameTopic.equals(TopicAndParams.topicRecvSensorgps)) {  //更新位置定位
                             if (System.currentTimeMillis() % 1000 < 200) {  //gps频率高，这里降一下，防止频繁更新轨迹
                                 sendCast(Common.MAIN_RECEIVER_ACTION, Common.ACTION_UI_LOCATION);
                             }
-                        } else {  //其他
-                            //发送广播
-                            sendCast(Common.MAIN_RECEIVER_ACTION, Common.ACTION_UI_UPDATE);
-                            sendCast(Common.COLLECT_RECEIVER_ACTION, Common.ACTION_UI_UPDATE);
+                        } else if (nameTopic.equals(TopicAndParams.topicRecvActuator)){  //档位速度等变化
+                            if (DataStorageFromPC.UI_DATA_CHANGE){
+                                sendCast(Common.MAIN_RECEIVER_ACTION, Common.ACTION_UI_UPDATE);
+                                DataStorageFromPC.UI_DATA_CHANGE = false;
+                            }
                         }
                     } catch (ParseException e) {
                         e.printStackTrace();
@@ -218,6 +222,7 @@ public class EnjoySocketService extends IntentService {
 
                     //发送广播
                     sendCast(Common.MAIN_RECEIVER_ACTION, Common.ACTION_UI_UPDATE);
+                    sendCast(Common.MAIN_RECEIVER_ACTION, Common.ACTION_UI_DISCONNECT);
                     Log.i(connectTag, "广播disconnect");
                     synchronized (connectObjLock) {
                         connectObjLock.notify();  //唤醒连接线程
