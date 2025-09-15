@@ -13,7 +13,6 @@ import org.rajawali3d.loader.LoaderOBJ;
 import org.rajawali3d.loader.ParsingException;
 import org.rajawali3d.materials.Material;
 import org.rajawali3d.materials.methods.DiffuseMethod;
-import org.rajawali3d.materials.methods.SpecularMethod;
 import org.rajawali3d.math.vector.Vector3;
 import org.rajawali3d.primitives.Cube;
 import org.rajawali3d.primitives.Plane;
@@ -160,7 +159,7 @@ public class CarScene extends Renderer {
      * 初始化未知物模型
      * @return
      */
-    private Object3D intUnknowModel(){
+    private Object3D intiUnknowModel(){
         Object3D unknowModel = new Cube(1,true,true);
         unknowModel.setPosition(0,0.5,-1);
         unknowModel.setScale(0.5);
@@ -171,7 +170,7 @@ public class CarScene extends Renderer {
 
     //初始化交通参与者
     public void initModelNPC(){
-        //创建未知物体-3个 机动车33个
+        //创建未知物体-3个 机动车3个
 
         for (int i =0; i < 3; i++){
             Object3D body = initVehicleModel3D(R.raw.car, colorPearArr);
@@ -179,7 +178,7 @@ public class CarScene extends Renderer {
             getCurrentScene().addChild(body);
             ContainerObject3D.ModelWaite2VehicleQueue.offer(body);
 
-            Object3D unknowModel = intUnknowModel();
+            Object3D unknowModel = intiUnknowModel();
             unknowModel.setVisible(false);
             getCurrentScene().addChild(unknowModel);
             ContainerObject3D.ModelWaite0UnknownQueue.offer(unknowModel);
