@@ -209,15 +209,17 @@ public class CarScene extends Renderer {
 
     }
 
+    int startPoint = -16, endPoint = 4;
     private void addLaneLines() {
         // 创建车道线材质
         Material lineMaterial = new Material();
         lineMaterial.setColor(0x00bfff); // 蓝色线条
 //        lineMaterial.setColor(0xFFFFFF); // 白色线条
+        float lineLength = 1.2f, lineWith = 0.08f;
 
         // 中心虚线
-        for (int i = -20; i <= 6; i += 2) {
-            Plane line = new Plane(0.08f, 0.8f, 1, 1);
+        for (int i = startPoint; i <= endPoint; i += 2) {
+            Plane line = new Plane(lineWith, lineLength, 1, 1);
             line.setMaterial(lineMaterial);
             line.setRotation(0,0,90);
             line.setY(-0.08f); // 稍微高于地面  z--向观察者
@@ -225,7 +227,7 @@ public class CarScene extends Renderer {
             getCurrentScene().addChild(line);
 
 
-            Plane lineR = new Plane(0.08f, 0.8f, 1, 1);
+            Plane lineR = new Plane(lineWith, lineLength, 1, 1);
             lineR.setMaterial(lineMaterial);
             lineR.setRotation(0,0,90);
             lineR.setY(-0.08f); // 稍微高于地面  z--向观察者
@@ -244,8 +246,8 @@ public class CarScene extends Renderer {
         for (Plane line: lineList){
             Vector3 v = line.getPosition();
             v.z = v.z + z;
-            if (v.z > 6){
-                v.z = -20;
+            if (v.z >= endPoint){
+                v.z = startPoint;
             }
             line.setPosition(v);
         }
