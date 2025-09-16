@@ -20,7 +20,7 @@ public class InitActivity extends Activity {
     EditText ipEdt;
     Button ipBtn;
 //    final String ipHead = "192.168.";
-    final String ipHead = "123.56.";
+//    final String ipHead = "123.56.";
 
 
     @Override
@@ -36,8 +36,9 @@ public class InitActivity extends Activity {
 
         String ipStr = EnjoyTrainShipApplication.sharedPreferences.getString(Common.ROS_IP, "");
         if (!ipStr.equals("")) {
-            String[] ipArr = ipStr.split("\\.");
-            ipEdt.setText(ipArr[2] + "." + ipArr[3]);
+//            String[] ipArr = ipStr.split("\\.");
+//            ipEdt.setText(ipArr[2] + "." + ipArr[3]);
+            ipEdt.setText(ipStr);
         }
 
         ipBtn.setOnClickListener(new View.OnClickListener() {
@@ -48,19 +49,20 @@ public class InitActivity extends Activity {
                     ToastUtil.showShort(InitActivity.this, "请先输入IP");
                     return;
                 }
-                String ipTail = editable.toString();
-                String[] ipTailArr = ipTail.split("\\.");
-                if (ipTailArr.length != 2) {
-
+                String ipRos = editable.toString();
+                String[] ipArr = ipRos.split("\\.");
+                if (ipArr.length != 4) {
                     ToastUtil.showShort(InitActivity.this, "IP输入格式有误");
                     return;
                 }
-                if (!MyStringUtil.isNumeric(ipTailArr[0]) || !MyStringUtil.isNumeric(ipTailArr[1])) {
-                    ToastUtil.showShort(InitActivity.this, "IP输入格式有误");
-                    return;
+                for (String s: ipArr){
+                    if (!MyStringUtil.isNumeric(s)){
+                        ToastUtil.showShort(InitActivity.this, "IP输入格式有误");
+                        return;
+                    }
                 }
 
-                EnjoyTrainShipApplication.editor.putString(Common.ROS_IP, ipHead + ipTail);
+                EnjoyTrainShipApplication.editor.putString(Common.ROS_IP, ipRos);
                 EnjoyTrainShipApplication.editor.commit();
 
                 //跳转
