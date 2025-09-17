@@ -70,6 +70,7 @@ import com.enjoy.wanji.service.EnjoySocketService;
 import com.enjoy.wanji.util.AMapUtil;
 import com.enjoy.wanji.util.ToastUtil;
 import com.enjoy.wanji.vr3D.CarScene;
+import com.enjoy.wanji.vr3D.CarScene1;
 import com.enjoy.wanji.vr3D.ModelAgent;
 
 import org.json.simple.JSONArray;
@@ -93,7 +94,7 @@ public class MainActivity1 extends Activity implements LocationSource, AMapLocat
     private OnLocationChangedListener mListener;
 
     private SurfaceView surfaceView;
-    private CarScene carScene;
+    private CarScene1 carScene;
 
 
     private UiSettings uiSettings;
@@ -158,7 +159,7 @@ public class MainActivity1 extends Activity implements LocationSource, AMapLocat
 
         //3D动画界面初始化
         surfaceView = findViewById(R.id.rajawali_surface);
-        carScene = new CarScene(mContext);
+        carScene = new CarScene1(mContext);
         surfaceView.setSurfaceRenderer(carScene);
         //初始化控件
         initView();

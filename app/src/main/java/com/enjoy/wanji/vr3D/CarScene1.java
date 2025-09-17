@@ -15,19 +15,19 @@ import org.rajawali3d.materials.Material;
 import org.rajawali3d.materials.methods.DiffuseMethod;
 import org.rajawali3d.math.vector.Vector3;
 import org.rajawali3d.primitives.Cube;
+import org.rajawali3d.primitives.Line3D;
 import org.rajawali3d.primitives.Plane;
 import org.rajawali3d.renderer.Renderer;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Stack;
 
 
-public class CarScene extends Renderer {
+public class CarScene1 extends Renderer {
 
     private Object3D carModel;
-    private Object3D humanModel;
-    private TranslateAnimation3D carAnimation;
-    private boolean isAnimating = false;
+
 
     List<Plane> lineList = new ArrayList<>();
 //    private Object3D ground;
@@ -36,15 +36,13 @@ public class CarScene extends Renderer {
     float[] colorDarkGrayArr = {0.6627f, 0.6627f, 0.6627f, 1f}; //深灰色
     float[] colorDeepGrayArr = {0.35f, 0.35f, 0.35f, 1f}; //较深灰色
     float[] colorPearArr = {0.9922f, 0.9333f, 0.9569f, 1.0f};; //珠光白
-    public CarScene(Context context){
+    public CarScene1(Context context){
         super(context);
     }
 
     @Override
     protected void initScene() {
         //设置背景颜色
-//        getCurrentScene().setBackgroundColor(0.87f,0.87f,0.87f, 0.9f);
-//        getCurrentScene().setBackgroundColor(1f,1f,1f, 0.7f);
         getCurrentScene().setBackgroundColor(0.98f,0.98f,0.98f, 0.1f);
 
 
@@ -67,7 +65,11 @@ public class CarScene extends Renderer {
         getCurrentScene().addLight(fillLight);
 
 
-        addLaneLines(); //车道线
+//        addLaneLines(); //车道线
+
+        drawLines(); //实时车道线
+//        myDraw();
+
 
         //初始化本车
         carModel = initCenterCarModel(R.raw.car, colorLightGrayArr);
@@ -79,7 +81,8 @@ public class CarScene extends Renderer {
 
 
         // 设置摄像机位置（固定）  x-右  y-高  z-纵深 靠近观察者为正
-        getCurrentCamera().setPosition(0, 2.1, 5.0);
+        getCurrentCamera().setPosition(0, 3, 6.0);
+//        getCurrentCamera().setPosition(0, 5, 0.5);
         getCurrentCamera().setLookAt(0, 0, 0);
 
 
@@ -236,6 +239,7 @@ public class CarScene extends Renderer {
 //        addSolidLine(-3.5f); // 左边线
     }
 
+
     public void updateLinesMove(double z){
         for (Plane line: lineList){
             Vector3 v = line.getPosition();
@@ -245,6 +249,7 @@ public class CarScene extends Renderer {
             }
             line.setPosition(v);
         }
+
     }
 
     private void updateModelMaterial(Object3D model3D, float[] colorARR){
@@ -262,6 +267,52 @@ public class CarScene extends Renderer {
         }else if (model3D != null){
             model3D.setMaterial(material);
         }
+    }
+
+
+    /**
+     *
+     */
+    private void drawLines(){
+        final int NUM_PLANES = 50; // 使用的平面点个数
+        final float RANGE = 5.0f; // x轴范围
+
+        // 二次函数参数: y = a*x^2 + b*x + c
+        final float A = -2f;
+        final float B = 0f;
+        final float C = 0f;
+
+
+
+        Material material = new Material();
+//        material.enableLighting(true);
+        material.setColor(0x00bfff);
+//        material.setDiffuseMethod(new DiffuseMethod.Lambert());
+
+        Stack<Vector3> stack = new Stack<>();
+        List<Vector3> pointsList = new ArrayList<>();
+        float  x = 0;
+        // 创建多个平面形成二次曲线
+        for (int i = 0; i < NUM_PLANES; i++){
+            // 计算x坐标
+             x = -RANGE + (2 * RANGE * i / (NUM_PLANES - 1));
+
+            // 计算二次函数y值
+            float y = A * x * x + B * x + C;
+
+//                Math.
+            Vector3 v = new Vector3(x, 0, y);
+            pointsList.add(v);
+
+        }
+        //            Line3D line3D = new Line3D(points,1.5f, 0x00bfff);
+        stack.addAll(pointsList);
+        Line3D line3D = new Line3D(stack,5f, 0x00bfff); //thickness为线宽，单位是像素
+        line3D.setMaterial(material);
+
+        // 将平面添加到场景中
+        getCurrentScene().addChild(line3D);
+
     }
 
 }
