@@ -121,6 +121,11 @@ public class MessageHandle {
                 }
 
                 break;
+            case TopicAndParams.topicRecvLaneLine:
+                 DataStorageFromPC.CurveA = Double.valueOf(jsonObj.get("lon").toString());
+                 DataStorageFromPC.CurveB = Double.valueOf(jsonObj.get("lat").toString());
+                 DataStorageFromPC.CurveC = Double.valueOf(jsonObj.get("heading").toString());
+                 break;
             case TopicAndParams.topicRecvLonlatmMappoints:        //轨迹点
                 Log.i(tag, "get map points:" + jsonObj.toString());
 //                lonlatmappoints

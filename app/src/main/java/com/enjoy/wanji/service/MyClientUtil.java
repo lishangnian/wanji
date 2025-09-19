@@ -145,6 +145,10 @@ public class MyClientUtil {
         client.send(str);
         Log.i(tag, "发送订阅消息" + str);
 
+        str = MyStringUtil.subscribeTopicStr(TopicAndParams.topicRecvLaneLine); //轨迹曲线
+        client.send(str);
+        Log.i(tag, "发送订阅消息" + str);
+
 //        str = MyStringUtil.subscribeTopicStr(TopicAndParams.recvTopicGlobalPlanning); // 轨迹点
 //        client.send(str);
 //        Log.i(tag, "发送订阅消息" + str);

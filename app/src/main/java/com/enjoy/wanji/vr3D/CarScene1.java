@@ -5,9 +5,9 @@ import android.util.Log;
 import android.view.MotionEvent;
 
 import com.enjoy.wanji.R;
+import com.enjoy.wanji.entity.DataStorageFromPC;
 
 import org.rajawali3d.Object3D;
-import org.rajawali3d.animation.TranslateAnimation3D;
 import org.rajawali3d.lights.DirectionalLight;
 import org.rajawali3d.loader.LoaderOBJ;
 import org.rajawali3d.loader.ParsingException;
@@ -30,6 +30,7 @@ public class CarScene1 extends Renderer {
 
 
     List<Plane> lineList = new ArrayList<>();
+    Line3D leftCurveLine3D, rightCurveLine3D; //曲线
 //    private Object3D ground;
     float[] colorGrayArr = {0.7216f, 0.7608f, 0.8000f, 1f}; //灰色
     float[] colorLightGrayArr = {0.835f, 0.835f, 0.835f, 1f}; //灰色
@@ -65,25 +66,25 @@ public class CarScene1 extends Renderer {
         getCurrentScene().addLight(fillLight);
 
 
-//        addLaneLines(); //车道线
+        addLaneLines(); //车道线
 
-        drawLines(); //实时车道线
+//        drawLines(); //实时车道线
 //        myDraw();
 
 
         //初始化本车
         carModel = initCenterCarModel(R.raw.car, colorLightGrayArr);
 //        carModel = initCenterCarModel(R.raw.car, colorDeepGrayArr);
-        carModel.setScale(0.08f);
+        carModel.setScale(0.25f);
         carModel.setPosition(0, 0, 1.2); //  z 正直 靠近观察者方向
         carModel.setRotY(180); // 调整朝向
         getCurrentScene().addChild(carModel);
 
 
         // 设置摄像机位置（固定）  x-右  y-高  z-纵深 靠近观察者为正
-        getCurrentCamera().setPosition(0, 3, 6.0);
-//        getCurrentCamera().setPosition(0, 5, 0.5);
-        getCurrentCamera().setLookAt(0, 0, 0);
+        getCurrentCamera().setPosition(0, 8, 13);
+//        getCurrentCamera().setPosition(0, 38, 6);
+        getCurrentCamera().setLookAt(0, 0, -3);
 
 
     }
@@ -139,7 +140,7 @@ public class CarScene1 extends Renderer {
 //            LoaderOBJ leftLoader = new LoaderOBJ(this,R.raw.car);
             loader.parse();   //解析模型
             model = loader.getParsedObject();
-            model.setScale(0.08f);
+            model.setScale(0.25f);
 //        body.setPosition(-1.2, 0, -1.5); //
             model.setPosition(0,-100,0); //  初始位置把他放到地底下，看不见
             model.setRotY(180); // 调整朝向
@@ -206,21 +207,21 @@ public class CarScene1 extends Renderer {
 
     }
 
-    int startPoint = -16, endPoint = 4;
+    int startPoint = -60, endPoint = 6;
     private void addLaneLines() {
         // 创建车道线材质
         Material lineMaterial = new Material();
         lineMaterial.setColor(0x00bfff); // 蓝色线条
 //        lineMaterial.setColor(0xFFFFFF); // 白色线条
-        float lineLength = 1.2f, lineWith = 0.08f;
+        float lineLength = 4f, lineWith = 0.15f;
 
         // 中心虚线
-        for (int i = startPoint; i <= endPoint; i += 2) {
+        for (int i = startPoint; i <= endPoint; i += 6) {
             Plane line = new Plane(lineWith, lineLength, 1, 1);
             line.setMaterial(lineMaterial);
             line.setRotation(0,0,90);
             line.setY(-0.08f); // 稍微高于地面  z--向观察者
-            line.setPosition(-0.6, 0f, i);
+            line.setPosition(-1.7, 0f, i);
             getCurrentScene().addChild(line);
 
 
@@ -228,7 +229,7 @@ public class CarScene1 extends Renderer {
             lineR.setMaterial(lineMaterial);
             lineR.setRotation(0,0,90);
             lineR.setY(-0.08f); // 稍微高于地面  z--向观察者
-            lineR.setPosition(0.6, 0f, i);
+            lineR.setPosition(1.7, 0f, i);
             getCurrentScene().addChild(lineR);
             lineList.add(line);
             lineList.add(lineR);
@@ -241,12 +242,35 @@ public class CarScene1 extends Renderer {
 
 
     public void updateLinesMove(double z){
+        //轨迹是曲线转弯，隐藏直线
+        if (DataStorageFromPC.CurveA !=0){
+            for (Plane line: lineList){
+                if (line.isVisible()){
+                    line.setVisible(false);
+                }
+            }
+            drawLines(); //绘制曲线
+            return;
+        }
+
+        //曲线隐藏
+        if (null != leftCurveLine3D && leftCurveLine3D.isVisible()){
+            leftCurveLine3D.setVisible(false);
+        }
+        if (null != rightCurveLine3D && rightCurveLine3D.isVisible()){
+            rightCurveLine3D.setVisible(false);
+        }
+
         for (Plane line: lineList){
             Vector3 v = line.getPosition();
             v.z = v.z + z;
             if (v.z >= endPoint){
                 v.z = startPoint;
             }
+            if (!line.isVisible()){
+                line.setVisible(true);
+            }
+
             line.setPosition(v);
         }
 
@@ -270,48 +294,100 @@ public class CarScene1 extends Renderer {
     }
 
 
+    static double A, B, C;
+    float thickness = 10f;
+    static float CURVE_OFFSET_X = 1.5f;   //x偏移量
+    final int NUM_PLANES = 45; // 使用的平面点个数
+    final float RANGE = 8.0f; // x轴范围
     /**
      *
      */
     private void drawLines(){
-        final int NUM_PLANES = 50; // 使用的平面点个数
-        final float RANGE = 5.0f; // x轴范围
-
-        // 二次函数参数: y = a*x^2 + b*x + c
-        final float A = -2f;
-        final float B = 0f;
-        final float C = 0f;
+//        Log.i("lineTag","A="+A +", cA="+ DataStorageFromPC.CurveA
+//        +", B="+B+", cB="+DataStorageFromPC.CurveB
+//        +", C="+C +", cC="+DataStorageFromPC.CurveC);
+        if (A == DataStorageFromPC.CurveA
+                && B == DataStorageFromPC.CurveB
+                && C == DataStorageFromPC.CurveC){
+            //与上次曲线一样，直接显示不用再绘制
+            if (leftCurveLine3D != null){
+                leftCurveLine3D.setVisible(true);
+            }
+            if (rightCurveLine3D != null){
+                rightCurveLine3D.setVisible(true);
+            }
+            return;
+        }
+        A = DataStorageFromPC.CurveA;
+        B = DataStorageFromPC.CurveB;
+        C = DataStorageFromPC.CurveC;
 
 
 
         Material material = new Material();
-//        material.enableLighting(true);
         material.setColor(0x00bfff);
 //        material.setDiffuseMethod(new DiffuseMethod.Lambert());
 
-        Stack<Vector3> stack = new Stack<>();
-        List<Vector3> pointsList = new ArrayList<>();
-        float  x = 0;
+        Stack<Vector3> lStack = new Stack<>();
+        Stack<Vector3> rStack = new Stack<>();
+        List<Vector3> lPointsList = new ArrayList<>();
+        List<Vector3> rPointsList = new ArrayList<>();
+        float  x;
         // 创建多个平面形成二次曲线
         for (int i = 0; i < NUM_PLANES; i++){
             // 计算x坐标
              x = -RANGE + (2 * RANGE * i / (NUM_PLANES - 1));
 
             // 计算二次函数y值
-            float y = A * x * x + B * x + C;
+            float leftX = x + CURVE_OFFSET_X;   //左平移
+            float rightX = x - CURVE_OFFSET_X;  //右平移
 
-//                Math.
-            Vector3 v = new Vector3(x, 0, y);
-            pointsList.add(v);
+        //   中轴为        float xMedian = B/2;
+            Log.i("lineTag","lx ="+ leftX +" ,x="+x+", rx="+ rightX);
+
+            double leftY = -A * leftX * leftX + B * leftX + C;
+            double rightY = -A * rightX * rightX + B * rightX + C;
+
+            //
+            if (B > 0){
+                if (leftY < 0 && x > (B/(2*A) - CURVE_OFFSET_X) ){  //只取车头前的轨迹，只要抛物线的右边部分 中线为B/2-CURVE_OFFSET_X
+                    Vector3 lV = new Vector3(x, 0, leftY);
+                    lPointsList.add(lV);
+                }
+                if (rightY < 0 && x > (B/(2*A) + CURVE_OFFSET_X)){
+                    Vector3 rV = new Vector3(x, 0, rightY);
+                    rPointsList.add(rV);
+                }
+            }else if (B < 0){       //
+                if (leftY < 0 && x < (B/(2*A) - CURVE_OFFSET_X) ){  //只取车头前的轨迹，只要抛物线的左边部分 中线为B/2-CURVE_OFFSET_X
+                    Vector3 lV = new Vector3(x, 0, leftY);
+                    lPointsList.add(lV);
+                }
+                if (rightY < 0 && x < (B/(2*A) + CURVE_OFFSET_X)){ //取抛物线右边部分
+                    Vector3 rV = new Vector3(x, 0, rightY);
+                    rPointsList.add(rV);
+                }
+            }
+
 
         }
-        //            Line3D line3D = new Line3D(points,1.5f, 0x00bfff);
-        stack.addAll(pointsList);
-        Line3D line3D = new Line3D(stack,5f, 0x00bfff); //thickness为线宽，单位是像素
-        line3D.setMaterial(material);
+        lStack.addAll(lPointsList);
+        rStack.addAll(rPointsList);
+        if (leftCurveLine3D != null){
+            getCurrentScene().removeChild(leftCurveLine3D);
+        }
+        if (rightCurveLine3D != null){
+            getCurrentScene().removeChild(rightCurveLine3D);
+        }
+
+        leftCurveLine3D = new Line3D(lStack,thickness, 0x00bfff); //thickness为线宽，单位是像素
+        rightCurveLine3D = new Line3D(rStack,thickness, 0x00bfff);
+        leftCurveLine3D.setMaterial(material);
+        rightCurveLine3D.setMaterial(material);
 
         // 将平面添加到场景中
-        getCurrentScene().addChild(line3D);
+        getCurrentScene().addChild(leftCurveLine3D);
+        getCurrentScene().addChild(rightCurveLine3D);
 
     }
 

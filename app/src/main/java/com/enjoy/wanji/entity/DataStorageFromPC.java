@@ -53,6 +53,11 @@ public class DataStorageFromPC {
     public static volatile boolean TRAFFIC_DATA_SEND = false;  //交通参与者变化
     public static volatile int batterySoc = 0; //电量
     public static volatile String soc = "00";   //电量 %
+
+    //轨迹曲线对应的参数a b c
+    public static volatile double CurveA = 0;
+    public static volatile double CurveB = 0;
+    public static volatile double CurveC = 0;
     private static long carWorkModeUpdateStamp = System.currentTimeMillis();
     public static volatile int pathError = 0; //报警   0--无   1---报警
     public static volatile int sysError = 0;//故障报警 gps无数据或gps状态为0--1  激光雷达无数据--2   毫米波雷达无数据--3  超声波雷达无数据--4  无数据--5-10

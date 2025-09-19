@@ -35,7 +35,8 @@ public class ModelAgent {
 
 
     //偏移量
-    public static double X_OffSet_K = 2.4d;
+//    public static double X_OffSet_K = 2.4d;
+    public static double X_OffSet_K = 1d;
 
     /**
      * 0-未知   1--行人   2--机动车

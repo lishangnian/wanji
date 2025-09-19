@@ -26,6 +26,7 @@ public class Common {
     public static final int ACTION_REFRESH = 689;
 
     public static final int ACTION_UI_3D = 690;
+    public static final int ACTION_UI_CURVE_3D = 691;
 
     public static final int ACTION_UPDATE_COLLECT = 800;
 
