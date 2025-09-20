@@ -188,7 +188,15 @@ public class EnjoySocketService extends IntentService {
                         if (msgObj == null) {
                             return;
                         }
-                        MessageHandle.handle(nameTopic, msgJson);
+                        
+                        //catch处理过程， 防止处理数据时出现空指针，溢出等问题抛出异常，导致界面异常
+                        try {
+                            MessageHandle.handle(nameTopic, msgJson);
+                        }catch (Exception e){
+                            Log.e(tag,"topic: " + nameTopic+ " handle msg error"+ e.getMessage());
+                            return;
+                        }
+
                         if (nameTopic.equals(TopicAndParams.topicRecvLonlatmMappoints)) {  //接收到轨迹点
                             sendCast(Common.MAIN_RECEIVER_ACTION, Common.ACTION_UI_ROADS_SHOW);
                         } else if (nameTopic.equals(TopicAndParams.topicRecvV2xapp)) { //接收v2x
