@@ -43,43 +43,33 @@ public class MessageHandle {
                 if (socObj != null) {
                     float soc = Float.parseFloat(socObj.toString());
                     int socInt = (int) soc;
-                    if (socInt != DataStorageFromPC.batterySoc){
-                        DataStorageFromPC.UI_DATA_CHANGE = true;
-                        DataStorageFromPC.batterySoc = socInt;
-                        if (socInt < 10) {
-                            DataStorageFromPC.soc = "0" + socInt + "%";
-                        } else {
-                            DataStorageFromPC.soc = socInt + "%";
-                        }
+                    DataStorageFromPC.batterySoc = socInt;
+                    if (socInt < 10) {
+                        DataStorageFromPC.soc = "0" + socInt + "%";
+                    } else {
+                        DataStorageFromPC.soc = socInt + "%";
                     }
                 }
-                //驾驶状态
-                if (DataStorageFromPC.driverStatus != driverStatus) {  // 0-人工  1--自动
+                //驾驶状态  0-人工  1--自动
+                if (DataStorageFromPC.driverStatus != driverStatus){   //跳变
                     if (DataStorageFromPC.driverStatus > 0) {   //当前
                         DataStorageFromPC.driverStatusTip = 2;//退出自驾
                     } else {
                         DataStorageFromPC.driverStatusTip = 1;//进入自驾
                     }
                     DataStorageFromPC.driverStatus = driverStatus;
-                    DataStorageFromPC.UI_DATA_CHANGE = true;
-                }
-                //档位 0-P  1-R  2-N  3-D
-                if (gear != DataStorageFromPC.GearInt){
-                    DataStorageFromPC.GearInt = gear;
-                    DataStorageFromPC.Gear = GearEnum.getValue(gear);
-                    DataStorageFromPC.UI_DATA_CHANGE = true;
-                }
-                if (speedInt != DataStorageFromPC.velocity){
-                    DataStorageFromPC.speedStr = String.valueOf(speedInt);
-                    DataStorageFromPC.velocity = speedInt;
-                    DataStorageFromPC.UI_DATA_CHANGE = true;
                 }
 
+
+                //档位 0-P  1-R  2-N  3-D
+                DataStorageFromPC.GearInt = gear;
+                DataStorageFromPC.Gear = GearEnum.getValue(gear);
+
+                DataStorageFromPC.speedStr = String.valueOf(speedInt);
+                DataStorageFromPC.velocity = speedInt;
+
                 //转向 0--无  1--左转  2--右转
-                if (turnLight != DataStorageFromPC.turnLight){
-                    DataStorageFromPC.turnLight = turnLight;
-                    DataStorageFromPC.UI_DATA_CHANGE = true;
-                }
+                DataStorageFromPC.turnLight = turnLight;
                 break;
             case TopicAndParams.topicRecvTrafficPart:       //交通参与者，3D动画
                 if (DataStorageFromPC.TRAFFIC_DATA_SEND){

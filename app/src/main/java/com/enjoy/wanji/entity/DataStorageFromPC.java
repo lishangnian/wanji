@@ -33,7 +33,7 @@ public class DataStorageFromPC {
 
     //障碍物标志
     public static int obs = 0;    //0 -- 无   1--有
-    public static int driverStatusTip = 0;      //自驾状态跳变，0---无 1--进入自动驾驶 //退出自驾
+    public static volatile int driverStatusTip = 0;      //自驾状态跳变，0---无 1--进入自动驾驶 //退出自驾
     //驾驶状态标志
     public static int driverStatus = 0;      //0--非自动驾驶  1-自动驾驶
     //故障等级  语音提示加弹窗   为两位或三位，第一位是故障分类 后两位是故障码，具体见文档
@@ -49,7 +49,7 @@ public class DataStorageFromPC {
     public static volatile long actuatorTimeStamp = System.currentTimeMillis();  //actuator的时间戳
 
     public static volatile String battery = "0V";   //电压
-    public static volatile boolean UI_DATA_CHANGE = false;   //界面主数据变化标记
+//    public static volatile boolean UI_DATA_CHANGE = false;   //界面主数据变化标记
     public static volatile boolean TRAFFIC_DATA_SEND = false;  //交通参与者变化
     public static volatile int batterySoc = 0; //电量
     public static volatile String soc = "00";   //电量 %

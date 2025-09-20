@@ -649,7 +649,6 @@ public class MainActivity1 extends Activity implements LocationSource, AMapLocat
                 && System.currentTimeMillis() - AttentionInfo.timestamp < 2500) {
             return;
         }
-
         if (EnjoyTrainShipApplication.mediaLock.tryLock()) {
             attentionDialogShowImp(type, key);
         }

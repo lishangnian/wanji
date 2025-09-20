@@ -137,6 +137,7 @@ public class EnjoySocketService extends IntentService {
 
     JSONParser parser = new JSONParser();
     static boolean GPS_CAST_SEND = false;
+    static boolean ACTUATOR_UI_SEND = false;
     static boolean CURVE_LINE_SEND = false;
     /**
      * 连接ros服务
@@ -204,10 +205,10 @@ public class EnjoySocketService extends IntentService {
                                 GPS_CAST_SEND = false;
                             }else GPS_CAST_SEND = true;
                         } else if (nameTopic.equals(TopicAndParams.topicRecvActuator)){  //档位速度等变化
-                            if (DataStorageFromPC.UI_DATA_CHANGE){
+                            if (ACTUATOR_UI_SEND){   //稀疏处理
                                 sendCast(Common.MAIN_RECEIVER_ACTION, Common.ACTION_UI_UPDATE);
-                                DataStorageFromPC.UI_DATA_CHANGE = false;
-                            }
+                                ACTUATOR_UI_SEND = false;
+                            }else ACTUATOR_UI_SEND = true;
                         }else if (nameTopic.equals(TopicAndParams.topicRecvLaneLine)){
                             //曲线绘制放在 ACTION_UI_3D这个 type里了
 //                            if (CURVE_LINE_SEND){

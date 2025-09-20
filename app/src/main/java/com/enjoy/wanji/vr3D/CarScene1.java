@@ -295,10 +295,12 @@ public class CarScene1 extends Renderer {
 
 
     static double A, B, C;
-    float thickness = 10f;
+    float thickness = 8f;
     static float CURVE_OFFSET_X = 1.5f;   //x偏移量
-    final int NUM_PLANES = 45; // 使用的平面点个数
-    final float RANGE = 8.0f; // x轴范围
+    final int NUM_PLANES = 60; // 使用的平面点个数
+    final float RANGE = 6.0f; // x轴范围
+
+    double startY = 0.5;
     /**
      *
      */
@@ -342,28 +344,35 @@ public class CarScene1 extends Renderer {
             float leftX = x + CURVE_OFFSET_X;   //左平移
             float rightX = x - CURVE_OFFSET_X;  //右平移
 
-        //   中轴为        float xMedian = B/2;
-            Log.i("lineTag","lx ="+ leftX +" ,x="+x+", rx="+ rightX);
+        //   中轴为        float xMedian = B/2A;
+//            Log.i("lineTag","lx ="+ leftX +" ,x="+x+", rx="+ rightX);
 
             double leftY = -A * leftX * leftX + B * leftX + C;
             double rightY = -A * rightX * rightX + B * rightX + C;
 
-            //
+//            Vector3 lV = new Vector3(x, 0, leftY);
+//            Vector3 rV = new Vector3(x, 0, rightY);
+//            lPointsList.add(lV);
+//            rPointsList.add(rV);
+
+
             if (B > 0){
-                if (leftY < 0 && x > (B/(2*A) - CURVE_OFFSET_X) ){  //只取车头前的轨迹，只要抛物线的右边部分 中线为B/2-CURVE_OFFSET_X
+                if (leftY < startY && x > (B/(2*A) - CURVE_OFFSET_X) ){  //只取车头前的轨迹，只要抛物线的右边部分 中线为B/2-CURVE_OFFSET_X
                     Vector3 lV = new Vector3(x, 0, leftY);
                     lPointsList.add(lV);
                 }
-                if (rightY < 0 && x > (B/(2*A) + CURVE_OFFSET_X)){
+                if (rightY < startY && x > (B/(2*A) + CURVE_OFFSET_X)){
                     Vector3 rV = new Vector3(x, 0, rightY);
                     rPointsList.add(rV);
                 }
-            }else if (B < 0){       //
-                if (leftY < 0 && x < (B/(2*A) - CURVE_OFFSET_X) ){  //只取车头前的轨迹，只要抛物线的左边部分 中线为B/2-CURVE_OFFSET_X
+            }else if (B < 0){
+                if (leftY < startY && x < (B/(2*A) - CURVE_OFFSET_X) ){  //只取车头前的轨迹，只要抛物线的左边部分 中线为B/2-CURVE_OFFSET_X
                     Vector3 lV = new Vector3(x, 0, leftY);
                     lPointsList.add(lV);
                 }
-                if (rightY < 0 && x < (B/(2*A) + CURVE_OFFSET_X)){ //取抛物线右边部分
+//                Log.i("lineTag",", x="+x+", rightY="+rightY);
+                if (rightY < startY && x < (B/(2*A) + CURVE_OFFSET_X)){
+//                    Log.i("lineTag","x="+x+", rightY="+rightY +"is OK\n");
                     Vector3 rV = new Vector3(x, 0, rightY);
                     rPointsList.add(rV);
                 }
