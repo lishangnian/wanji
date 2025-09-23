@@ -70,7 +70,7 @@ public class CarScene extends Renderer {
         addLaneLines(); //车道线
 
         //初始化本车
-        carModel = initCenterCarModel(R.raw.car, colorLightGrayArr);
+        carModel = initCenterCarModel(R.raw.obj_car, colorLightGrayArr);
 //        carModel = initCenterCarModel(R.raw.car, colorDeepGrayArr);
         carModel.setScale(0.08f);
         carModel.setPosition(0, 0, 1.2); //  z 正直 靠近观察者方向
@@ -167,7 +167,7 @@ public class CarScene extends Renderer {
         //创建未知物体-3个 机动车3个
 
         for (int i =0; i < 3; i++){
-            Object3D body = initVehicleModel3D(R.raw.car, colorPearArr);
+            Object3D body = initVehicleModel3D(R.raw.obj_car, colorPearArr);
             body.setVisible(false);  //设置不可见
             getCurrentScene().addChild(body);
             ContainerObject3D.ModelWaite2VehicleQueue.offer(body);

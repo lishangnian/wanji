@@ -105,7 +105,7 @@ public class MainActivity1 extends Activity implements LocationSource, AMapLocat
     static boolean dialogWarning = false; //弹框是否为警告框
     TextView titleTxt, msgTxt, speedTxt, speedLimitTxt, gearTxt, socTxt;
 
-    ImageView connectImg, leftLight, rightLight, driveImg, socImg;
+    ImageView connectImg, leftLight, rightLight, driveImg, trafficLightImg, socImg;
     AnimationDrawable leftAnimation, rightAnimation;
 
 
@@ -123,6 +123,9 @@ public class MainActivity1 extends Activity implements LocationSource, AMapLocat
     private BitmapDescriptor normalRouteGreen = null;
     private BitmapDescriptor normalRouteYellow = null;
     private BitmapDescriptor normalRouteGrey = null;
+
+    private Drawable greenDrawable, yellowDrawable, redDrawable;
+
     private static Handler handler;
 
 
@@ -229,10 +232,15 @@ public class MainActivity1 extends Activity implements LocationSource, AMapLocat
 
         driveImg = findViewById(R.id.auto_drive_img);
         socImg = findViewById(R.id.soc_img);
+        trafficLightImg = findViewById(R.id.traffic_light);
         speedTxt = findViewById(R.id.speed_txt);
         speedLimitTxt = findViewById(R.id.limit_speed_txt);
         gearTxt = findViewById(R.id.gear_txt);
         socTxt = findViewById(R.id.soc_txt);
+
+        greenDrawable = getResources().getDrawable(R.drawable.light_g);
+        redDrawable = getResources().getDrawable(R.drawable.light_r);
+        yellowDrawable = getResources().getDrawable(R.drawable.light_y);
 
         progDialog = new ProgressDialog(this);
 
@@ -592,6 +600,21 @@ public class MainActivity1 extends Activity implements LocationSource, AMapLocat
                 break;
             case Common.ACTION_UI_V2X:  //v2x
                 //0:无 1：红灯 2：绿灯 3：黄灯
+                if (0 == DataStorageFromPC.lightColor && View.VISIBLE == trafficLightImg.getVisibility()){
+                    trafficLightImg.setVisibility(View.GONE);
+                }else if (0 < DataStorageFromPC.lightColor){
+                    if (View.GONE == trafficLightImg.getVisibility()){
+                        trafficLightImg.setVisibility(View.VISIBLE);
+                    }
+                    if (1 == DataStorageFromPC.lightColor && trafficLightImg.getDrawable() != redDrawable){
+                        trafficLightImg.setImageDrawable(redDrawable);
+                    }else if (2 == DataStorageFromPC.lightColor && trafficLightImg.getDrawable() != greenDrawable){
+                        trafficLightImg.setImageDrawable(greenDrawable);
+                    }else if (3 == DataStorageFromPC.lightColor && trafficLightImg.getDrawable() != yellowDrawable){
+                        trafficLightImg.setImageDrawable(yellowDrawable);
+                    }
+                }
+
                 //限速
                 if (Global.connectFlag && DataStorageFromPC.velocity > DataStorageFromPC.speedLimit) {  //当前速度大于限速
                     Log.i(TAG, "更新V2X");

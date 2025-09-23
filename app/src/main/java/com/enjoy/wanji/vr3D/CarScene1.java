@@ -73,8 +73,8 @@ public class CarScene1 extends Renderer {
 
 
         //初始化本车
-        carModel = initCenterCarModel(R.raw.car, colorLightGrayArr);
-//        carModel = initCenterCarModel(R.raw.car, colorDeepGrayArr);
+        carModel = initCenterCarModel(R.raw.obj_car, colorLightGrayArr);
+//        carModel = initCenterCarModel(R.raw.car1, colorLightGrayArr);
         carModel.setScale(0.25f);
         carModel.setPosition(0, 0, 1.2); //  z 正直 靠近观察者方向
         carModel.setRotY(180); // 调整朝向
@@ -83,7 +83,7 @@ public class CarScene1 extends Renderer {
 
         // 设置摄像机位置（固定）  x-右  y-高  z-纵深 靠近观察者为正
         getCurrentCamera().setPosition(0, 8, 13);
-//        getCurrentCamera().setPosition(0, 38, 6);
+//        getCurrentCamera().setPosition(0, 35, 6);
         getCurrentCamera().setLookAt(0, 0, -3);
 
 
@@ -165,13 +165,29 @@ public class CarScene1 extends Renderer {
         return unknowModel;
     }
 
+    /**
+     * 初始化非机动车
+     * @return
+     */
+    private Object3D initNoVehicle(int resourceId, float[] colorARR){
+        Object3D model = null;
+        try {
+            LoaderOBJ loader  = new LoaderOBJ(this, resourceId);
+            loader.parse();   //解析模型
+            model = loader.getParsedObject();
+//            updateModelMaterial(model, colorARR);
+        }catch (ParsingException pe){
+            Log.e("objTag","parsing carObj error:",pe.fillInStackTrace());
+        }
+        return model;
+    }
 
     //初始化交通参与者
     public void initModelNPC(){
         //创建未知物体-3个 机动车3个
 
         for (int i =0; i < 3; i++){
-            Object3D body = initVehicleModel3D(R.raw.car, colorPearArr);
+            Object3D body = initVehicleModel3D(R.raw.obj_car, colorPearArr);
             body.setVisible(false);  //设置不可见
             getCurrentScene().addChild(body);
             ContainerObject3D.ModelWaite2VehicleQueue.offer(body);
@@ -181,8 +197,44 @@ public class CarScene1 extends Renderer {
             getCurrentScene().addChild(unknowModel);
             ContainerObject3D.ModelWaite0UnknownQueue.offer(unknowModel);
 
-
         }
+
+        /**
+         *
+
+        //初始化行人
+        Object3D nonVehicleModel = initNoVehicle(R.raw.obj_person, colorPearArr);
+//        nonVehicleModel.setVisible(false);
+        nonVehicleModel.setScale(2.5f);
+        nonVehicleModel.setPosition(-3,0,-5); //  初始位置把他放到地底下，看不见
+        nonVehicleModel.setRotY(270); // 调整朝向
+        nonVehicleModel.setRotZ(45);  //
+        nonVehicleModel.setRotX(60);  //左右转
+
+
+
+        // 设置车辆材质（如果没有纹理，使用默认材质）
+        Material material = new Material();
+//        material.setColor(colorPearArr);
+        material.setColor(0xffffff);
+        material.enableLighting(true);
+        material.setDiffuseMethod(new DiffuseMethod.Lambert());
+
+        if (nonVehicleModel != null && nonVehicleModel.getNumChildren() > 0){
+            for(int i = 0; i < nonVehicleModel.getNumChildren(); i++){
+                Object3D child = nonVehicleModel.getChildAt(i);
+                Log.i("mTag","color = "+ child.getMaterial().getColor());
+                child.setMaterial(material);
+            }
+        }else if (nonVehicleModel != null){
+            Log.i("mTag","color_2 = "+   nonVehicleModel.getMaterial().getColor());
+            nonVehicleModel.setMaterial(material);
+//            nonVehicleModel.setColor(0xaaaaaa);
+            Log.i("mTag","color_3 = "+   nonVehicleModel.getMaterial().getColor());
+        }
+
+        getCurrentScene().addChild(nonVehicleModel);
+         */
 
     }
 
@@ -312,10 +364,10 @@ public class CarScene1 extends Renderer {
                 && B == DataStorageFromPC.CurveB
                 && C == DataStorageFromPC.CurveC){
             //与上次曲线一样，直接显示不用再绘制
-            if (leftCurveLine3D != null){
+            if (leftCurveLine3D != null && !leftCurveLine3D.isVisible()){
                 leftCurveLine3D.setVisible(true);
             }
-            if (rightCurveLine3D != null){
+            if (rightCurveLine3D != null && !leftCurveLine3D.isVisible()){
                 rightCurveLine3D.setVisible(true);
             }
             return;

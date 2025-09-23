@@ -25,7 +25,7 @@ public class DataStorageFromPC {
     public static int brakePadel = 0;   //刹车信号
     public static int accBrake = 0;  //刹车提醒  0-无  1-有
     //v2x
-    public static double lightColor = 0;  //0:无 1：红灯 2：绿灯 3：黄灯
+    public static int lightColor = 0;  //0:无 1：红灯 2：绿灯 3：黄灯
 
     public static int v2xType = 0;  //默认0  1--16各类预警(具体看表)  2---
 

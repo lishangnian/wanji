@@ -177,7 +177,7 @@ public class MessageHandle {
                 //  trafficLight  0:无 1：红灯 2：绿灯 3：黄灯
 //
                 int v2xType = Integer.valueOf(jsonObj.get("v2xtype").toString());  //类型
-                int trafficLight = Integer.valueOf(jsonObj.get("color").toString());
+                int trafficLight = Integer.valueOf(jsonObj.get("color").toString()); //0:无 1：红灯 2：绿灯 3：黄灯
                 int speedLimitInt = (int) (Integer.valueOf(jsonObj.get("speedlimit").toString()) * 3.6);  //限速  m/s
                 DataStorageFromPC.lightColor = trafficLight;
                 DataStorageFromPC.v2xType = v2xType;

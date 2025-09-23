@@ -58,14 +58,16 @@
                         android:text="0"
                         android:textColor="@color/black"
                         android:textSize="120sp" />
-                    <TextView
+                    <ImageView
                         android:layout_width="0dp"
                         android:layout_height="match_parent"
                         android:layout_weight="1"
-                        android:gravity="center_horizontal|end"
+                        android:id="@+id/traffic_light"
+                        android:src="@drawable/light_r"
+                        android:layout_gravity="center_horizontal|end"
+                        android:paddingTop="20dp"
                         android:paddingBottom="0dp"
-                        android:textColor="@color/black"
-                        android:textSize="64sp" />
+                     />
                 </LinearLayout>
 
                 <!--档位 速度 电量-->

@@ -188,7 +188,7 @@ public class EnjoySocketService extends IntentService {
                         if (msgObj == null) {
                             return;
                         }
-                        
+
                         //catch处理过程， 防止处理数据时出现空指针，溢出等问题抛出异常，导致界面异常
                         try {
                             MessageHandle.handle(nameTopic, msgJson);
