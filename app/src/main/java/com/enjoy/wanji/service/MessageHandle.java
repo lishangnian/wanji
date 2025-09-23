@@ -227,6 +227,7 @@ public class MessageHandle {
 //            obj.setWidth(Float.parseFloat(obJson.get("width").toString()));
 //            obj.setLength(Float.parseFloat(obJson.get("length").toString()));
 //            ContainerObject3D.Obj0UnknownList.add(obj);
+//            ContainerObject3D.Obj1PedestrianList.add(obj);
         }
         return trafficObj;
     }

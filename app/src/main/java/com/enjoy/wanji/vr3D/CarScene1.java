@@ -1,6 +1,7 @@
 package com.enjoy.wanji.vr3D;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.util.Log;
 import android.view.MotionEvent;
 
@@ -10,9 +11,13 @@ import com.enjoy.wanji.entity.DataStorageFromPC;
 import org.rajawali3d.Object3D;
 import org.rajawali3d.lights.DirectionalLight;
 import org.rajawali3d.loader.LoaderOBJ;
+import org.rajawali3d.loader.LoaderSTL;
 import org.rajawali3d.loader.ParsingException;
 import org.rajawali3d.materials.Material;
 import org.rajawali3d.materials.methods.DiffuseMethod;
+import org.rajawali3d.materials.methods.SpecularMethod;
+import org.rajawali3d.materials.textures.ATexture;
+import org.rajawali3d.materials.textures.Texture;
 import org.rajawali3d.math.vector.Vector3;
 import org.rajawali3d.primitives.Cube;
 import org.rajawali3d.primitives.Line3D;
@@ -83,7 +88,7 @@ public class CarScene1 extends Renderer {
 
         // 设置摄像机位置（固定）  x-右  y-高  z-纵深 靠近观察者为正
         getCurrentCamera().setPosition(0, 8, 13);
-//        getCurrentCamera().setPosition(0, 35, 6);
+//        getCurrentCamera().setPosition(0, 25, 5);
         getCurrentCamera().setLookAt(0, 0, -3);
 
 
@@ -160,7 +165,7 @@ public class CarScene1 extends Renderer {
     private Object3D intiUnknowModel(){
         Object3D unknowModel = new Cube(1,true,true);
         unknowModel.setPosition(0,0.5,-1);
-        unknowModel.setScale(0.5);
+//        unknowModel.setScale(0.5);
         updateModelMaterial(unknowModel, colorPearArr);
         return unknowModel;
     }
@@ -169,13 +174,14 @@ public class CarScene1 extends Renderer {
      * 初始化非机动车
      * @return
      */
-    private Object3D initNoVehicle(int resourceId, float[] colorARR){
+    private Object3D initNoVehicle(int resourceId ){
         Object3D model = null;
         try {
-            LoaderOBJ loader  = new LoaderOBJ(this, resourceId);
+            LoaderSTL loader = new LoaderSTL(mContext.getResources(),mTextureManager, resourceId);
             loader.parse();   //解析模型
             model = loader.getParsedObject();
-//            updateModelMaterial(model, colorARR);
+            updateModelMaterial(model,colorPearArr);
+
         }catch (ParsingException pe){
             Log.e("objTag","parsing carObj error:",pe.fillInStackTrace());
         }
@@ -187,54 +193,30 @@ public class CarScene1 extends Renderer {
         //创建未知物体-3个 机动车3个
 
         for (int i =0; i < 3; i++){
+            // 机动车
             Object3D body = initVehicleModel3D(R.raw.obj_car, colorPearArr);
             body.setVisible(false);  //设置不可见
             getCurrentScene().addChild(body);
             ContainerObject3D.ModelWaite2VehicleQueue.offer(body);
 
+            //未知
             Object3D unknowModel = intiUnknowModel();
             unknowModel.setVisible(false);
             getCurrentScene().addChild(unknowModel);
             ContainerObject3D.ModelWaite0UnknownQueue.offer(unknowModel);
 
+
+            //行人
+            Object3D nonVehicleModel = initNoVehicle(R.raw.person);
+            nonVehicleModel.setVisible(false);
+            nonVehicleModel.setScale(2.5f);
+            nonVehicleModel.setPosition(0,0,50);
+            nonVehicleModel.setRotY(250); // 调整朝向
+            nonVehicleModel.setRotZ(10);
+            nonVehicleModel.setRotX(-40);  //左右转
+            ContainerObject3D.ModelWaite1PedestrianQueue.offer(nonVehicleModel);
+            getCurrentScene().addChild(nonVehicleModel);
         }
-
-        /**
-         *
-
-        //初始化行人
-        Object3D nonVehicleModel = initNoVehicle(R.raw.obj_person, colorPearArr);
-//        nonVehicleModel.setVisible(false);
-        nonVehicleModel.setScale(2.5f);
-        nonVehicleModel.setPosition(-3,0,-5); //  初始位置把他放到地底下，看不见
-        nonVehicleModel.setRotY(270); // 调整朝向
-        nonVehicleModel.setRotZ(45);  //
-        nonVehicleModel.setRotX(60);  //左右转
-
-
-
-        // 设置车辆材质（如果没有纹理，使用默认材质）
-        Material material = new Material();
-//        material.setColor(colorPearArr);
-        material.setColor(0xffffff);
-        material.enableLighting(true);
-        material.setDiffuseMethod(new DiffuseMethod.Lambert());
-
-        if (nonVehicleModel != null && nonVehicleModel.getNumChildren() > 0){
-            for(int i = 0; i < nonVehicleModel.getNumChildren(); i++){
-                Object3D child = nonVehicleModel.getChildAt(i);
-                Log.i("mTag","color = "+ child.getMaterial().getColor());
-                child.setMaterial(material);
-            }
-        }else if (nonVehicleModel != null){
-            Log.i("mTag","color_2 = "+   nonVehicleModel.getMaterial().getColor());
-            nonVehicleModel.setMaterial(material);
-//            nonVehicleModel.setColor(0xaaaaaa);
-            Log.i("mTag","color_3 = "+   nonVehicleModel.getMaterial().getColor());
-        }
-
-        getCurrentScene().addChild(nonVehicleModel);
-         */
 
     }
 
@@ -286,10 +268,6 @@ public class CarScene1 extends Renderer {
             lineList.add(line);
             lineList.add(lineR);
         }
-
-        // 车道边界线
-//        addSolidLine(3.5f);  // 右边线
-//        addSolidLine(-3.5f); // 左边线
     }
 
 
