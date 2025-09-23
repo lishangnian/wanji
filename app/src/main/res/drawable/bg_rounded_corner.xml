@@ -6,7 +6,7 @@
     <corners android:radius="16dp" />
 
     <!-- 设置背景填充色 -->
-    <solid android:color="@color/white" />
+    <solid android:color="@color/grey" />
 
     <!-- (可选) 设置边框 -->
     <stroke

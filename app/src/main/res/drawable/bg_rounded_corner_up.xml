@@ -9,7 +9,7 @@
         />
 
     <!-- 设置背景填充色 -->
-    <solid android:color="@color/lightWhite" />
+    <solid android:color="@color/grey" />
 
     <!-- (可选) 设置边框 -->
     <stroke

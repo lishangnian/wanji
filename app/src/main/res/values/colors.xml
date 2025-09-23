@@ -14,7 +14,9 @@
     <color name="lightBlack">#1a1a1a</color>
     <color name="black">#000000</color>
     <color name="phone_bg">#f6f6f6</color>
-    <color name="grey">#ebebeb</color>
+    <color name="light_grey">#ebebeb</color>
+    <color name="grey">#ebf0f5</color>
+    <color name="deep_grey">#a0a0a0</color>
     <color name="white">#ffffff</color>
     <color name="red">#ff0000</color>
     <color name="green">#00ff00</color>

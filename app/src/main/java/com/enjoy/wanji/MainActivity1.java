@@ -1,6 +1,7 @@
 package com.enjoy.wanji;
 
 import android.Manifest;
+import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
@@ -12,11 +13,13 @@ import android.content.IntentFilter;
 import android.content.pm.ActivityInfo;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
+import android.graphics.Outline;
 import android.graphics.drawable.AnimationDrawable;
 import android.graphics.drawable.Drawable;
 import android.location.Location;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -26,8 +29,10 @@ import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewOutlineProvider;
 import android.view.WindowManager;
 import android.widget.EditText;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -126,6 +131,8 @@ public class MainActivity1 extends Activity implements LocationSource, AMapLocat
 
     private Drawable greenDrawable, yellowDrawable, redDrawable;
 
+    private FrameLayout mapContainer, view3DContainer;
+
     private static Handler handler;
 
 
@@ -164,6 +171,13 @@ public class MainActivity1 extends Activity implements LocationSource, AMapLocat
         surfaceView = findViewById(R.id.rajawali_surface);
         carScene = new CarScene1(mContext);
         surfaceView.setSurfaceRenderer(carScene);
+
+        mapContainer = findViewById(R.id.mapview_container);
+        view3DContainer = findViewById(R.id.view_3d);
+        //API 21+  设置高德地图圆角
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP){
+            setMapViewCornerRadius();
+        }
         //初始化控件
         initView();
 
@@ -172,6 +186,26 @@ public class MainActivity1 extends Activity implements LocationSource, AMapLocat
 
     }
 
+    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
+    private void setMapViewCornerRadius(){
+        mapContainer.setClipToOutline(true);
+        view3DContainer.setClipToOutline(true);
+        mapContainer.setOutlineProvider(new ViewOutlineProvider() {
+            @Override
+            public void getOutline(View view, Outline outline) {
+                int radius = (int) (16 * getResources().getDisplayMetrics().density);
+                outline.setRoundRect(0,0,view.getWidth(),view.getHeight(),radius);
+            }
+        });
+        view3DContainer.setOutlineProvider(new ViewOutlineProvider() {
+            @Override
+            public void getOutline(View view, Outline outline) {
+                int radius = (int) (16 * getResources().getDisplayMetrics().density);
+                outline.setRoundRect(0,0,view.getWidth(),view.getHeight(),radius);
+            }
+        });
+
+    }
 
     /**
      * 绘制轨迹

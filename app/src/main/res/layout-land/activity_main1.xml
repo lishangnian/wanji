@@ -5,7 +5,8 @@
     android:id="@+id/activity_main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/grey"
+    android:padding="8dp"
+    android:background="@color/deep_grey"
     android:orientation="horizontal">
 
 <!--    android:background="@drawable/collect_roads_background"-->
@@ -200,20 +201,28 @@
             </LinearLayout>
 
             <!--        3D显示画面-->
+<!--
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:layout_weight="4">
+                -->
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:id="@+id/view_3d"
+            android:layout_weight="4">
                 <org.rajawali3d.view.SurfaceView
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:id="@+id/rajawali_surface"
                     ></org.rajawali3d.view.SurfaceView>
-            </LinearLayout>
+            </FrameLayout>
         </LinearLayout>
 
 
 <!--    右侧地图部分-->
+<!--
     <LinearLayout
         android:layout_width="0dp"
         android:layout_height="match_parent"
@@ -222,12 +231,20 @@
         android:layout_marginStart="8dp"
         android:padding="6dp"
         android:layout_weight="2">
+         -->
+    <FrameLayout
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:id="@+id/mapview_container"
+        android:layout_marginLeft="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_weight="2"
+        >
         <com.amap.api.maps.MapView
             android:id="@+id/map"
             android:layout_width="match_parent"
             android:layout_height="match_parent">
         </com.amap.api.maps.MapView>
-        
-    </LinearLayout>
+    </FrameLayout>
 
 </LinearLayout>
