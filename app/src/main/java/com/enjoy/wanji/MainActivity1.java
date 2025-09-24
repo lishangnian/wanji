@@ -142,8 +142,6 @@ public class MainActivity1 extends Activity implements LocationSource, AMapLocat
     private static List<Polyline> polylineList = new ArrayList<>();
 
 
-    private static Lock stopGoLock = new ReentrantLock();
-
     MainActivityDataReceiver mainActivityDataReceiver;
     private Bundle instanceState;
 
@@ -174,79 +172,13 @@ public class MainActivity1 extends Activity implements LocationSource, AMapLocat
 
         mapContainer = findViewById(R.id.mapview_container);
         view3DContainer = findViewById(R.id.view_3d);
-        //API 21+  设置高德地图圆角
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP){
-            setMapViewCornerRadius();
-        }
+
         //初始化控件
         initView();
 
         //再初始化 耗时的组件
         handler.sendEmptyMessageDelayed(Common.ACTION_INIT_VIEW_DELAY, 2000);
 
-    }
-
-    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
-    private void setMapViewCornerRadius(){
-        mapContainer.setClipToOutline(true);
-        view3DContainer.setClipToOutline(true);
-        mapContainer.setOutlineProvider(new ViewOutlineProvider() {
-            @Override
-            public void getOutline(View view, Outline outline) {
-                int radius = (int) (16 * getResources().getDisplayMetrics().density);
-                outline.setRoundRect(0,0,view.getWidth(),view.getHeight(),radius);
-            }
-        });
-        view3DContainer.setOutlineProvider(new ViewOutlineProvider() {
-            @Override
-            public void getOutline(View view, Outline outline) {
-                int radius = (int) (16 * getResources().getDisplayMetrics().density);
-                outline.setRoundRect(0,0,view.getWidth(),view.getHeight(),radius);
-            }
-        });
-
-    }
-
-    /**
-     * 绘制轨迹
-     *
-     * @param
-     */
-    private void drawRoadInMap( ) {
-//        List<JSONObject> jsonList = DataStorageFromPC.zoneNameJsonListMap.get(zoneName);
-//        if (jsonList == null || jsonList.size() == 0) {
-//            return;
-//        }
-        //清除已有的轨迹
-        for (Polyline line : polylineList) {
-            line.remove();
-        }
-
-        JSONObject jsonObject = DataStorageFromPC.mappingJSON;
-
-        List<LatLng> temp = new ArrayList();
-        JSONArray pointsArray = (JSONArray) jsonObject.get("points");
-        if (pointsArray == null || pointsArray.isEmpty()) {
-                Log.i(TAG,"轨迹点没有啊！！");
-                return;
-        }
-
-        //clearMarkers();   //清除 始终点标记
-        int size = pointsArray.size();
-        for (int i = 0; i < size; i++) {
-            JSONObject pointJson = (JSONObject) pointsArray.get(i);
-            double lat = (Double) pointJson.get("lat");
-            double lon = (Double) pointJson.get("lon");
-            LatLng latLngPoint = ChangeLatlon.transform(lat, lon);
-            temp.add(latLngPoint);
-        }
-        addStartEndMarker(temp.get(0), temp.get(temp.size() - 1));
-        PolylineOptions po = new PolylineOptions().addAll(temp).setUseTexture(true).setCustomTexture(normalRouteBlue)
-                .width(15).color(Color.argb(255, 0, 255, 1));
-        Polyline poly = aMap.addPolyline(po);
-        polylineList.add(poly);
-
-        Log.i(TAG, "画路线完成");
     }
 
 
@@ -278,12 +210,10 @@ public class MainActivity1 extends Activity implements LocationSource, AMapLocat
 
         progDialog = new ProgressDialog(this);
 
-
-        //路线选择下拉框部分
-//        final List<String> parkList = new ArrayList<>();
-//        for (int i = 1; i <= 3; i++) {
-//            parkList.add(i + "");
-//        }
+        //API 21+  设置高德地图圆角
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP){
+            setMapViewCornerRadius();
+        }
 
         handler = new Handler() {
             @Override
@@ -356,73 +286,71 @@ public class MainActivity1 extends Activity implements LocationSource, AMapLocat
         startService(intent);
     }
 
-    /**
-     * 园区重命名编辑框
-     */
-    private void tipViewShow() {
-        LinearLayout editeLayout = (LinearLayout) getLayoutInflater()
-                .inflate(R.layout.edit_zone_layout, null);
 
-        final EditText roadNameEdt = editeLayout.findViewById(R.id.zone_name_edt);
-        TextView roadNumTxt = editeLayout.findViewById(R.id.zone_num_txt);
-        roadNumTxt.setText("园区编号：" + DataStorageToPC.zoneName);
-        final AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity1.this);
-        builder.setTitle("园区命名");
-        builder.setView(editeLayout);
-        builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+
+    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
+    private void setMapViewCornerRadius(){
+        mapContainer.setClipToOutline(true);
+        view3DContainer.setClipToOutline(true);
+        mapContainer.setOutlineProvider(new ViewOutlineProvider() {
             @Override
-            public void onClick(DialogInterface dialog, int which) {
-                int num = DataStorageToPC.zoneName;
-                Log.i("vvvvvvvvvvvvvvvv", "get num = " + num);
-                Editable roadEdt = roadNameEdt.getText();
-                if (roadEdt == null) {
-                    ToastUtil.showShort(MainActivity1.this, "名称不可为空");
-                    return;
-                }
-                String zoneNameNew = roadEdt.toString();
-                if ("".equals(zoneNameNew)) {
-                    ToastUtil.showShort(MainActivity1.this, "名称不可为空");
-                    return;
-                }
-                //名称存入缓存
-                zoneNameNew = DataStorageToPC.zoneName + "-" + zoneNameNew;
-                EnjoyTrainShipApplication.editor.putString(Common.ZONE_HEAD + DataStorageToPC.zoneName, zoneNameNew);
-                EnjoyTrainShipApplication.editor.commit();
+            public void getOutline(View view, Outline outline) {
+                int radius = (int) (16 * getResources().getDisplayMetrics().density);
+                outline.setRoundRect(0,0,view.getWidth(),view.getHeight(),radius);
             }
         });
-        builder.setNegativeButton("取消", null);
-        builder.show();
+        view3DContainer.setOutlineProvider(new ViewOutlineProvider() {
+            @Override
+            public void getOutline(View view, Outline outline) {
+                int radius = (int) (16 * getResources().getDisplayMetrics().density);
+                outline.setRoundRect(0,0,view.getWidth(),view.getHeight(),radius);
+            }
+        });
+
     }
 
-
     /**
-     * 删除轨迹调用
+     * 绘制轨迹
+     *
+     * @param
      */
-    private void deleteRoadsSets() {
-        if (DataStorageToPC.zoneName == 0) {
-            ToastUtil.showShort(getApplicationContext(), "先选择路线");
+    private void drawRoadInMap( ) {
+//        List<JSONObject> jsonList = DataStorageFromPC.zoneNameJsonListMap.get(zoneName);
+//        if (jsonList == null || jsonList.size() == 0) {
+//            return;
+//        }
+        //清除已有的轨迹
+        for (Polyline line : polylineList) {
+            line.remove();
+        }
+
+        JSONObject jsonObject = DataStorageFromPC.mappingJSON;
+
+        List<LatLng> temp = new ArrayList();
+        JSONArray pointsArray = (JSONArray) jsonObject.get("points");
+        if (pointsArray == null || pointsArray.isEmpty()) {
+            Log.i(TAG,"轨迹点没有啊！！");
             return;
         }
-        AlertDialog.Builder deleteRoadsBuild = new AlertDialog.Builder(this);
-        deleteRoadsBuild.setTitle("提示");
-        deleteRoadsBuild.setMessage("删除轨迹当前轨迹" + "?");
-        deleteRoadsBuild.setPositiveButton("确定", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                Global.deleteRoadFlag = true;
-                handler.sendEmptyMessageDelayed(Common.ACTION_REFRESH, 2000);  //删除轨迹后重载
-            }
-        });
-        deleteRoadsBuild.setNegativeButton("取消", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                Global.deleteRoadFlag = false;
 
-            }
-        });
-        deleteRoadsBuild.create().show();
+        //clearMarkers();   //清除 始终点标记
+        int size = pointsArray.size();
+        for (int i = 0; i < size; i++) {
+            JSONObject pointJson = (JSONObject) pointsArray.get(i);
+            double lat = (Double) pointJson.get("lat");
+            double lon = (Double) pointJson.get("lon");
+            LatLng latLngPoint = ChangeLatlon.transform(lat, lon);
+            temp.add(latLngPoint);
+        }
+        addStartEndMarker(temp.get(0), temp.get(temp.size() - 1));
+        PolylineOptions po = new PolylineOptions().addAll(temp).setUseTexture(true).setCustomTexture(normalRouteBlue)
+                .width(15).color(Color.argb(255, 0, 255, 1));
+        Polyline poly = aMap.addPolyline(po);
+        polylineList.add(poly);
 
+        Log.i(TAG, "画路线完成");
     }
+
 
     /**
      * 广播接收器类
@@ -1174,7 +1102,7 @@ public class MainActivity1 extends Activity implements LocationSource, AMapLocat
 
     }
 
-    //    @Override
+//        @Override
     public void onProviderEnabled(String s) {
 
     }
