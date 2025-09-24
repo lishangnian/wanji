@@ -6,6 +6,7 @@ import android.util.Log;
 import com.enjoy.wanji.data.TopicAndParams;
 import com.enjoy.wanji.entity.DataStorageFromPC;
 import com.enjoy.wanji.entity.GearEnum;
+import com.enjoy.wanji.entity.TrafficObjClassEnum;
 import com.enjoy.wanji.vr3D.ContainerObject3D;
 import com.enjoy.wanji.vr3D.TrafficObj;
 
@@ -207,10 +208,11 @@ public class MessageHandle {
         trafficObj.setY(Float.parseFloat(obJson.get("y").toString()));
         trafficObj.setWidth(Float.parseFloat(obJson.get("width").toString()));
         trafficObj.setLength(Float.parseFloat(obJson.get("length").toString()));
+        trafficObj.setAzimuth(Float.parseFloat(obJson.get("azimuth").toString()));
 
-        if (classification == 0) {
+        if (classification == TrafficObjClassEnum.Unknown.key) {
             ContainerObject3D.Obj0UnknownList.add(trafficObj);
-        } else if (classification == 1) {
+        } else if (classification == TrafficObjClassEnum.Pedestrian.key) {
             ContainerObject3D.Obj1PedestrianList.add(trafficObj);
         } else {
             ContainerObject3D.Obj2VehicleList.add(trafficObj);
@@ -226,6 +228,7 @@ public class MessageHandle {
 //            obj.setY(Float.parseFloat(obJson.get("y").toString())  - 6 );
 //            obj.setWidth(Float.parseFloat(obJson.get("width").toString()));
 //            obj.setLength(Float.parseFloat(obJson.get("length").toString()));
+//            obj.setAzimuth(Float.parseFloat(obJson.get("azimuth").toString()));
 //            ContainerObject3D.Obj0UnknownList.add(obj);
 //            ContainerObject3D.Obj1PedestrianList.add(obj);
         }

@@ -2,6 +2,7 @@ package com.enjoy.wanji.vr3D;
 
 import android.util.Log;
 
+import com.enjoy.wanji.entity.TrafficObjClassEnum;
 import com.enjoy.wanji.service.EnjoySocketService;
 
 import org.rajawali3d.Object3D;
@@ -73,7 +74,14 @@ public class ModelAgent {
             TrafficObj obj = objList.get(i);
             Object3D model = list.get(i);
             model.setVisible(true);
-            model.setPosition(obj.getX() / X_OffSet_K, 0, 0 - obj.getY());
+
+            if(TrafficObjClassEnum.Vehicle.key == obj.getClassification()){  //机动车
+                model.setRotY(obj.getAzimuth()+180);
+                model.setPosition(obj.getX(), 0.8, 0 - obj.getY());
+            }else {
+                model.setRotY(obj.getAzimuth());
+                model.setPosition(obj.getX(), 0, 0 - obj.getY());
+            }
         }
     }
 }

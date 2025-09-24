@@ -8,6 +8,8 @@ public class TrafficObj {
     private float y;   //纵坐标
     private float width;             //#宽度
     private float length;           //#长度
+    
+    private float azimuth;          //航向
 
 
     public int getId() {
@@ -27,6 +29,14 @@ public class TrafficObj {
      */
     public void setClassification(int classification) {
         this.classification = classification;
+    }
+
+    public float getAzimuth() {
+        return azimuth;
+    }
+
+    public void setAzimuth(float azimuth) {
+        this.azimuth = azimuth;
     }
 
     public float getX() {
