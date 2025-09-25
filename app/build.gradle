@@ -34,12 +34,18 @@ android {
     }
 
 
+//    applicationVariants.all { variant ->
+//        variant.outputs.all {
+//            outputFileName = "${variant.name}-${variant.versionName}.apk"
+//        }
+//    }
+
     applicationVariants.all { variant ->
-        variant.outputs.all {
-            outputFileName = "${variant.name}-${variant.versionName}.apk"
+        variant.outputs.all { output ->
+            def project ="智驾终端"
+            output.outputFileName = "${project}-${variant.versionName}.apk"
         }
     }
-
 
 }
 
