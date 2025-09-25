@@ -157,7 +157,6 @@ public class EnjoySocketService extends IntentService {
                     // 连接成功
                     Global.connectFlag = true;
                     Log.i(connectTag, "ros connect success");
-                    Log.i(connectTag, "广播connect success");
                     Global.connectTip = 1;  //连接成功，语音提示标记
 
                     //发送广播

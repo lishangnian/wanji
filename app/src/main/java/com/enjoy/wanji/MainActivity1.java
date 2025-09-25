@@ -7,7 +7,6 @@ import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.ActivityInfo;
@@ -23,7 +22,6 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.text.Editable;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.KeyEvent;
@@ -31,10 +29,8 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewOutlineProvider;
 import android.view.WindowManager;
-import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.amap.api.location.AMapLocation;
@@ -52,7 +48,6 @@ import com.amap.api.maps.model.LatLng;
 import com.amap.api.maps.model.LatLngBounds;
 import com.amap.api.maps.model.Marker;
 import com.amap.api.maps.model.MarkerOptions;
-import com.amap.api.maps.model.MyLocationStyle;
 import com.amap.api.maps.model.Polyline;
 import com.amap.api.maps.model.PolylineOptions;
 import com.amap.api.maps.model.VisibleRegion;
@@ -68,13 +63,11 @@ import com.enjoy.wanji.entity.AttentionTypeEnum;
 import com.enjoy.wanji.entity.DataStorage;
 import com.enjoy.wanji.entity.DataStorageCollectMap;
 import com.enjoy.wanji.entity.DataStorageFromPC;
-import com.enjoy.wanji.entity.DataStorageToPC;
 import com.enjoy.wanji.entity.ErrorContentEnum;
 import com.enjoy.wanji.entity.V2xTypeEnum;
 import com.enjoy.wanji.service.EnjoySocketService;
 import com.enjoy.wanji.util.AMapUtil;
 import com.enjoy.wanji.util.ToastUtil;
-import com.enjoy.wanji.vr3D.CarScene;
 import com.enjoy.wanji.vr3D.CarScene1;
 import com.enjoy.wanji.vr3D.ModelAgent;
 
@@ -84,8 +77,6 @@ import org.rajawali3d.view.SurfaceView;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.locks.Lock;
-import java.util.concurrent.locks.ReentrantLock;
 
 
 public class MainActivity1 extends Activity implements LocationSource, AMapLocationListener,
@@ -176,8 +167,22 @@ public class MainActivity1 extends Activity implements LocationSource, AMapLocat
         //初始化控件
         initView();
 
+
+        //注册广播接收器
+        mainActivityDataReceiver = new MainActivityDataReceiver();
+        //接收器设置指定action
+        IntentFilter filter = new IntentFilter();
+        filter.addAction(Common.MAIN_RECEIVER_ACTION);
+        registerReceiver(mainActivityDataReceiver, filter);
+
+        //启动连接
+        Intent intent = new Intent(MainActivity1.this, EnjoySocketService.class);
+        intent.putExtra(Common.ACTION_NAME, Common.ACTION_CONNECT);
+        startService(intent);
+
         //再初始化 耗时的组件
-        handler.sendEmptyMessageDelayed(Common.ACTION_INIT_VIEW_DELAY, 2000);
+        handler.sendEmptyMessageDelayed(Common.ACTION_INIT_MAP_DELAY, 500);  //初始化地图
+//        handler.sendEmptyMessageDelayed(Common.ACTION_INIT_3D_MODEL_DELAY, 2000); //初始化3D的model
 
     }
 
@@ -270,20 +275,6 @@ public class MainActivity1 extends Activity implements LocationSource, AMapLocat
 //            throw new RuntimeException(e);
         }
         geocoderSearch.setOnGeocodeSearchListener(this);
-
-        carScene.initModelNPC();  //初始化3D中的NPC
-
-        //注册广播接收器
-        mainActivityDataReceiver = new MainActivityDataReceiver();
-        //接收器设置指定action
-        IntentFilter filter = new IntentFilter();
-        filter.addAction(Common.MAIN_RECEIVER_ACTION);
-        registerReceiver(mainActivityDataReceiver, filter);
-
-        //启动连接
-        Intent intent = new Intent(MainActivity1.this, EnjoySocketService.class);
-        intent.putExtra(Common.ACTION_NAME, Common.ACTION_CONNECT);
-        startService(intent);
     }
 
 
@@ -372,7 +363,7 @@ public class MainActivity1 extends Activity implements LocationSource, AMapLocat
      */
     private void myHandleMessage(int msgWhat) {
         switch (msgWhat) {
-            case Common.ACTION_INIT_VIEW_DELAY:  //初始化耗时组件
+            case Common.ACTION_INIT_MAP_DELAY:  //初始化耗时组件
                 delayInitView();
                 break;
             case Common.ACTION_REFRESH:
@@ -530,9 +521,11 @@ public class MainActivity1 extends Activity implements LocationSource, AMapLocat
                 break;
             case Common.ACTION_UI_3D:   //更新3D动画
                 ModelAgent.updatePosition();
-                carScene.updateLinesMove(DataStorageFromPC.velocity / 180f);
                 break;
             case Common.ACTION_UI_LOCATION:   //更新位置定位
+                //更新 3D动画中车道线
+                carScene.updateLinesMove(DataStorageFromPC.velocity / 180f);
+
                 double lon = DataStorageFromPC.lon;
                 double lat = DataStorageFromPC.lat;
                 heading = DataStorageFromPC.heading;

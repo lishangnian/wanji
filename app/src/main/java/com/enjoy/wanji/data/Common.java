@@ -30,5 +30,5 @@ public class Common {
 
     public static final int ACTION_UPDATE_COLLECT = 800;
 
-    public static final int ACTION_INIT_VIEW_DELAY = 801;
+    public static final int ACTION_INIT_MAP_DELAY = 801;
 }

@@ -7,6 +7,7 @@ import android.view.MotionEvent;
 
 import com.enjoy.wanji.R;
 import com.enjoy.wanji.entity.DataStorageFromPC;
+import com.enjoy.wanji.service.EnjoySocketService;
 
 import org.rajawali3d.Object3D;
 import org.rajawali3d.lights.DirectionalLight;
@@ -100,6 +101,8 @@ public class CarScene1 extends Renderer {
 //        getCurrentCamera().setPosition(15, 1, 5);  //侧视
         getCurrentCamera().setLookAt(lookAtX, lookAtY, lookAtZ);
 
+
+        initModelNPC(); //初始化 背景交通物体
 
     }
 
@@ -198,8 +201,28 @@ public class CarScene1 extends Renderer {
         return model;
     }
 
-    //初始化交通参与者
     public void initModelNPC(){
+        Thread t = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                if (EnjoySocketService.UpdateUIModelLock.tryLock()) {
+                    try {
+                        initModelNPC_Imp();
+                    } finally {
+                        EnjoySocketService.UpdateUIModelLock.unlock();
+                    }
+                } else {
+                    Log.i("msgTag", "Lock not init 3D NPC: 未获取锁");
+                }
+            }
+        });
+        t.start();
+
+    }
+
+
+    //初始化交通参与者
+    private void initModelNPC_Imp(){
         //创建未知物体-3个 机动车3个
 
         for (int i =0; i < 3; i++){
@@ -219,11 +242,8 @@ public class CarScene1 extends Renderer {
             //行人
             Object3D nonVehicleModel = initNoVehicle(R.raw.stl_man, colorColdWhiteArr);
             nonVehicleModel.setVisible(false);
-            nonVehicleModel.setScale(2.2f);
+            nonVehicleModel.setScale(1.8f);
             nonVehicleModel.setPosition(0,0,50);
-//            nonVehicleModel.setRotY(-30); // 调整朝向
-//            nonVehicleModel.setRotZ(-30);
-//            nonVehicleModel.setRotX(-40);  //左右转
             ContainerObject3D.ModelWaite1PedestrianQueue.offer(nonVehicleModel);
             getCurrentScene().addChild(nonVehicleModel);
         }

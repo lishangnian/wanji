@@ -78,6 +78,9 @@ public class ModelAgent {
             if(TrafficObjClassEnum.Vehicle.key == obj.getClassification()){  //机动车
                 model.setRotY(obj.getAzimuth()+180);
                 model.setPosition(obj.getX(), 0.8, 0 - obj.getY());
+            }else if (TrafficObjClassEnum.Pedestrian.key == obj.getClassification()){
+                model.setRotY(obj.getAzimuth());
+                model.setPosition(obj.getX(), 0.2 , 0 - obj.getY());
             }else {
                 model.setRotY(obj.getAzimuth());
                 model.setPosition(obj.getX(), 0, 0 - obj.getY());
