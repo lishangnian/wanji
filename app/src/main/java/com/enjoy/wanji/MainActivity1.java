@@ -519,13 +519,13 @@ public class MainActivity1 extends Activity implements LocationSource, AMapLocat
 
                 Log.i(TAG, "主页面UI更新");
                 break;
-            case Common.ACTION_UI_3D:   //更新3D动画
+            case Common.ACTION_UI_3D:   //更新3D动画 交通参与者
                 ModelAgent.updatePosition();
                 break;
+            case Common.ACTION_UI_LINES_3D:  //更新车道线
+                carScene.updateLinesMove(DataStorageFromPC.velocity / 100f);
+                break;
             case Common.ACTION_UI_LOCATION:   //更新位置定位
-                //更新 3D动画中车道线
-                carScene.updateLinesMove(DataStorageFromPC.velocity / 180f);
-
                 double lon = DataStorageFromPC.lon;
                 double lat = DataStorageFromPC.lat;
                 heading = DataStorageFromPC.heading;

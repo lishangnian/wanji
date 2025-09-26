@@ -202,15 +202,17 @@ public class EnjoySocketService extends IntentService {
                         } else if (nameTopic.equals(TopicAndParams.topicRecvV2xapp)) { //接收v2x
                             sendCast(Common.MAIN_RECEIVER_ACTION, Common.ACTION_UI_V2X);
                         }else if (nameTopic.equals(TopicAndParams.topicRecvTrafficPart)){   //交通参与者
-                            //稀疏一下，否则50ms频率太高，boolean在数据处理中交替变化
-                            if (DataStorageFromPC.TRAFFIC_DATA_SEND){
+                            //处理traffic中有多个for循环，影响效率这里做稀疏，否则50ms频率太高，boolean在数据处理中交替变化，
+                            //稀疏后频率是 10，不会影响展示
+                            if (DataStorageFromPC.TRAFFIC_DATA_SEND){ //
                                 sendCast(Common.MAIN_RECEIVER_ACTION, Common.ACTION_UI_3D);
                             }
+                            sendCast(Common.MAIN_RECEIVER_ACTION, Common.ACTION_UI_LINES_3D); //更新车道线
                         } else if (nameTopic.equals(TopicAndParams.topicRecvSensorgps)) {  //更新位置定位
                             //gps频率高，做稀疏处理
                             sendCast(Common.MAIN_RECEIVER_ACTION, Common.ACTION_UI_LOCATION);
                         } else if (nameTopic.equals(TopicAndParams.topicRecvActuator)){  //档位速度等变化
-                            if (System.currentTimeMillis() - actuatorTimestamp > 800 ){   //稀疏处理
+                            if (System.currentTimeMillis() - actuatorTimestamp > 500 ){   //稀疏处理
                                 actuatorTimestamp = System.currentTimeMillis();
                                 sendCast(Common.MAIN_RECEIVER_ACTION, Common.ACTION_UI_UPDATE);
                             }
