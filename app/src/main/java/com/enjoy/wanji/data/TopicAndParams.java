@@ -2,7 +2,7 @@ package com.enjoy.wanji.data;
 
 public class TopicAndParams {
 
-    public static final String topicRecvSensorgps = "/sensorgps"; //订阅消息TASKRE
+    public static final String topicRecvSensorgps = "/sensorgpsPad"; //订阅消息TASKRE
     public static final String topicRecvLoadMapsName = "/lonlatmap"; //订阅加载地图TOPIC
     public static final String topicRecvBehaviordecision = "/behaviordecision"; //订阅障碍物消息topic
     public static final String topicRecvActuator = "/actuator";   //订阅驾驶状态topic

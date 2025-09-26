@@ -556,9 +556,9 @@ public class MainActivity1 extends Activity implements LocationSource, AMapLocat
             case Common.ACTION_UI_V2X:  //v2x
                 //0:无 1：红灯 2：绿灯 3：黄灯
                 if (0 == DataStorageFromPC.lightColor && View.VISIBLE == trafficLightImg.getVisibility()){
-                    trafficLightImg.setVisibility(View.GONE);
+                    trafficLightImg.setVisibility(View.INVISIBLE);
                 }else if (0 < DataStorageFromPC.lightColor){
-                    if (View.GONE == trafficLightImg.getVisibility()){
+                    if (View.INVISIBLE == trafficLightImg.getVisibility()){
                         trafficLightImg.setVisibility(View.VISIBLE);
                     }
                     if (1 == DataStorageFromPC.lightColor && trafficLightImg.getDrawable() != redDrawable){
@@ -583,7 +583,7 @@ public class MainActivity1 extends Activity implements LocationSource, AMapLocat
                         speedLimitTxt.setBackground(getResources().getDrawable(R.drawable.limit_speed0));
                     }
                 } else {
-                    speedLimitTxt.setVisibility(View.GONE);  //不可见
+                    speedLimitTxt.setVisibility(View.INVISIBLE);  //不可见
                 }
                 attentionDialogShow();
                 break;
@@ -977,23 +977,22 @@ public class MainActivity1 extends Activity implements LocationSource, AMapLocat
         Log.i(TAG, "addCarMarker() called with: lat = [" + lat + "], lot = [" + lot + "], heading = [" + heading + "]");
         if (carMarker != null) {
 //            carMarker.remove();
-//            carMarker.setPosition(new LatLng(lat, lot));
+            carMarker.setPosition(new LatLng(lat, lot));
 //            carMarker.setRotateAngle(360 - heading);
 //            return;
 
-            carMarker.setPosition(new LatLng(lat, lot));
-            carMarker.setRotateAngle(360 - heading);
-
-        } else {
+        }else {
             //绘制marker
             carMarker = aMap.addMarker(new MarkerOptions()
                     .position(new LatLng(lat, lot))
                     .icon(BitmapDescriptorFactory.fromBitmap(BitmapFactory
                             .decodeResource(getResources(), R.mipmap.car)))
                     .draggable(true));
-            carMarker.setRotateAngle(360 - heading);
+            carMarker.setZIndex(10f);
         }
-        carMarker.setZIndex(100f);
+        carMarker.setRotateAngle(360 - heading);
+
+
     }
 
 

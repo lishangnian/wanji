@@ -20,6 +20,7 @@ public class DataStorageFromPC {
     public static String speedLimitStr = "100";  //限速度数值
     public static volatile int velocity = 0;  //速度数值
     public static volatile int speedLimit = 100;  //限速度数值
+    public static volatile long v2xTimestamp = System.currentTimeMillis();  //接收到v2x时的时间
     public static volatile long rtk = 0;
     public static String objDis = "---m";  //障碍物距离单位
     public static int brakePadel = 0;   //刹车信号

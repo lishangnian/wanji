@@ -23,6 +23,8 @@ import org.rajawali3d.primitives.Line3D;
 import org.rajawali3d.primitives.Plane;
 import org.rajawali3d.renderer.Renderer;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Stack;
@@ -38,6 +40,9 @@ public class CarScene extends Renderer {
 //    private Object3D ground;
     float[] colorGrayArr = {0.7216f, 0.7608f, 0.8000f, 1f}; //灰色
     float[] colorLightGrayArr = {0.835f, 0.835f, 0.835f, 1f}; //灰色
+    float[] colorSliverGrayArr = {0.85f, 0.85f, 0.87f, 1f}; //浅银灰色
+    float[] colorAuroraSliverGrayArr = {0.92f, 0.92f, 0.94f, 1f}; //极光银
+    float[] colorScienceGrayArr = {0.88f, 0.88f, 0.90f, 1f}; //科技灰色
     float[] colorDarkGrayArr = {0.6627f, 0.6627f, 0.6627f, 1f}; //深灰色
     float[] colorDeepGrayArr = {0.35f, 0.35f, 0.35f, 1f}; //较深灰色
     float[] colorPearArr = {0.9922f, 0.9333f, 0.9569f, 1.0f};; //珠光白
@@ -69,7 +74,7 @@ public class CarScene extends Renderer {
         getCurrentScene().addLight(keyLight);
 
         DirectionalLight keyLight1 = new DirectionalLight(-1.5, -1.5f, -2.0f);
-        keyLight1.setPower(0.30f);
+        keyLight1.setPower(0.35f);
         keyLight1.setColor(1.0f, 1.0f, 0.98f);
         getCurrentScene().addLight(keyLight1);
 
@@ -85,26 +90,55 @@ public class CarScene extends Renderer {
 
         addLaneLines(); //车道线
 
-//        carModel = initCenterCarModel(R.raw.stl_main_car, colorLightGrayArr);
-        carModel = initCenterCarModel(R.raw.stl_main_car, colorDarkGrayArr);
-        carModel.setScale(3.9f);
+        float scale = 3.2f;
+//        carModel = initMainCarModel(R.raw.obj_main_car);
+        carModel = initCenterCarModel(R.raw.stl_main_car, colorAuroraSliverGrayArr);
+//        carModel = initCenterCarModel(R.raw.stl_main_car, colorGrayArr);
+        carModel.setScale(scale);
         carModel.setRotX(180);
         carModel.setRotZ(-90);
 
-        carModel.setPosition(carPositionX, carPositionY, carPositionZ); //  z 正直 靠近观察者方向
+        carModel.setPosition(carPositionX, carPositionY, carPositionZ);
         getCurrentScene().addChild(carModel);
-
 
         // 设置摄像机位置（固定）  x-右  y-高  z-纵深 靠近观察者为正
         getCurrentCamera().setPosition(cameraX, cameraY, cameraZ);
 //        getCurrentCamera().setPosition(0, 25, 5);  //俯视
-//        getCurrentCamera().setPosition(15, 1, 5);  //侧视
         getCurrentCamera().setLookAt(lookAtX, lookAtY, lookAtZ);
 
 
         initModelNPC(); //初始化 背景交通物体
 
     }
+
+    /**
+     *
+     * @param resourceId
+     * @return
+     */
+    /**
+     *
+
+
+    private Object3D initMainCarModel(int resourceId){
+        Object3D model = null;
+        try {
+            InputStream objInputStream = mContext.getAssets().open("model/obj_main_car.obj");
+//            LoaderOBJ loader  = new LoaderOBJ(this, resourceId);
+//            LoaderOBJ loader  = new LoaderOBJ(mContext.getResources(), getTextureManager(), resourceId);
+//            LoaderOBJ loader = new LoaderOBJ(mContext.getResources(),getTextureManager(),objInputStream);
+//            loader.parse();   //解析模型
+//            model = loader.getParsedObject();
+
+
+
+        }catch (ParsingException | IOException pe){
+            Log.e("objTag","parsing carObj error:",pe.fillInStackTrace());
+        }
+
+        return model;
+    }
+     */
 
     private Object3D initCenterCarModel(int resourceId, float[] colorARR){
         Object3D model = null;
@@ -120,13 +154,10 @@ public class CarScene extends Renderer {
             material.setDiffuseMethod(new DiffuseMethod.Lambert());
 
             // 设置镜面反射 - 实现光滑表面
-//                    SpecularMethod.Phong phong = new SpecularMethod.Phong();
-//                    phong.setSpecularColor();     //高光颜色
-//                    phong.setShininess(128);  //高光强度   值越大 反光点越小
             material.setSpecularMethod(new SpecularMethod.Phong(Color.WHITE, 100));
 
             // 启用颜色影响
-            material.setColorInfluence(0.92f);
+            material.setColorInfluence(0.97f);
             if (model != null && model.getNumChildren() > 0){
                 for(int i = 0; i < model.getNumChildren(); i++){
                     Object3D child = model.getChildAt(i);
@@ -157,11 +188,8 @@ public class CarScene extends Renderer {
 //            LoaderSTL loader = new LoaderSTL(mContext.getResources(),mTextureManager,resourceId);
             loader.parse();   //解析模型
             model = loader.getParsedObject();
-//            model.setScale(0.25f);
-            model.setScale(4.5f);
+            model.setScale(3.8f);
             model.setRotY(180);
-//            model.setRotZ(-90);
-//            model.setRotation(0,180,-90);
             model.setPosition(0,-100,0);
             updateModelMaterial(model, colorARR);
 

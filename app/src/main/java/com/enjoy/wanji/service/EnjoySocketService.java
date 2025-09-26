@@ -138,6 +138,7 @@ public class EnjoySocketService extends IntentService {
     JSONParser parser = new JSONParser();
     static boolean GPS_CAST_SEND = false;
     static boolean ACTUATOR_UI_SEND = false;
+    static long actuatorTimestamp = System.currentTimeMillis();
     static boolean CURVE_LINE_SEND = false;
     /**
      * 连接ros服务
@@ -207,15 +208,12 @@ public class EnjoySocketService extends IntentService {
                             }
                         } else if (nameTopic.equals(TopicAndParams.topicRecvSensorgps)) {  //更新位置定位
                             //gps频率高，做稀疏处理
-                            if (GPS_CAST_SEND){
-                                sendCast(Common.MAIN_RECEIVER_ACTION, Common.ACTION_UI_LOCATION);
-                                GPS_CAST_SEND = false;
-                            }else GPS_CAST_SEND = true;
+                            sendCast(Common.MAIN_RECEIVER_ACTION, Common.ACTION_UI_LOCATION);
                         } else if (nameTopic.equals(TopicAndParams.topicRecvActuator)){  //档位速度等变化
-                            if (ACTUATOR_UI_SEND){   //稀疏处理
+                            if (System.currentTimeMillis() - actuatorTimestamp > 800 ){   //稀疏处理
+                                actuatorTimestamp = System.currentTimeMillis();
                                 sendCast(Common.MAIN_RECEIVER_ACTION, Common.ACTION_UI_UPDATE);
-                                ACTUATOR_UI_SEND = false;
-                            }else ACTUATOR_UI_SEND = true;
+                            }
                         }else if (nameTopic.equals(TopicAndParams.topicRecvLaneLine)){
                             //曲线绘制放在 ACTION_UI_3D这个 type里了
 //                            if (CURVE_LINE_SEND){

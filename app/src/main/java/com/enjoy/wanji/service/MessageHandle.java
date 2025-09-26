@@ -186,7 +186,7 @@ public class MessageHandle {
                     DataStorageFromPC.speedLimit = speedLimitInt;
                     DataStorageFromPC.speedLimitStr = String.valueOf(speedLimitInt);
                 }
-
+                DataStorageFromPC.v2xTimestamp = System.currentTimeMillis();
                 break;
         }
     }
