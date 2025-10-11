@@ -984,7 +984,7 @@ public class MainActivity1 extends Activity implements LocationSource, AMapLocat
         }else {
             //绘制marker
             carMarker = aMap.addMarker(new MarkerOptions()
-                    .position(new LatLng(lat, lot))
+                    .position(new LatLng(lat, lot)).setFlat(true)
                     .icon(BitmapDescriptorFactory.fromBitmap(BitmapFactory
                             .decodeResource(getResources(), R.mipmap.car)))
                     .draggable(true));
