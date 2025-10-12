@@ -47,16 +47,16 @@ public class EnjoyTrainShipApplication extends Application {
     }
 
 
-    static boolean playCompletionFlag = true;  //播放完成标志
+    public static boolean playCompletionFlag = true;  //播放完成标志
 
     /**
      * 播放语音
      */
     private void playMedia() {
-        if (!playCompletionFlag) {
-            return;
-        }
-        if (mediaPlayer != null && mediaPlayer.isPlaying()) {
+//        if (!playCompletionFlag) {
+//            return;
+//        }
+        if (!playCompletionFlag || (mediaPlayer != null && mediaPlayer.isPlaying())) {
             Log.i(mediaTag, "语音is playing return");
             return;
         }
@@ -101,9 +101,9 @@ public class EnjoyTrainShipApplication extends Application {
                 }
             }
         } else if (AttentionInfo.type == AttentionTypeEnum.V2X.key) {    //播放v2x语音
-            if (AttentionInfo.attentionKey == V2xTypeEnum.FCW.key) {
+            if (AttentionInfo.attentionKey == V2xTypeEnum.FCW.key) {   //车辆已进入云支持绿波车速引导模式
                 file = getResources().openRawResourceFd(R.raw.v2x1);
-            } else if (AttentionInfo.attentionKey == V2xTypeEnum.ICW.key) {
+            } else if (AttentionInfo.attentionKey == V2xTypeEnum.ICW.key) { // 车辆已退出云支持绿波车速引导模式
                 file = getResources().openRawResourceFd(R.raw.v2x2);
             } else if (AttentionInfo.attentionKey == V2xTypeEnum.LTA.key) {
                 file = getResources().openRawResourceFd(R.raw.v2x3);

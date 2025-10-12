@@ -85,6 +85,7 @@ public class MainActivity1 extends Activity implements LocationSource, AMapLocat
         GeocodeSearch.OnGeocodeSearchListener, OnMapTouchListener {//定位接口
     private static final String TAG = "PageActivityMain1";
     private static String mediaTag = "media_tag";
+    private static String attentionTag = "attentionTag";
 
     private Context mContext;
     private AMap aMap;//地图控制器类
@@ -636,7 +637,7 @@ public class MainActivity1 extends Activity implements LocationSource, AMapLocat
         } else if (DataStorageFromPC.driverStatus > 0 && ErrorContentEnum.contains(DataStorageFromPC.error)) {  //自驾状态，有故障
             type = AttentionTypeEnum.ERROR.key;
             key = DataStorageFromPC.error;
-        } else if (DataStorageFromPC.driverStatus > 0 && DataStorageFromPC.v2xType > 0) {  //自驾状态， v2x信息
+        } else if (DataStorageFromPC.v2xType > 0) {  //自驾状态， v2x信息
             type = AttentionTypeEnum.V2X.key;
             key = DataStorageFromPC.v2xType;
         }
@@ -650,10 +651,10 @@ public class MainActivity1 extends Activity implements LocationSource, AMapLocat
         EnjoyTrainShipApplication.mediaLock.unlock();
     }
 
-    String attentionTag = "attentionTag";
+
 
     private void attentionDialogShowImp(int type, int key) {
-        Log.i(attentionTag, "type =" + type + ". key = " + key);
+        Log.i(attentionTag, "type =" + type + " key = " + key);
         if (type == 0 && (System.currentTimeMillis() - AttentionInfo.timestamp) > 2500) {  //没有任何弹框消息，且距离上次弹框时间超过2.5秒
             if (dialogPopWindow != null && dialogPopWindow.isShowing()) {
                 dialogPopWindow.dismiss();
@@ -665,18 +666,21 @@ public class MainActivity1 extends Activity implements LocationSource, AMapLocat
         }
         AttentionInfo.timestamp = System.currentTimeMillis();
         //如果此次弹框信息和上次的一样，且弹框还在，就直接报语音
-        if (type == AttentionInfo.type && key == AttentionInfo.attentionKey
-                && dialogPopWindow != null && dialogPopWindow.isShowing()) {
-            Log.i(attentionTag, "语音唤醒线程开始唤醒1");
-            notifyMediaThread();
+        if (type == AttentionInfo.type && key == AttentionInfo.attentionKey) {
+//            Log.i(attentionTag, "语音唤醒线程开始唤醒1");
+//            notifyMediaThread();
+            if ( dialogPopWindow != null && dialogPopWindow.isShowing()){
+                dialogPopWindow.dismiss();
+            }
+
             return;
         }
-
 
         AttentionInfo.type = type;
         AttentionInfo.attentionKey = key;
         if (type == AttentionTypeEnum.CONNECT_SUCCESS.key || type == AttentionTypeEnum.DISCONNECT.key
-                || type == AttentionTypeEnum.MANUAL_DRIVE.key || type == AttentionTypeEnum.AUTO_DRIVE.key) {
+                || type == AttentionTypeEnum.MANUAL_DRIVE.key || type == AttentionTypeEnum.AUTO_DRIVE.key
+                || type == AttentionTypeEnum.V2X.key) {
             AttentionInfo.title = "提示";
             dialogWarning = false;
         } else {

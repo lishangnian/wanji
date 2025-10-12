@@ -3,8 +3,8 @@ package com.enjoy.wanji.entity;
 public enum V2xTypeEnum {
     EMPTY(0, "无"),
 //    FCW(1, "前方碰撞预警"), //
-    FCW(1, "超出设计运行范围"),
-    ICW(2, "交叉路口碰撞预警"),
+    FCW(1, ""),  //车辆已进入云支持绿波车速引导模式
+    ICW(2, ""), // 车辆已退出云支持绿波车速引导模式
     LTA(3, "左转辅助"),
     BSW(4, "盲区预警/变道预警"),
     DNPW(5, "逆向超车预警"),

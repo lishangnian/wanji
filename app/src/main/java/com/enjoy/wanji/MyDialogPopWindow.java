@@ -52,7 +52,7 @@ public class MyDialogPopWindow extends PopupWindow {
         if (btnShow){
             cancelBtn.setVisibility(View.VISIBLE);
         }else {
-            cancelBtn.setVisibility(View.GONE);
+            cancelBtn.setVisibility(View.INVISIBLE);
         }
     }
 
