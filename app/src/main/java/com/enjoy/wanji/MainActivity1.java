@@ -63,6 +63,7 @@ import com.enjoy.wanji.entity.AttentionTypeEnum;
 import com.enjoy.wanji.entity.DataStorage;
 import com.enjoy.wanji.entity.DataStorageCollectMap;
 import com.enjoy.wanji.entity.DataStorageFromPC;
+import com.enjoy.wanji.entity.DriveStatusEnum;
 import com.enjoy.wanji.entity.ErrorContentEnum;
 import com.enjoy.wanji.entity.V2xTypeEnum;
 import com.enjoy.wanji.service.EnjoySocketService;
@@ -99,7 +100,7 @@ public class MainActivity1 extends Activity implements LocationSource, AMapLocat
     static AlertDialog.Builder errorDialog = null;
     static MyDialogPopWindow dialogPopWindow = null;
     static boolean dialogWarning = false; //弹框是否为警告框
-    TextView titleTxt, msgTxt, speedTxt, speedLimitTxt, gearTxt, socTxt;
+    TextView titleTxt, msgTxt, speedTxt, speedLimitTxt, remainTimeTxt, driveTxt, gearTxt, socTxt;
 
     ImageView connectImg, leftLight, rightLight, driveImg, trafficLightImg, socImg;
     AnimationDrawable leftAnimation, rightAnimation;
@@ -208,6 +209,8 @@ public class MainActivity1 extends Activity implements LocationSource, AMapLocat
         speedLimitTxt = findViewById(R.id.limit_speed_txt);
         gearTxt = findViewById(R.id.gear_txt);
         socTxt = findViewById(R.id.soc_txt);
+        driveTxt = findViewById(R.id.drive_txt);
+        remainTimeTxt = findViewById(R.id.remain_time_txt);
 
         greenDrawable = getResources().getDrawable(R.drawable.light_g);
         redDrawable = getResources().getDrawable(R.drawable.light_r);
@@ -448,11 +451,14 @@ public class MainActivity1 extends Activity implements LocationSource, AMapLocat
                 //驾驶状态
                 if (!Global.connectFlag) { //未连接
                     driveImg.setImageDrawable(getResources().getDrawable(R.drawable.no_auto_drive));
+                    driveTxt.setText(getResources().getText(R.string.no_auto_drive));
                 } else {
-                    if (0 == DataStorageFromPC.driverStatus) {  // 人工
+                    if (DriveStatusEnum.NO_AUTO.key == DataStorageFromPC.driverStatus) {  // 人工
                         driveImg.setImageDrawable(getResources().getDrawable(R.drawable.no_auto_drive));
+                        driveTxt.setText(getResources().getText(R.string.no_auto_drive));
                     } else {  //1 自动
                         driveImg.setImageDrawable(getResources().getDrawable(R.drawable.auto_drive));
+                        driveTxt.setText(getResources().getText(R.string.auto_drive));
                     }
                 }
 
@@ -557,10 +563,19 @@ public class MainActivity1 extends Activity implements LocationSource, AMapLocat
                 //0:无 1：红灯 2：绿灯 3：黄灯
                 if (0 == DataStorageFromPC.lightColor && View.VISIBLE == trafficLightImg.getVisibility()){
                     trafficLightImg.setVisibility(View.INVISIBLE);
+                    remainTimeTxt.setVisibility(View.INVISIBLE);
                 }else if (0 < DataStorageFromPC.lightColor){
                     if (View.INVISIBLE == trafficLightImg.getVisibility()){
                         trafficLightImg.setVisibility(View.VISIBLE);
                     }
+                    if (View.INVISIBLE == remainTimeTxt.getVisibility()){
+                        remainTimeTxt.setVisibility(View.VISIBLE);
+                    }
+                    String remainTimeStr = String.valueOf(DataStorageFromPC.remainingTime);
+                    if (DataStorageFromPC.remainingTime < 10){
+                        remainTimeStr = "0"+ remainTimeStr;
+                    }
+                    remainTimeTxt.setText(remainTimeStr);
                     if (1 == DataStorageFromPC.lightColor && trafficLightImg.getDrawable() != redDrawable){
                         trafficLightImg.setImageDrawable(redDrawable);
                     }else if (2 == DataStorageFromPC.lightColor && trafficLightImg.getDrawable() != greenDrawable){

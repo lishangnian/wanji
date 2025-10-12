@@ -161,6 +161,14 @@ public class MyClientUtil {
         client.send(str);
         Log.i(tag, "发送订阅消息" + str);
 
+        str = MyStringUtil.subscribeTopicStr(TopicAndParams.topicRecvCloudLight); // 云端数据
+        client.send(str);
+        Log.i(tag, "发送订阅消息" + str);
+
+        str = MyStringUtil.subscribeTopicStr(TopicAndParams.topicRecvCloudPath); // 云端
+        client.send(str);
+        Log.i(tag, "发送订阅消息" + str);
+
 
     }
 }

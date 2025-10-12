@@ -9,7 +9,8 @@ public class TopicAndParams {
     public static final String topicRecvControllon = "/controllon";   //订阅障碍物topic
     public static final String topicRecvTrafficPart = "/trafficpart";   //订阅交通参与者topic
     public static final String topicRecvLaneLine = "/laneline";   //轨迹曲线 参数
-
+    public static final String topicRecvCloudLight = "/cloudlight";   // 云端 topic
+    public static final String topicRecvCloudPath = "/cloudpath";  //云端控制
     public static final String topicRecvGlobalPlanning = "/globalplanning";   //订阅
     public static final String topicRecvLonlatmMappoints = "/lonlatmappoints";  //轨迹点topic
     public static final String topicRecvV2xapp = "/v2xapp";

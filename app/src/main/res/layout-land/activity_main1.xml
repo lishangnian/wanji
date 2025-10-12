@@ -59,16 +59,33 @@
                         android:text="0"
                         android:textColor="@color/black"
                         android:textSize="120sp" />
-                    <ImageView
+                    <LinearLayout
                         android:layout_width="0dp"
                         android:layout_height="match_parent"
                         android:layout_weight="1"
-                        android:id="@+id/traffic_light"
-                        android:src="@drawable/light_r"
-                        android:layout_gravity="center_horizontal|end"
-                        android:paddingTop="20dp"
-                        android:paddingBottom="0dp"
-                     />
+                        android:orientation="horizontal">
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_weight="1"
+                            android:id="@+id/remain_time_txt"
+                            android:text="000"
+                            android:textSize="64sp"
+                            android:textColor="@color/red"
+                            android:gravity="center_vertical|center_horizontal"
+                            android:fontFamily="@font/digital_font"
+                            />
+                        <ImageView
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_weight="1"
+                            android:id="@+id/traffic_light"
+                            android:src="@drawable/light_r"
+                            android:layout_gravity="center_horizontal|end"
+                            android:paddingBottom="0dp"
+                            />
+                    </LinearLayout>
+
                 </LinearLayout>
 
                 <!--档位 速度 电量-->
@@ -148,19 +165,32 @@
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:gravity="center_horizontal"
-                        android:layout_weight="1">
+                        android:orientation="horizontal"
+                        android:layout_weight="2">
                         <ImageView
-                            android:layout_width="64dp"
-                            android:layout_height="64dp"
+                            android:layout_width="72dp"
+                            android:layout_height="72dp"
                             android:id="@+id/auto_drive_img"
                             android:src="@drawable/no_auto_drive"
+                            android:layout_weight="1"
+                            />
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="72dp"
+                            android:id="@+id/drive_txt"
+                            android:text="@string/no_auto_drive"
+                            android:gravity="center_vertical|center_horizontal"
+                            android:textColor="@color/colorBlue"
+                            android:textSize="24sp"
+                            android:textStyle="bold"
+                            android:layout_weight="1"
                             />
                     </LinearLayout>
                     <!--            转向灯-->
                     <LinearLayout
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:layout_weight="2"
+                        android:layout_weight="3"
                         android:orientation="horizontal"
                         android:gravity="center_horizontal"
                         >
@@ -183,11 +213,11 @@
                     <LinearLayout
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:layout_weight="1"
+                        android:layout_weight="2"
                         android:gravity="center_horizontal">
                         <ImageView
-                            android:layout_width="64dp"
-                            android:layout_height="64dp"
+                            android:layout_width="72dp"
+                            android:layout_height="72dp"
                             android:id="@+id/connect_flag"
                             android:src="@drawable/disconnect"
                             />

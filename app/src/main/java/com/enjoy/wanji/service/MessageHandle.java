@@ -178,9 +178,9 @@ public class MessageHandle {
                 //  trafficLight  0:无 1：红灯 2：绿灯 3：黄灯
 //
                 int v2xType = Integer.valueOf(jsonObj.get("v2xtype").toString());  //类型
-                int trafficLight = Integer.valueOf(jsonObj.get("color").toString()); //0:无 1：红灯 2：绿灯 3：黄灯
+//                int trafficLight = Integer.valueOf(jsonObj.get("color").toString()); //0:无 1：红灯 2：绿灯 3：黄灯
                 int speedLimitInt = (int) (Integer.valueOf(jsonObj.get("speedlimit").toString()) * 3.6);  //限速  m/s
-                DataStorageFromPC.lightColor = trafficLight;
+//                DataStorageFromPC.lightColor = trafficLight;
                 DataStorageFromPC.v2xType = v2xType;
                 if (DataStorageFromPC.speedLimit != speedLimitInt){
                     DataStorageFromPC.speedLimit = speedLimitInt;
@@ -188,6 +188,31 @@ public class MessageHandle {
                 }
                 DataStorageFromPC.v2xTimestamp = System.currentTimeMillis();
                 break;
+            case TopicAndParams.topicRecvCloudLight:          //云端
+                //0:无 1：红灯 2：绿灯 3：黄灯
+                int trafficLight = Integer.valueOf(jsonObj.get("color").toString());
+
+                int remainingTime =  Integer.parseInt(jsonObj.get("remainingtime").toString()); //剩余时间
+
+                DataStorageFromPC.lightColor = trafficLight;
+                DataStorageFromPC.remainingTime = remainingTime;
+                break;
+            case TopicAndParams.topicRecvCloudPath:
+                /**
+                 *
+                1. 增加语音提醒：“车辆已进入云支持绿波车速引导模式”，“车辆已退出云支持绿波车速引导模式”
+                2. 增加云端建议车速
+                3. 增加“云支持绿波车速引导”、“云支持自动紧急制动”功能状态显示
+                4. 增加红绿登倒计时读秒（根据云端下发信号情况）
+                 */
+
+                JSONArray pointsArr = (JSONArray) jsonObj.get("points");
+                if (pointsArr.size() > 0){
+                    JSONObject element = (JSONObject)pointsArr.get(0);
+                    int targetSpeed =  (int) (Double.parseDouble(element.get("speed").toString()) * 3.6); //指导速度
+                }
+                break;
+
         }
     }
 
