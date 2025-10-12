@@ -96,18 +96,54 @@
                     android:layout_gravity="center_vertical"
                     android:layout_weight="2"
                     >
-                    <!--            显示档位-->
-                    <TextView
+                    <LinearLayout
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:id="@+id/gear_txt"
                         android:layout_weight="1"
-                        android:textColor="@color/red"
-                        android:gravity="center"
-                        android:textFontWeight="@android:integer/config_longAnimTime"
-                        android:textSize="72sp"
-                        android:text="@string/gear_p"
-                        />
+                        android:orientation="horizontal">
+                        <!--            显示档位-->
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:id="@+id/gear_txt"
+                            android:layout_weight="2"
+                            android:textColor="@color/red"
+                            android:gravity="center"
+                            android:textFontWeight="@android:integer/config_longAnimTime"
+                            android:textSize="72sp"
+                            android:text="@string/gear_p"
+                            />
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:id="@+id/guide_layout"
+                            android:orientation="vertical"
+                            android:layout_weight="3"
+                            android:layout_gravity="center_vertical"
+                            >
+                            <TextView
+                                android:layout_width="match_parent"
+                                android:layout_height="0dp"
+                                android:layout_weight="1"
+                                android:id="@+id/guide_speed_txt"
+                                android:text="60km/h"
+                                android:gravity="center_horizontal"
+                                android:textColor="@color/deepGreen"
+                                android:textSize="30sp"
+                                />
+                            <TextView
+                                android:layout_width="match_parent"
+                                android:layout_height="0dp"
+                                android:layout_weight="1"
+                                android:text="@string/guide_speed"
+                                android:gravity="center_horizontal"
+                                android:textColor="@color/colorDark"
+                                android:textSize="24sp"
+                                />
+
+                        </LinearLayout>
+                    </LinearLayout>
+
                     <!--            速度单位-->
                     <TextView
                         android:layout_width="0dp"

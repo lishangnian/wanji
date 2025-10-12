@@ -31,6 +31,7 @@ import android.view.ViewOutlineProvider;
 import android.view.WindowManager;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.amap.api.location.AMapLocation;
@@ -102,7 +103,9 @@ public class MainActivity1 extends Activity implements LocationSource, AMapLocat
     static AlertDialog.Builder errorDialog = null;
     static MyDialogPopWindow dialogPopWindow = null;
     static boolean dialogWarning = false; //弹框是否为警告框
-    TextView titleTxt, msgTxt, speedTxt, speedLimitTxt, remainTimeTxt, driveTxt, gearTxt, socTxt;
+    TextView titleTxt, msgTxt, speedTxt, speedLimitTxt, remainTimeTxt,
+            driveTxt, gearTxt, socTxt, guideSpeedTxt;
+    LinearLayout guideLayout;
 
     ImageView connectImg, leftLight, rightLight, driveImg, trafficLightImg, socImg;
     AnimationDrawable leftAnimation, rightAnimation;
@@ -212,7 +215,10 @@ public class MainActivity1 extends Activity implements LocationSource, AMapLocat
         gearTxt = findViewById(R.id.gear_txt);
         socTxt = findViewById(R.id.soc_txt);
         driveTxt = findViewById(R.id.drive_txt);
+        guideSpeedTxt = findViewById(R.id.guide_speed_txt);
         remainTimeTxt = findViewById(R.id.remain_time_txt);
+
+        guideLayout = findViewById(R.id.guide_layout);
 
         greenDrawable = getResources().getDrawable(R.drawable.light_g);
         redDrawable = getResources().getDrawable(R.drawable.light_r);
@@ -520,6 +526,18 @@ public class MainActivity1 extends Activity implements LocationSource, AMapLocat
                             leftLight.setImageResource(R.drawable.turn_left_animation);
                             leftAnimation = (AnimationDrawable) leftLight.getDrawable();
                         }
+                    }
+                }
+                //指导速度
+                if (System.currentTimeMillis() - DataStorageFromPC.guideSpeedTimeStamp > 1000){
+                    //未收到指导速度  不显示
+                    if (View.VISIBLE == guideLayout.getVisibility()){
+                        guideLayout.setVisibility(View.INVISIBLE);
+                    }
+                }else {
+                    guideSpeedTxt.setText(DataStorageFromPC.guideSpeed+"km/h");
+                    if (View.VISIBLE != guideLayout.getVisibility()){
+                        guideLayout.setVisibility(View.VISIBLE);
                     }
                 }
 
