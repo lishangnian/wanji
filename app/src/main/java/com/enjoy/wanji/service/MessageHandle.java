@@ -211,6 +211,7 @@ public class MessageHandle {
                     JSONObject element = (JSONObject)pointsArr.get(0);
                     int targetSpeed =  (int) (Double.parseDouble(element.get("speed").toString()) * 3.6); //指导速度
                     DataStorageFromPC.guideSpeed = targetSpeed;
+                    DataStorageFromPC.guideSpeedTimeStamp = System.currentTimeMillis();
                 }
                 break;
 

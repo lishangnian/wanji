@@ -44,6 +44,8 @@
     <string name="no_auto_drive">人工驾驶</string>
     <string name="auto_drive">自动驾驶</string>
 
+    <string name="guide_speed">指导速度</string>
+
 
     <drawable name="btn_pressed">#535353</drawable>
     <drawable name="btn_normal">#33A1C9</drawable>
