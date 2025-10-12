@@ -65,6 +65,7 @@ import com.enjoy.wanji.entity.DataStorageCollectMap;
 import com.enjoy.wanji.entity.DataStorageFromPC;
 import com.enjoy.wanji.entity.DriveStatusEnum;
 import com.enjoy.wanji.entity.ErrorContentEnum;
+import com.enjoy.wanji.entity.GearEnum;
 import com.enjoy.wanji.entity.V2xTypeEnum;
 import com.enjoy.wanji.service.EnjoySocketService;
 import com.enjoy.wanji.util.AMapUtil;
@@ -465,7 +466,8 @@ public class MainActivity1 extends Activity implements LocationSource, AMapLocat
                 //档位
                 if (Global.connectFlag) {
                     gearTxt.setText(DataStorageFromPC.Gear);
-                    if ("P".equals(DataStorageFromPC.Gear) || "R".equals(DataStorageFromPC.Gear)) {
+                    if (GearEnum.P.value.equals(DataStorageFromPC.Gear)
+                            || GearEnum.R.value.equals(DataStorageFromPC.Gear)) {
                         gearTxt.setTextColor(Color.RED);
                     } else {
                         gearTxt.setTextColor(getResources().getColor(R.color.deepGreen));

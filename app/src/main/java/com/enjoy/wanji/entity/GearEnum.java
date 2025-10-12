@@ -20,22 +20,18 @@ public enum GearEnum {
     }
 
     public static String getValue(int key) {
-        if (key != 0) {
-            for (GearEnum errorType : GearEnum.values()) {
-                if (errorType.key == key) {
-                    return errorType.value;
-                }
+        for (GearEnum errorType : GearEnum.values()) {
+            if (errorType.key == key) {
+                return errorType.value;
             }
         }
         return "";
     }
 
     public static boolean contains(int key) {
-        if (key != 0) {
-            for (GearEnum errorType : GearEnum.values()) {
-                if (errorType.key == key) {
-                    return true;
-                }
+        for (GearEnum errorType : GearEnum.values()) {
+            if (errorType.key == key) {
+                return true;
             }
         }
         return false;
