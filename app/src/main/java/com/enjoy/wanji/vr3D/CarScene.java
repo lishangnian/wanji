@@ -52,7 +52,7 @@ public class CarScene extends Renderer {
 //    float[] colorLightPearArr = {0.98f, 0.96f, 0.90f, 1.0f};; //标准乳白色
     float[] colorColdWhiteArr = {0.85f, 0.90f, 1.00f, 1.0f};; //冷白色
 
-    float carPositionX = 0, carPositionY = 0.9f, carPositionZ = -1.5f;
+    float carPositionX = 0, carPositionY = 0.7f, carPositionZ = -1.5f;
     float cameraX = 0, cameraY = 8f, cameraZ = 9f;
 //    float cameraX = 13, cameraY = 1f, cameraZ = 5f;      //测试 侧面视角
 
@@ -357,13 +357,26 @@ public class CarScene extends Renderer {
 
 
             //行人
-            Object3D nonVehicleModel = initNoVehicle(R.raw.stl_man, colorColdWhiteArr);
-            nonVehicleModel.setVisible(false);
-            nonVehicleModel.setScale(1.8f);
-            nonVehicleModel.setPosition(0,0,50);
-            ContainerObject3D.ModelWaite1PedestrianQueue.offer(nonVehicleModel);
-            getCurrentScene().addChild(nonVehicleModel);
+            Object3D pedestrianModel = initNoVehicle(R.raw.stl_man, colorColdWhiteArr);
+            pedestrianModel.setVisible(false);
+            pedestrianModel.setScale(1.8f);
+            pedestrianModel.setPosition(0,0,50);
+            ContainerObject3D.ModelWaite1PedestrianQueue.offer(pedestrianModel);
+            getCurrentScene().addChild(pedestrianModel);
+
+            //非机动车
+            Object3D bikeModel = initNoVehicle(R.raw.stl_bike, colorColdWhiteArr);
+            bikeModel.setVisible(false);
+            bikeModel.setScale(1.8f);
+            bikeModel.setPosition(0,0,50);
+            ContainerObject3D.ModelWaite3NoVehicleQueue.offer(bikeModel);
+            getCurrentScene().addChild(bikeModel);
         }
+//        Object3D bikeModel = initNoVehicle(R.raw.stl_bike, colorColdWhiteArr);
+//        bikeModel.setScale(1.8f);
+//        bikeModel.setRotY(180);
+//        bikeModel.setPosition(1.7,0.8,-3);
+//        getCurrentScene().addChild(bikeModel);
 
     }
 

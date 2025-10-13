@@ -84,11 +84,14 @@ public class MessageHandle {
                         ContainerObject3D.TrafficObjHomeQueue.addAll(ContainerObject3D.Obj0UnknownList);
                         ContainerObject3D.TrafficObjHomeQueue.addAll(ContainerObject3D.Obj1PedestrianList);
                         ContainerObject3D.TrafficObjHomeQueue.addAll(ContainerObject3D.Obj2VehicleList);
+                        ContainerObject3D.TrafficObjHomeQueue.addAll(ContainerObject3D.Obj3NoVehicleList);
 
                         //清空上次传来的检测物
                         ContainerObject3D.Obj0UnknownList.clear();
                         ContainerObject3D.Obj1PedestrianList.clear();
                         ContainerObject3D.Obj2VehicleList.clear();
+                        ContainerObject3D.Obj3NoVehicleList.clear();
+
 
                         if (sensorObjects != null) {
                             JSONArray objectArray = (JSONArray) sensorObjects;
@@ -241,7 +244,7 @@ public class MessageHandle {
             ContainerObject3D.Obj0UnknownList.add(trafficObj);
         } else if (classification == TrafficObjClassEnum.Pedestrian.key) {
             ContainerObject3D.Obj1PedestrianList.add(trafficObj);
-        } else {
+        } else if (classification == TrafficObjClassEnum.Vehicle.key){
             ContainerObject3D.Obj2VehicleList.add(trafficObj);
 
 
@@ -258,6 +261,8 @@ public class MessageHandle {
 //            obj.setAzimuth(Float.parseFloat(obJson.get("azimuth").toString()));
 //            ContainerObject3D.Obj0UnknownList.add(obj);
 //            ContainerObject3D.Obj1PedestrianList.add(obj);
+        }else if (classification == TrafficObjClassEnum.NoVehicle.key){  //非机动车
+            ContainerObject3D.Obj3NoVehicleList.add(trafficObj);
         }
         return trafficObj;
     }

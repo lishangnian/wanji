@@ -32,6 +32,7 @@ public class ModelAgent {
         updatePositionImp1(ContainerObject3D.Obj0UnknownList, ContainerObject3D.ModelActive0UnknownQueue, ContainerObject3D.ModelWaite0UnknownQueue);
         updatePositionImp1(ContainerObject3D.Obj1PedestrianList, ContainerObject3D.ModelActive1PedestrianQueue, ContainerObject3D.ModelWaite1PedestrianQueue);
         updatePositionImp1(ContainerObject3D.Obj2VehicleList, ContainerObject3D.ModelActive2VehicleQueue, ContainerObject3D.ModelWaite2VehicleQueue);
+        updatePositionImp1(ContainerObject3D.Obj3NoVehicleList,ContainerObject3D.ModelActive3NoVehicleQueue,ContainerObject3D.ModelWaite3NoVehicleQueue);
     }
 
 
@@ -78,12 +79,15 @@ public class ModelAgent {
             if(TrafficObjClassEnum.Vehicle.key == obj.getClassification()){  //机动车
                 model.setRotY(obj.getAzimuth()+180);
                 model.setPosition(obj.getX(), 0.8, 0 - obj.getY());
-            }else if (TrafficObjClassEnum.Pedestrian.key == obj.getClassification()){
+            }else if (TrafficObjClassEnum.Pedestrian.key == obj.getClassification()){ //行人
                 model.setRotY(obj.getAzimuth());
                 model.setPosition(obj.getX(), 0.2 , 0 - obj.getY());
-            }else {
+            }else if(TrafficObjClassEnum.Unknown.key == obj.getClassification()){   //未知
                 model.setRotY(obj.getAzimuth());
                 model.setPosition(obj.getX(), 0, 0 - obj.getY());
+            }else if (TrafficObjClassEnum.NoVehicle.key == obj.getClassification()){  //非机动车
+                model.setRotY(obj.getAzimuth() + 180);
+                model.setPosition(obj.getX(), 0, 0.8 - obj.getY());
             }
         }
     }
