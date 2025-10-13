@@ -67,6 +67,7 @@ import com.enjoy.wanji.entity.DataStorageFromPC;
 import com.enjoy.wanji.entity.DriveStatusEnum;
 import com.enjoy.wanji.entity.ErrorContentEnum;
 import com.enjoy.wanji.entity.GearEnum;
+import com.enjoy.wanji.entity.TrafficLightEnum;
 import com.enjoy.wanji.entity.V2xTypeEnum;
 import com.enjoy.wanji.service.EnjoySocketService;
 import com.enjoy.wanji.util.AMapUtil;
@@ -527,11 +528,8 @@ public class MainActivity1 extends Activity implements LocationSource, AMapLocat
                         }
                     }
                 }
-                Log.i(TAG, "主页面UI更新");
-                break;
 
-            case Common.ACTION_UI_GUIDE_SPEED:
-                //指导速度
+                //建议车速
                 if (System.currentTimeMillis() - DataStorageFromPC.guideSpeedTimeStamp > 5000){
                     //未收到指导速度  不显示
                     if (View.VISIBLE == guideSpeedTxt.getVisibility()){
@@ -545,7 +543,7 @@ public class MainActivity1 extends Activity implements LocationSource, AMapLocat
                     }
                     guideSpeedTxt.setText(DataStorageFromPC.guideSpeed+"km/h");
                 }
-
+                Log.i(TAG, "主页面UI更新");
                 break;
             case Common.ACTION_UI_3D:   //更新3D动画 交通参与者
                 ModelAgent.updatePosition();
@@ -583,10 +581,11 @@ public class MainActivity1 extends Activity implements LocationSource, AMapLocat
                 break;
             case Common.ACTION_UI_V2X:  //v2x
                 //0:无 1：红灯 2：绿灯 3：黄灯
-                if (0 == DataStorageFromPC.lightColor && View.VISIBLE == trafficLightImg.getVisibility()){
+                if (TrafficLightEnum.NO.key == DataStorageFromPC.lightColor
+                        && View.VISIBLE == trafficLightImg.getVisibility()){
                     trafficLightImg.setVisibility(View.INVISIBLE);
                     remainTimeTxt.setVisibility(View.INVISIBLE);
-                }else if (0 < DataStorageFromPC.lightColor){
+                }else if (TrafficLightEnum.NO.key < DataStorageFromPC.lightColor){
                     if (View.INVISIBLE == trafficLightImg.getVisibility()){
                         trafficLightImg.setVisibility(View.VISIBLE);
                     }
@@ -598,12 +597,17 @@ public class MainActivity1 extends Activity implements LocationSource, AMapLocat
                         remainTimeStr = "0"+ remainTimeStr;
                     }
                     remainTimeTxt.setText(remainTimeStr);
-                    if (1 == DataStorageFromPC.lightColor && trafficLightImg.getDrawable() != redDrawable){
+                    if (TrafficLightEnum.RED.key == DataStorageFromPC.lightColor
+                            && trafficLightImg.getDrawable() != redDrawable){
                         trafficLightImg.setImageDrawable(redDrawable);
-                    }else if (2 == DataStorageFromPC.lightColor && trafficLightImg.getDrawable() != greenDrawable){
+                        remainTimeTxt.setTextColor(Color.RED);
+                    }else if (TrafficLightEnum.GREEN.key == DataStorageFromPC.lightColor
+                            && trafficLightImg.getDrawable() != greenDrawable){
                         trafficLightImg.setImageDrawable(greenDrawable);
-                    }else if (3 == DataStorageFromPC.lightColor && trafficLightImg.getDrawable() != yellowDrawable){
+                        remainTimeTxt.setTextColor(Color.GREEN);
+                    }else if (TrafficLightEnum.YELLOW.key == DataStorageFromPC.lightColor && trafficLightImg.getDrawable() != yellowDrawable){
                         trafficLightImg.setImageDrawable(yellowDrawable);
+                        remainTimeTxt.setTextColor(Color.YELLOW);
                     }
                 }
 
