@@ -222,8 +222,8 @@ public class EnjoySocketService extends IntentService {
 //                                sendCast(Common.MAIN_RECEIVER_ACTION, Common.ACTION_UI_CURVE_3D);
 //                                CURVE_LINE_SEND = false;
 //                            }else CURVE_LINE_SEND = true;
-
-
+                        }else if (nameTopic.equals(TopicAndParams.topicRecvCloudPath)){
+                            sendCast(Common.MAIN_RECEIVER_ACTION ,Common.ACTION_UI_GUIDE_SPEED);
                         }
                     } catch (ParseException e) {
                         e.printStackTrace();

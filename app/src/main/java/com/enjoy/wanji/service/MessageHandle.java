@@ -207,7 +207,7 @@ public class MessageHandle {
                  */
 
                 JSONArray pointsArr = (JSONArray) jsonObj.get("points");
-                if (pointsArr.size() > 0){
+                if (pointsArr != null && pointsArr.size() > 0){
                     JSONObject element = (JSONObject)pointsArr.get(0);
                     int targetSpeed =  (int) (Double.parseDouble(element.get("speed").toString()) * 3.6); //指导速度
                     DataStorageFromPC.guideSpeed = targetSpeed;

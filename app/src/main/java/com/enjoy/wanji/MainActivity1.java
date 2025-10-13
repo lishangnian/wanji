@@ -104,8 +104,7 @@ public class MainActivity1 extends Activity implements LocationSource, AMapLocat
     static MyDialogPopWindow dialogPopWindow = null;
     static boolean dialogWarning = false; //弹框是否为警告框
     TextView titleTxt, msgTxt, speedTxt, speedLimitTxt, remainTimeTxt,
-            driveTxt, gearTxt, socTxt, guideSpeedTxt;
-    LinearLayout guideLayout;
+            driveTxt, gearTxt, socTxt, guideSpeedTxt, guideSpeedTitleTxt;
 
     ImageView connectImg, leftLight, rightLight, driveImg, trafficLightImg, socImg;
     AnimationDrawable leftAnimation, rightAnimation;
@@ -216,9 +215,9 @@ public class MainActivity1 extends Activity implements LocationSource, AMapLocat
         socTxt = findViewById(R.id.soc_txt);
         driveTxt = findViewById(R.id.drive_txt);
         guideSpeedTxt = findViewById(R.id.guide_speed_txt);
+        guideSpeedTitleTxt = findViewById(R.id.guide_speed_title);
         remainTimeTxt = findViewById(R.id.remain_time_txt);
 
-        guideLayout = findViewById(R.id.guide_layout);
 
         greenDrawable = getResources().getDrawable(R.drawable.light_g);
         redDrawable = getResources().getDrawable(R.drawable.light_r);
@@ -528,23 +527,25 @@ public class MainActivity1 extends Activity implements LocationSource, AMapLocat
                         }
                     }
                 }
+                Log.i(TAG, "主页面UI更新");
+                break;
+
+            case Common.ACTION_UI_GUIDE_SPEED:
                 //指导速度
-                if (System.currentTimeMillis() - DataStorageFromPC.guideSpeedTimeStamp > 1000){
+                if (System.currentTimeMillis() - DataStorageFromPC.guideSpeedTimeStamp > 5000){
                     //未收到指导速度  不显示
-                    if (View.VISIBLE == guideLayout.getVisibility()){
-                        guideLayout.setVisibility(View.INVISIBLE);
+                    if (View.VISIBLE == guideSpeedTxt.getVisibility()){
+                        guideSpeedTxt.setVisibility(View.INVISIBLE);
+                        guideSpeedTitleTxt.setVisibility(View.INVISIBLE);
                     }
                 }else {
-                    guideSpeedTxt.setText(DataStorageFromPC.guideSpeed+"km/h");
-                    if (View.VISIBLE != guideLayout.getVisibility()){
-                        guideLayout.setVisibility(View.VISIBLE);
+                    if (View.VISIBLE != guideSpeedTxt.getVisibility()){
+                        guideSpeedTxt.setVisibility(View.VISIBLE);
+                        guideSpeedTitleTxt.setVisibility(View.VISIBLE);
                     }
+                    guideSpeedTxt.setText(DataStorageFromPC.guideSpeed+"km/h");
                 }
 
-                //故障报警
-//                attentionDialogShow();
-
-                Log.i(TAG, "主页面UI更新");
                 break;
             case Common.ACTION_UI_3D:   //更新3D动画 交通参与者
                 ModelAgent.updatePosition();
@@ -640,7 +641,11 @@ public class MainActivity1 extends Activity implements LocationSource, AMapLocat
             type = AttentionTypeEnum.CONNECT_SUCCESS.key;  //连接成功
             key = AttentionContentEnum.CONNECT_SUCCESS.key;
             Global.connectTip = 0;
-        } else if (DataStorageFromPC.driverStatusTip == 2) {
+        }
+
+        /**
+         *
+         else if (DataStorageFromPC.driverStatusTip == 2) {
             type = AttentionTypeEnum.MANUAL_DRIVE.key;//退出自驾
             key = AttentionContentEnum.SWITCH_MANUAL_DRIVE.key;
             DataStorageFromPC.driverStatusTip = 0;
@@ -655,7 +660,9 @@ public class MainActivity1 extends Activity implements LocationSource, AMapLocat
         } else if (DataStorageFromPC.driverStatus > 0 && ErrorContentEnum.contains(DataStorageFromPC.error)) {  //自驾状态，有故障
             type = AttentionTypeEnum.ERROR.key;
             key = DataStorageFromPC.error;
-        } else if (DataStorageFromPC.v2xType > 0) {  //自驾状态， v2x信息
+        }
+        **/
+        else if (DataStorageFromPC.v2xType > 0) {  //自驾状态， v2x信息
             type = AttentionTypeEnum.V2X.key;
             key = DataStorageFromPC.v2xType;
         }
