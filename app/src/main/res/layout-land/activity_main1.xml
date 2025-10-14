@@ -196,6 +196,7 @@
                     android:layout_weight="2"
                     android:paddingTop="4dp"
                     android:orientation="horizontal">
+                <!--驾驶标志-->
                     <LinearLayout
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
@@ -207,18 +208,6 @@
                             android:layout_height="72dp"
                             android:id="@+id/auto_drive_img"
                             android:src="@drawable/no_auto_drive"
-                            android:layout_weight="1"
-                            />
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="72dp"
-                            android:id="@+id/drive_txt"
-                            android:text="@string/no_auto_drive"
-                            android:gravity="center_vertical|center_horizontal"
-                            android:textColor="@color/colorBlue"
-                            android:textSize="24sp"
-                            android:textStyle="bold"
-                            android:layout_weight="1"
                             />
                     </LinearLayout>
                     <!--            转向灯-->
@@ -249,13 +238,65 @@
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="2"
-                        android:gravity="center_horizontal">
-                        <ImageView
-                            android:layout_width="72dp"
-                            android:layout_height="72dp"
-                            android:id="@+id/connect_flag"
-                            android:src="@drawable/disconnect"
-                            />
+                        android:gravity="center_horizontal"
+                        android:orientation="vertical"
+                        >
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="0dp"
+                            android:layout_weight="1"
+                            android:layout_gravity="center_vertical"
+                            android:orientation="horizontal"
+                            >
+                            <TextView
+                                android:layout_width="0dp"
+                                android:layout_height="match_parent"
+                                android:layout_weight="1"
+                                android:text="C-GLOSA"
+                                android:gravity="center_vertical"
+                                android:textSize="22sp"
+                                android:textFontWeight="@android:integer/config_mediumAnimTime"
+                                android:textColor="@color/colorBlue"
+                                />
+                            <ImageView
+                                android:layout_width="0dp"
+                                android:layout_height="match_parent"
+                                android:layout_weight="1"
+                                android:id="@+id/glosa_img"
+                                android:src="@drawable/sweep_enable_false"
+                                />
+                        </LinearLayout>
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="0dp"
+                            android:layout_weight="1"
+                            android:orientation="horizontal"
+                            >
+                            <TextView
+                                android:layout_width="0dp"
+                                android:layout_height="match_parent"
+                                android:layout_weight="1"
+                                android:text="C-AEB"
+                                android:gravity="center_vertical"
+                                android:textSize="22sp"
+                                android:textFontWeight="@android:integer/config_mediumAnimTime"
+                                android:textColor="@color/colorBlue"
+                                />
+                            <ImageView
+                                android:layout_width="0dp"
+                                android:layout_height="match_parent"
+                                android:layout_weight="1"
+                                android:id="@+id/c_aeb_img"
+                                android:src="@drawable/sweep_enable_false"
+                                />
+                        </LinearLayout>
+<!--                        <ImageView-->
+<!--                            android:layout_width="72dp"-->
+<!--                            android:layout_height="72dp"-->
+<!--                            android:id="@+id/connect_flag"-->
+<!--                            android:src="@drawable/disconnect"-->
+<!--                            />-->
+
                     </LinearLayout>
                 </LinearLayout>
                 <View

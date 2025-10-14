@@ -105,9 +105,10 @@ public class MainActivity1 extends Activity implements LocationSource, AMapLocat
     static MyDialogPopWindow dialogPopWindow = null;
     static boolean dialogWarning = false; //弹框是否为警告框
     TextView titleTxt, msgTxt, speedTxt, speedLimitTxt, remainTimeTxt,
-            driveTxt, gearTxt, socTxt, guideSpeedTxt, guideSpeedTitleTxt;
+            gearTxt, socTxt, guideSpeedTxt, guideSpeedTitleTxt;
 
-    ImageView connectImg, leftLight, rightLight, driveImg, trafficLightImg, socImg;
+    ImageView leftLight, rightLight, driveImg, trafficLightImg, socImg,
+            glosaImg, aebImg;
     AnimationDrawable leftAnimation, rightAnimation;
 
 
@@ -126,7 +127,7 @@ public class MainActivity1 extends Activity implements LocationSource, AMapLocat
     private BitmapDescriptor normalRouteYellow = null;
     private BitmapDescriptor normalRouteGrey = null;
 
-    private Drawable greenDrawable, yellowDrawable, redDrawable;
+    private Drawable greenDrawable, yellowDrawable, redDrawable, switchOffDrawable, switchOnDrawable;
 
     private FrameLayout mapContainer, view3DContainer;
 
@@ -199,7 +200,7 @@ public class MainActivity1 extends Activity implements LocationSource, AMapLocat
     private void initView() {
 
         DataStorage.mode = 1;    //订阅模式 1--显示订阅信息模式 2--采集地图模式
-        connectImg = findViewById(R.id.connect_flag);
+//        connectImg = findViewById(R.id.connect_flag);
         leftLight = findViewById(R.id.turn_left_light_img);
         rightLight = findViewById(R.id.turn_right_light_img);
         leftLight.setImageResource(R.drawable.turn_left_animation);
@@ -209,12 +210,13 @@ public class MainActivity1 extends Activity implements LocationSource, AMapLocat
 
         driveImg = findViewById(R.id.auto_drive_img);
         socImg = findViewById(R.id.soc_img);
+        glosaImg = findViewById(R.id.glosa_img);
+        aebImg = findViewById(R.id.c_aeb_img);
         trafficLightImg = findViewById(R.id.traffic_light);
         speedTxt = findViewById(R.id.speed_txt);
         speedLimitTxt = findViewById(R.id.limit_speed_txt);
         gearTxt = findViewById(R.id.gear_txt);
         socTxt = findViewById(R.id.soc_txt);
-        driveTxt = findViewById(R.id.drive_txt);
         guideSpeedTxt = findViewById(R.id.guide_speed_txt);
         guideSpeedTitleTxt = findViewById(R.id.guide_speed_title);
         remainTimeTxt = findViewById(R.id.remain_time_txt);
@@ -223,6 +225,9 @@ public class MainActivity1 extends Activity implements LocationSource, AMapLocat
         greenDrawable = getResources().getDrawable(R.drawable.light_g);
         redDrawable = getResources().getDrawable(R.drawable.light_r);
         yellowDrawable = getResources().getDrawable(R.drawable.light_y);
+
+        switchOnDrawable = getResources().getDrawable(R.drawable.sweep_enable_true);
+        switchOffDrawable = getResources().getDrawable(R.drawable.sweep_enable_false);
 
         progDialog = new ProgressDialog(this);
 
@@ -381,25 +386,10 @@ public class MainActivity1 extends Activity implements LocationSource, AMapLocat
 //                refresh("after delete");  //删除轨迹后的
                 break;
             case Common.ACTION_UI_CONNECT:        //连接成功
-                //连接状态
-                if (Global.connectFlag) {
-                    //改变连接logo连接颜色
-                    connectImg.setImageDrawable(getResources().getDrawable(R.drawable.connect));
-                    Log.i(TAG, "更新连接标志 true");
-                } else {
-                    connectImg.setImageDrawable(getResources().getDrawable(R.drawable.disconnect));
-                }
                 //加载轨迹
                 Global.loadRoadsFlag = true;
                 break;
             case Common.ACTION_UI_DISCONNECT:        //连接断开
-                if (Global.connectFlag) {
-                    connectImg.setImageDrawable(getResources().getDrawable(R.drawable.connect));
-                } else {
-                    connectImg.setImageDrawable(getResources().getDrawable(R.drawable.disconnect));
-                    Log.i(TAG, "更新连接标志 false");
-
-                }
                 break;
             /**
              case Common.ACTION_UI_UPDATE_PARK:
@@ -459,14 +449,11 @@ public class MainActivity1 extends Activity implements LocationSource, AMapLocat
                 //驾驶状态
                 if (!Global.connectFlag) { //未连接
                     driveImg.setImageDrawable(getResources().getDrawable(R.drawable.no_auto_drive));
-                    driveTxt.setText(getResources().getText(R.string.no_auto_drive));
                 } else {
                     if (DriveStatusEnum.NO_AUTO.key == DataStorageFromPC.driverStatus) {  // 人工
                         driveImg.setImageDrawable(getResources().getDrawable(R.drawable.no_auto_drive));
-                        driveTxt.setText(getResources().getText(R.string.no_auto_drive));
                     } else {  //1 自动
                         driveImg.setImageDrawable(getResources().getDrawable(R.drawable.auto_drive));
-                        driveTxt.setText(getResources().getText(R.string.auto_drive));
                     }
                 }
 
@@ -530,19 +517,7 @@ public class MainActivity1 extends Activity implements LocationSource, AMapLocat
                 }
 
                 //建议车速
-                if (System.currentTimeMillis() - DataStorageFromPC.guideSpeedTimeStamp > 5000){
-                    //未收到指导速度  不显示
-                    if (View.VISIBLE == guideSpeedTxt.getVisibility()){
-                        guideSpeedTxt.setVisibility(View.INVISIBLE);
-                        guideSpeedTitleTxt.setVisibility(View.INVISIBLE);
-                    }
-                }else {
-                    if (View.VISIBLE != guideSpeedTxt.getVisibility()){
-                        guideSpeedTxt.setVisibility(View.VISIBLE);
-                        guideSpeedTitleTxt.setVisibility(View.VISIBLE);
-                    }
-                    guideSpeedTxt.setText(DataStorageFromPC.guideSpeed+"km/h");
-                }
+                guideSpeedTxt.setText(DataStorageFromPC.guideSpeed+"km/h");
                 Log.i(TAG, "主页面UI更新");
                 break;
             case Common.ACTION_UI_3D:   //更新3D动画 交通参与者
@@ -626,7 +601,29 @@ public class MainActivity1 extends Activity implements LocationSource, AMapLocat
                 } else {
                     speedLimitTxt.setVisibility(View.INVISIBLE);  //不可见
                 }
-                attentionDialogShow();
+
+//                C-GLOSA  C-AEB 设置
+                if (DataStorageFromPC.v2xType == 1){  //打开
+                    if (switchOnDrawable != glosaImg.getDrawable()){
+                        glosaImg.setImageDrawable(switchOnDrawable);
+                        aebImg.setImageDrawable(switchOnDrawable);
+                    }
+                    if (View.VISIBLE != guideSpeedTxt.getVisibility()){
+                        guideSpeedTxt.setVisibility(View.VISIBLE);
+                        guideSpeedTitleTxt.setVisibility(View.VISIBLE);
+                    }
+                }else {     // 2 关闭
+                    if (switchOffDrawable != glosaImg.getDrawable()){
+                        glosaImg.setImageDrawable(switchOffDrawable);
+                        aebImg.setImageDrawable(switchOffDrawable);
+                    }
+                    if (View.VISIBLE == guideSpeedTxt.getVisibility()){
+                        guideSpeedTxt.setVisibility(View.INVISIBLE);
+                        guideSpeedTitleTxt.setVisibility(View.INVISIBLE);
+                    }
+                }
+
+//                attentionDialogShow();
                 break;
         }
     }
