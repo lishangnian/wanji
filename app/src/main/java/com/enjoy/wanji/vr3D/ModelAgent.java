@@ -87,7 +87,7 @@ public class ModelAgent {
                 model.setPosition(obj.getX(), 0, 0 - obj.getY());
             }else if (TrafficObjClassEnum.NoVehicle.key == obj.getClassification()){  //非机动车
                 model.setRotY(obj.getAzimuth() + 180);
-                model.setPosition(obj.getX(), 0, 0.8 - obj.getY());
+                model.setPosition(obj.getX(), 0.8, 0 - obj.getY());
             }
         }
     }
