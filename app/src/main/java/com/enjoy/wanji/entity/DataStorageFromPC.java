@@ -31,7 +31,8 @@ public class DataStorageFromPC {
     public static int lightColor = 0;  //0:无 1：红灯 2：绿灯 3：黄灯
     public static int remainingTime = 0; //红绿灯读秒时间
 
-    public static int v2xType = 0;  //默认0  1--16各类预警(具体看表)  2---
+    public static volatile int v2xTypePre = 0;   //v2xtype上一次状态值
+    public static volatile int v2xType = 0;  //默认0  1--16各类预警(具体看表)  2---
 
     public static int mode = 1; //app模式 1--显示订阅的信息模式      2--采集地图模式
 

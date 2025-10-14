@@ -603,7 +603,7 @@ public class MainActivity1 extends Activity implements LocationSource, AMapLocat
                 }
 
 //                C-GLOSA  C-AEB 设置
-                if (DataStorageFromPC.v2xType == 1){  //打开
+                if (DataStorageFromPC.v2xType == 1 && DataStorageFromPC.v2xTypePre != 1){  //到1跳变 打开
                     if (switchOnDrawable != glosaImg.getDrawable()){
                         glosaImg.setImageDrawable(switchOnDrawable);
                         aebImg.setImageDrawable(switchOnDrawable);
@@ -612,7 +612,8 @@ public class MainActivity1 extends Activity implements LocationSource, AMapLocat
                         guideSpeedTxt.setVisibility(View.VISIBLE);
                         guideSpeedTitleTxt.setVisibility(View.VISIBLE);
                     }
-                }else {     // 2 关闭
+                    DataStorageFromPC.v2xTypePre = 1;
+                }else if (DataStorageFromPC.v2xType == 2 && DataStorageFromPC.v2xTypePre != 2){     // 跳变到2 关闭
                     if (switchOffDrawable != glosaImg.getDrawable()){
                         glosaImg.setImageDrawable(switchOffDrawable);
                         aebImg.setImageDrawable(switchOffDrawable);
@@ -621,6 +622,7 @@ public class MainActivity1 extends Activity implements LocationSource, AMapLocat
                         guideSpeedTxt.setVisibility(View.INVISIBLE);
                         guideSpeedTitleTxt.setVisibility(View.INVISIBLE);
                     }
+                    DataStorageFromPC.v2xTypePre = 2;
                 }
 
 //                attentionDialogShow();
