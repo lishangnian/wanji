@@ -340,9 +340,9 @@ public class CarScene extends Renderer {
 
     //初始化交通参与者
     private void initModelNPC_Imp(){
-        //创建未知物体-3个 机动车3个
+        //创建各类交通参与者，每类8个
 
-        for (int i =0; i < 3; i++){
+        for (int i =0; i < 8; i++){
             // 机动车
             Object3D body = initVehicleModel3D(R.raw.obj_bg_car, colorColdWhiteArr);
             body.setVisible(false);  //设置不可见

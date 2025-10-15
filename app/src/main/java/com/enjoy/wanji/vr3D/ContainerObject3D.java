@@ -30,7 +30,7 @@ public class ContainerObject3D {
 
     //先new 12个待用
     static {
-        while (TrafficObjHomeQueue.size() <= 12){
+        while (TrafficObjHomeQueue.size() <= 32){
             TrafficObjHomeQueue.add(new TrafficObj());
         }
     }
