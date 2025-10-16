@@ -1,18 +1,39 @@
 <?xml version="1.0" encoding="utf-8"?>
-<shape xmlns:android="http://schemas.android.com/apk/res/android">
-    <corners
-        android:radius="5dp" />
-    <padding
-        android:bottom="2dp"
-        android:left="2dp"
-        android:right="2dp"
-        android:top="3dp" />
-    <solid android:color="@android:color/transparent" />
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <stroke
-        android:width="0dp"
-        android:color="@android:color/transparent"/>
-</shape>
+
+    <item  android:left="2dp"  android:top="4dp">
+        <shape android:shape="rectangle">
+            <solid android:color="@color/deep_grey"/> <!-- 设置阴影的颜色 -->
+            <corners android:radius="6dp"/> <!-- 设置圆角半径 -->
+        </shape>
+    </item>
+    <item android:bottom="4dp" android:right="2dp">
+        <shape android:shape="rectangle">
+            <solid android:color="@color/lightWhite"/> <!-- 设置形状的背景颜色 -->
+            <corners android:radius="6dp"/> <!-- 设置圆角半径 -->
+        </shape>
+    </item>
+
+</layer-list>
+
+
+
+<!--<shape xmlns:android="http://schemas.android.com/apk/res/android">-->
+<!--    <corners-->
+<!--        android:radius="5dp" />-->
+<!--    <padding-->
+<!--        android:bottom="2dp"-->
+<!--        android:left="2dp"-->
+<!--        android:right="2dp"-->
+<!--        android:top="3dp" />-->
+<!--&lt;!&ndash;    填充&ndash;&gt;-->
+<!--    <solid android:color="@color/lightWhite" />-->
+<!--&lt;!&ndash;描边&ndash;&gt;-->
+<!--    <stroke-->
+<!--        android:width="4dp"-->
+<!--        android:color="@android:color/holo_red_light"/>-->
+<!--</shape>-->
 
 
 

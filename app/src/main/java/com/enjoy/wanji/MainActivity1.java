@@ -68,9 +68,11 @@ import com.enjoy.wanji.entity.DriveStatusEnum;
 import com.enjoy.wanji.entity.ErrorContentEnum;
 import com.enjoy.wanji.entity.GearEnum;
 import com.enjoy.wanji.entity.TrafficLightEnum;
+import com.enjoy.wanji.entity.V2xAttention;
 import com.enjoy.wanji.entity.V2xTypeEnum;
 import com.enjoy.wanji.service.EnjoySocketService;
 import com.enjoy.wanji.util.AMapUtil;
+import com.enjoy.wanji.util.MyStringUtil;
 import com.enjoy.wanji.util.ToastUtil;
 import com.enjoy.wanji.vr3D.CarScene;
 import com.enjoy.wanji.vr3D.ModelAgent;
@@ -612,7 +614,6 @@ public class MainActivity1 extends Activity implements LocationSource, AMapLocat
                         guideSpeedTxt.setVisibility(View.VISIBLE);
                         guideSpeedTitleTxt.setVisibility(View.VISIBLE);
                     }
-                    DataStorageFromPC.v2xTypePre = 1;
                 }else if (DataStorageFromPC.v2xType == 2 && DataStorageFromPC.v2xTypePre != 2){     // 跳变到2 关闭
                     if (switchOffDrawable != glosaImg.getDrawable()){
                         glosaImg.setImageDrawable(switchOffDrawable);
@@ -622,14 +623,70 @@ public class MainActivity1 extends Activity implements LocationSource, AMapLocat
                         guideSpeedTxt.setVisibility(View.INVISIBLE);
                         guideSpeedTitleTxt.setVisibility(View.INVISIBLE);
                     }
-                    DataStorageFromPC.v2xTypePre = 2;
                 }
+                DataStorageFromPC.v2xTypePre = DataStorageFromPC.v2xType;
 
 //                attentionDialogShow();
+                popup(); //弹框
                 break;
         }
     }
 
+
+    private void popup(){
+        if (DataStorageFromPC.v2xType == V2xTypeEnum.LTA.key){
+            dialogWarning = true;
+        }else if (DataStorageFromPC.v2xType != 0
+                && dialogPopWindow != null && dialogPopWindow.isShowing()){
+            // v2xtype不是3 且在显示，那就消失,返回
+            dialogPopWindow.dismiss();
+            dialogWarning = false;
+            return;
+        }
+
+        //当前正在显示,返回
+        if (DataStorageFromPC.v2xType == V2xAttention.v2xType
+                && DataStorageFromPC.v2xType == V2xTypeEnum.LTA.key
+                && dialogPopWindow != null && dialogPopWindow.isShowing()) {
+            if (dialogPopWindow != null && dialogPopWindow.isShowing()) {
+                return;
+            }
+        }
+
+        V2xAttention.timestamp = System.currentTimeMillis();
+        String attentionMsg = V2xTypeEnum.getValue(DataStorageFromPC.v2xType);
+
+        V2xAttention.message = attentionMsg;
+        if (null == attentionMsg || "".equals(attentionMsg)){
+            return;
+        }
+
+        if (dialogPopWindow == null) {
+            dialogPopWindow = new MyDialogPopWindow(this, new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    dialogPopWindow.dismiss();
+                }
+            });
+        }
+        if (msgTxt == null) {
+            msgTxt = dialogPopWindow.getContentView().findViewById(R.id.alarm_msg_txt);
+        }
+        if (titleTxt == null) {
+            titleTxt = dialogPopWindow.getContentView().findViewById(R.id.title_txt);
+        }
+
+        if (dialogWarning){
+            msgTxt.setTextColor(getResources().getColor(R.color.red));
+        }else {
+            msgTxt.setTextColor(getResources().getColor(R.color.lightBlack));
+        }
+        dialogPopWindow.setBtnWarning(false);
+
+        titleTxt.setText(V2xAttention.title);
+        msgTxt.setText(V2xAttention.message);
+        dialogPopWindow.showAtLocation(findViewById(R.id.activity_main), Gravity.CENTER, 0, 0);
+    }
 
     /**
      * 弹出框警告
