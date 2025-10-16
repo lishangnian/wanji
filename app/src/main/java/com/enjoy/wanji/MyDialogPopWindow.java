@@ -5,6 +5,7 @@ import android.content.Context;
 import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
@@ -37,7 +38,8 @@ public class MyDialogPopWindow extends PopupWindow {
         WindowManager.LayoutParams p = dialogWindow.getAttributes(); //获取对话框当前参数
 
         this.setHeight(RelativeLayout.LayoutParams.WRAP_CONTENT);
-        this.setWidth((int) (d.getWidth() * 0.6));
+//        this.setWidth((int) (d.getWidth() * 0.6));
+        this.setWidth(ViewGroup.LayoutParams.WRAP_CONTENT);
 
         this.setFocusable(true);  //弹出框可点击
 

@@ -223,7 +223,6 @@ public class MainActivity1 extends Activity implements LocationSource, AMapLocat
         guideSpeedTitleTxt = findViewById(R.id.guide_speed_title);
         remainTimeTxt = findViewById(R.id.remain_time_txt);
 
-
         greenDrawable = getResources().getDrawable(R.drawable.light_g);
         redDrawable = getResources().getDrawable(R.drawable.light_r);
         yellowDrawable = getResources().getDrawable(R.drawable.light_y);
@@ -519,7 +518,13 @@ public class MainActivity1 extends Activity implements LocationSource, AMapLocat
                 }
 
                 //建议车速
-                guideSpeedTxt.setText(DataStorageFromPC.guideSpeed+"km/h");
+                guideSpeedTxt.setText(DataStorageFromPC.guideSpeed+R.string.km_h);
+                if (System.currentTimeMillis() - DataStorageFromPC.guideSpeedTimeStamp > 20000){   //大于20秒未收到建议速度，不显示
+                    if (View.VISIBLE == guideSpeedTxt.getVisibility()){
+                        guideSpeedTxt.setVisibility(View.INVISIBLE);
+                        guideSpeedTitleTxt.setVisibility(View.INVISIBLE);
+                    }
+                }
                 Log.i(TAG, "主页面UI更新");
                 break;
             case Common.ACTION_UI_3D:   //更新3D动画 交通参与者
