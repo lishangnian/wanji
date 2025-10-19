@@ -17,6 +17,7 @@ public class TopicAndParams {
 
 
     public static String topicSendApp = "/app"; //TASK 发送停止或出发、地图编号
+    public static String topicSendCloudApp = "/cloudapp"; //发送   C-GLOSA 和 C-AEB 等
     public static String topicSendAppMs = "/appMsg"; //TASK 发送停止或出发、地图编号
     public static String topicSendRequestMap = "/requestmap";
     public static String topicSendCollectMap = "/collectmap";

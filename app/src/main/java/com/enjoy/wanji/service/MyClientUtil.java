@@ -29,12 +29,13 @@ public class MyClientUtil {
         if (DataStorage.page == 1) {  //在第一界面
             //topic app
             dataMap.put(TopicAndParams.paramStopGoTopicApp, DataStorageToPC.stopgo);
-            dataMap.put(TopicAndParams.paramZoneNameTopicApp, DataStorageToPC.zoneName);
-            dataMap.put(TopicAndParams.paramApsNumTopicApp, DataStorageToPC.apsNum);
-            dataMap.put(TopicAndParams.paramEstopTopicApp, DataStorageToPC.eStop);  //触发临时停车
-            dataMap.put(TopicAndParams.paramParkTopicApp, DataStorageToPC.getPark());  //触发加载回停车场地图
+//            dataMap.put(TopicAndParams.paramZoneNameTopicApp, DataStorageToPC.zoneName);
+//            dataMap.put(TopicAndParams.paramApsNumTopicApp, DataStorageToPC.apsNum);
+//            dataMap.put(TopicAndParams.paramEstopTopicApp, DataStorageToPC.eStop);  //触发临时停车
+//            dataMap.put(TopicAndParams.paramParkTopicApp, DataStorageToPC.getPark());  //触发加载回停车场地图
             dataMap.put(TopicAndParams.timestamp, System.currentTimeMillis());
-            String str = MyStringUtil.sendDataStr(TopicAndParams.topicSendApp, dataMap);
+//            String str = MyStringUtil.sendDataStr(TopicAndParams.topicSendApp, dataMap);
+            String str = MyStringUtil.sendDataStr(TopicAndParams.topicSendCloudApp, dataMap);
             client.send(str);
             dataMap.clear();
             Log.i(tag, "app send " + str);

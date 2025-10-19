@@ -5,7 +5,10 @@ import android.os.SystemClock;
 public class DataStorageToPC {
 
     //topic app
-    public static volatile int stopgo = 0; //无效、出发、停止 0 1 2
+    public static volatile int stopgo = 0; //默认、  发C-GLOSA、  发C-AEB、  发两个同时// glosaStopgo +  aebStopgo   0 1 2  3
+
+    public static volatile int glosaStopgo = 0; //0-默认、 1-开
+    public static volatile int aebStopgo = 0; //0-默认、   2-开
     public static volatile int zoneName = 0;  //园区名称
     public static volatile int apsNum = 0;  //对应泊车点，该数字如果大于配置文件中泊车点数量，取第一个泊车点
     public static volatile int eStop = 0;  //触发临时停车  每按一下，切换状态，0-1来回切换

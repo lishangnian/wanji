@@ -64,6 +64,7 @@ import com.enjoy.wanji.entity.AttentionTypeEnum;
 import com.enjoy.wanji.entity.DataStorage;
 import com.enjoy.wanji.entity.DataStorageCollectMap;
 import com.enjoy.wanji.entity.DataStorageFromPC;
+import com.enjoy.wanji.entity.DataStorageToPC;
 import com.enjoy.wanji.entity.DriveStatusEnum;
 import com.enjoy.wanji.entity.ErrorContentEnum;
 import com.enjoy.wanji.entity.GearEnum;
@@ -236,6 +237,43 @@ public class MainActivity1 extends Activity implements LocationSource, AMapLocat
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP){
             setMapViewCornerRadius();
         }
+
+        glosaImg.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (switchOnDrawable != glosaImg.getDrawable()){
+                    glosaImg.setImageDrawable(switchOnDrawable);
+                    DataStorageToPC.glosaStopgo = 1;
+                }else {
+                    glosaImg.setImageDrawable(switchOffDrawable);
+                    DataStorageToPC.glosaStopgo = 0;
+                }
+                DataStorageToPC.stopgo = DataStorageToPC.glosaStopgo + DataStorageToPC.aebStopgo;
+            }
+        });
+        aebImg.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (switchOnDrawable != aebImg.getDrawable()){
+                    aebImg.setImageDrawable(switchOnDrawable);
+                    DataStorageToPC.aebStopgo = 2;
+                }else {
+                    aebImg.setImageDrawable(switchOffDrawable);
+                    DataStorageToPC.aebStopgo = 0;
+                }
+                DataStorageToPC.stopgo = DataStorageToPC.glosaStopgo + DataStorageToPC.aebStopgo;
+            }
+        });
+
+        if (switchOnDrawable != glosaImg.getDrawable()){
+            glosaImg.setImageDrawable(switchOnDrawable);
+            aebImg.setImageDrawable(switchOnDrawable);
+        }
+        if (switchOffDrawable != glosaImg.getDrawable()){
+            glosaImg.setImageDrawable(switchOffDrawable);
+            aebImg.setImageDrawable(switchOffDrawable);
+        }
+
 
         handler = new Handler() {
             @Override
@@ -609,21 +647,15 @@ public class MainActivity1 extends Activity implements LocationSource, AMapLocat
                     speedLimitTxt.setVisibility(View.INVISIBLE);  //不可见
                 }
 
-//                C-GLOSA  C-AEB 设置
+
+                // C-GLOSA  C-AEB 设置
+
                 if (DataStorageFromPC.v2xType == 1 && DataStorageFromPC.v2xTypePre != 1){  //到1跳变 打开
-                    if (switchOnDrawable != glosaImg.getDrawable()){
-                        glosaImg.setImageDrawable(switchOnDrawable);
-                        aebImg.setImageDrawable(switchOnDrawable);
-                    }
                     if (View.VISIBLE != guideSpeedTxt.getVisibility()){
                         guideSpeedTxt.setVisibility(View.VISIBLE);
                         guideSpeedTitleTxt.setVisibility(View.VISIBLE);
                     }
                 }else if (DataStorageFromPC.v2xType == 2 && DataStorageFromPC.v2xTypePre != 2){     // 跳变到2 关闭
-                    if (switchOffDrawable != glosaImg.getDrawable()){
-                        glosaImg.setImageDrawable(switchOffDrawable);
-                        aebImg.setImageDrawable(switchOffDrawable);
-                    }
                     if (View.VISIBLE == guideSpeedTxt.getVisibility()){
                         guideSpeedTxt.setVisibility(View.INVISIBLE);
                         guideSpeedTitleTxt.setVisibility(View.INVISIBLE);

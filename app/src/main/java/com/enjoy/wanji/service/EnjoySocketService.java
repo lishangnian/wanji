@@ -118,7 +118,7 @@ public class EnjoySocketService extends IntentService {
                 if (count % 10 == 0 && DataStorage.page == 1) {   //订阅消息5秒发一次 且在第一主页面
                     MyClientUtil.subscribe(client);
                 }
-                if (DataStorage.page == 1) {  //在页面一，发送实时命令信息
+                if (count % 2 == 0 && DataStorage.page == 1) {  //在页面一，发送实时命令信息 一秒次
                     MyClientUtil.send(client);
                 } else if (DataStorage.page == 2) {  //第二页面，发送采集轨迹命令
                     MyClientUtil.collectMap(client);
