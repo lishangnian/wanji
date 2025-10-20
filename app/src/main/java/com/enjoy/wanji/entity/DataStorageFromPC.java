@@ -21,7 +21,7 @@ public class DataStorageFromPC {
     public static volatile int velocity = 0;  //速度数值
     public static volatile int speedLimit = 100;  //限速度数值
     public static volatile int guideSpeed = 0; //指导速度
-    public static volatile long guideSpeedTimeStamp = System.currentTimeMillis(); //指导速度时间戳
+    public static volatile long guideSpeedTimeStamp = 0; //指导速度时间戳
     public static volatile long v2xTimestamp = System.currentTimeMillis();  //接收到v2x时的时间
     public static volatile long rtk = 0;
     public static String objDis = "---m";  //障碍物距离单位

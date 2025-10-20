@@ -265,15 +265,6 @@ public class MainActivity1 extends Activity implements LocationSource, AMapLocat
             }
         });
 
-        if (switchOnDrawable != glosaImg.getDrawable()){
-            glosaImg.setImageDrawable(switchOnDrawable);
-            aebImg.setImageDrawable(switchOnDrawable);
-        }
-        if (switchOffDrawable != glosaImg.getDrawable()){
-            glosaImg.setImageDrawable(switchOffDrawable);
-            aebImg.setImageDrawable(switchOffDrawable);
-        }
-
 
         handler = new Handler() {
             @Override
@@ -555,12 +546,17 @@ public class MainActivity1 extends Activity implements LocationSource, AMapLocat
                     }
                 }
 
-                //建议车速
-                guideSpeedTxt.setText(DataStorageFromPC.guideSpeed+R.string.km_h);
                 if (System.currentTimeMillis() - DataStorageFromPC.guideSpeedTimeStamp > 20000){   //大于20秒未收到建议速度，不显示
                     if (View.VISIBLE == guideSpeedTxt.getVisibility()){
                         guideSpeedTxt.setVisibility(View.INVISIBLE);
                         guideSpeedTitleTxt.setVisibility(View.INVISIBLE);
+                    }
+                }else {
+                    //建议车速
+                    guideSpeedTxt.setText(DataStorageFromPC.guideSpeed+getString(R.string.km_h));
+                    if (View.INVISIBLE == guideSpeedTxt.getVisibility()){
+                        guideSpeedTxt.setVisibility(View.VISIBLE);
+                        guideSpeedTitleTxt.setVisibility(View.VISIBLE);
                     }
                 }
                 Log.i(TAG, "主页面UI更新");
@@ -649,6 +645,8 @@ public class MainActivity1 extends Activity implements LocationSource, AMapLocat
 
 
                 // C-GLOSA  C-AEB 设置
+                /**
+                 *
 
                 if (DataStorageFromPC.v2xType == 1 && DataStorageFromPC.v2xTypePre != 1){  //到1跳变 打开
                     if (View.VISIBLE != guideSpeedTxt.getVisibility()){
@@ -661,6 +659,7 @@ public class MainActivity1 extends Activity implements LocationSource, AMapLocat
                         guideSpeedTitleTxt.setVisibility(View.INVISIBLE);
                     }
                 }
+                 */
                 DataStorageFromPC.v2xTypePre = DataStorageFromPC.v2xType;
 
 //                attentionDialogShow();
