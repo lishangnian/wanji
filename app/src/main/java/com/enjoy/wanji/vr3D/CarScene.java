@@ -6,29 +6,23 @@ import android.util.Log;
 import android.view.MotionEvent;
 
 import com.enjoy.wanji.R;
-import com.enjoy.wanji.entity.DataStorageFromPC;
 import com.enjoy.wanji.service.EnjoySocketService;
 
 import org.rajawali3d.Object3D;
 import org.rajawali3d.lights.DirectionalLight;
-import org.rajawali3d.loader.Loader3DSMax;
 import org.rajawali3d.loader.LoaderOBJ;
 import org.rajawali3d.loader.LoaderSTL;
 import org.rajawali3d.loader.ParsingException;
 import org.rajawali3d.materials.Material;
 import org.rajawali3d.materials.methods.DiffuseMethod;
 import org.rajawali3d.materials.methods.SpecularMethod;
-import org.rajawali3d.materials.textures.ATexture;
 import org.rajawali3d.math.vector.Vector3;
 import org.rajawali3d.primitives.Cube;
-import org.rajawali3d.primitives.Line3D;
 import org.rajawali3d.primitives.Plane;
 import org.rajawali3d.renderer.Renderer;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Stack;
 
 
 public class CarScene extends Renderer {
@@ -37,9 +31,7 @@ public class CarScene extends Renderer {
 
 
     List<Plane> lineList = new ArrayList<>();
-    Line3D leftCurveLine3D, rightCurveLine3D; //曲线
-    Material line3DMaterial;
-//    private Object3D ground;
+
     float[] colorGrayArr = {0.7216f, 0.7608f, 0.8000f, 1f}; //灰色
     float[] colorLightGrayArr = {0.835f, 0.835f, 0.835f, 1f}; //灰色
     float[] colorSliverGrayArr = {0.85f, 0.85f, 0.87f, 1f}; //浅银灰色
@@ -65,10 +57,7 @@ public class CarScene extends Renderer {
     @Override
     protected void initScene() {
         //设置背景颜色
-//        getCurrentScene().setBackgroundColor(0.98f,0.98f,0.98f, 1f);
-//        getCurrentScene().setBackgroundColor(0.10f,0.10f,0.12f, 1f);//深灰色
         getCurrentScene().setBackgroundColor(0.92f,0.94f,0.96f, 1f);
-
 
         DirectionalLight keyLight = new DirectionalLight(1.5, -1.8f, -2.0f); // 方向向量
         keyLight.setPower(0.45f); // 光的强度
@@ -91,15 +80,8 @@ public class CarScene extends Renderer {
         getCurrentScene().addLight(light1);
 
         addLaneLines(); //车道线
-//        bezierLines();  //绘制曲线
-
         float scale = 3.2f;
-//        float scale = 50f;
-
-//        carModel = initMainCarModel(R.raw.obj_max_car_main);
-//         carModel = initMainCarModel(R.raw.obj_max_car_main);
         carModel = initCenterCarModel(R.raw.stl_main_car, colorAuroraSliverGrayArr);
-//        carModel = initCenterCarModel(R.raw.stl_main_car, colorGrayArr);
         carModel.setScale(scale);
         carModel.setRotX(180);
         carModel.setRotZ(-90);
@@ -114,91 +96,6 @@ public class CarScene extends Renderer {
         initModelNPC(); //初始化 背景交通物体
 
     }
-
-
-
-    private void createInternalFolder(){
-        Log.i("myTag","start create folders");
-        //新建文件夹，用来存放模型文件  Android/data/com.enjoy.wanji
-        File folder = new File(mContext.getExternalFilesDir(null), "models");
-        if (!folder.exists()){
-            folder.mkdirs();
-        }
-        Log.i("myTag","get name: "+folder.getName());
-        Log.i("myTag","get dir absolute path:"+ folder.getAbsolutePath());
-        Log.i("myTag","get dir path:"+ folder.getPath());
-    }
-
-    /**
-     *
-     * @param resourceId
-     * @return
-     */
-
-    private Object3D initMainCarModel(int resourceId){
-
-        Object3D model = null;
-        try {
-//            LoaderOBJ loader = new LoaderOBJ(mContext.getResources(), mTextureManager,resourceId);
-//            LoaderSTL loader = new LoaderSTL(mContext.getResources(), mTextureManager, resourceId);
-//            InputStream inputStream = mContext.getAssets().open("models/obj_max_car_main.max");
-
-//            File modelFile = new File(mContext.getExternalFilesDir(null), "models/car_main.obj");
-//            File modelFile = new File(mContext.getExternalFilesDir(null), "models/material.mtl");
-            File modelFile = new File(mContext.getExternalFilesDir(null), "models/obj_max_car_main.max");
-//            File modelFile = new File(mContext.getExternalFilesDir(null), "models/texture_pbr_20250901.png");
-            Log.i("myTag","f model exists: "+ modelFile.exists());
-
-
-//            modelFile.setReadable(true, false);
-//            modelFile.setWritable(true);
-//            modelFile.setExecutable(true);
-
-
-            Loader3DSMax loader = new Loader3DSMax(this, modelFile);
-//                LoaderOBJ loader = new LoaderOBJ(this, modelFile);
-
-
-            loader.parse();   //解析模型
-            model = loader.getParsedObject();
-
-//            Material material = initMaterial();
-//            model.setMaterial(material);
-
-
-            /**
-             *
-
-            // 设置车辆材质（如果没有纹理，使用默认材质）
-            Material material = new Material();
-            material.setColor(colorAuroraSliverGrayArr);
-            material.enableLighting(true);
-            material.setDiffuseMethod(new DiffuseMethod.Lambert());
-
-            // 设置镜面反射 - 实现光滑表面
-            material.setSpecularMethod(new SpecularMethod.Phong(Color.WHITE, 100));
-
-            // 启用颜色影响
-            material.setColorInfluence(0.97f);
-            if (model != null && model.getNumChildren() > 0){
-                for(int i = 0; i < model.getNumChildren(); i++){
-                    Object3D child = model.getChildAt(i);
-                    Log.i("main tag","num child >0 ");
-                    child.setMaterial(material);
-                }
-            }else if (model != null){
-                model.setMaterial(material);
-            }
-             */
-//
-        }catch (ParsingException  pe){   //|ATexture.TextureException
-            Log.e("objTag","parsing carObj error:",pe.fillInStackTrace());
-            throw new RuntimeException(pe);
-        }
-
-        return model;
-    }
-
 
     private Object3D initCenterCarModel(int resourceId, float[] colorARR){
         Object3D model = null;
@@ -233,34 +130,6 @@ public class CarScene extends Renderer {
 
         return model;
 
-    }
-
-
-    private Material initMaterial() throws ATexture.TextureException {
-        String tag = "textureTag";
-        float[] colorArr = {0.8f, 0.8f, 0.8f,1};
-        Material material = new Material();
-        Log.i(tag,"s1 *******");
-//        Texture textureKd = new Texture("kd_png",R.raw.texture_pbr_20250901);
-//        Texture texturePm = new Texture("pm_png",R.raw.texture_pbr_20250901_metallic);//金属贴图
-//        Texture texturePr = new Texture("pr_png",R.raw.texture_pbr_20250901_roughness); //粗糙贴图
-//        Texture textureBump = new Texture("bump_png",R.raw.texture_pbr_20250901_normal); //法线贴图
-//        material.addTexture(textureKd);
-//        material.addTexture(texturePm);
-//        material.addTexture(texturePr);
-//        material.addTexture(textureBump);
-        Log.i(tag,"s2 *******");
-        material.enableLighting(true);
-        material.setColor(colorArr);  //漫反射颜色
-        material.setDiffuseMethod(new DiffuseMethod.Lambert());//漫反射
-        //设置高光颜色  控制高光大小和锐利度值越大越锐利，接近镜面 <50：柔和弥散    50-150：标准高光   >150：锐利高光
-//        material.setSpecularMethod(new SpecularMethod.Phong(Color.WHITE, 30));
-        material.setAmbientColor(colorArr);
-        material.setColorInfluence(0.65f);  // 0.0: 完全使用纹理颜色（忽略材质颜色） 1.0: 完全使用材质颜色（忽略纹理） 0.0-1.0: 两者按比例混合
-
-
-        Log.i(tag,"s3 *******");
-        return material;
     }
 
 
@@ -372,12 +241,6 @@ public class CarScene extends Renderer {
             ContainerObject3D.ModelWaite3NoVehicleQueue.offer(bikeModel);
             getCurrentScene().addChild(bikeModel);
         }
-//        Object3D bikeModel = initNoVehicle(R.raw.stl_bike, colorColdWhiteArr);
-//        bikeModel.setScale(1.8f);
-//        bikeModel.setRotY(180);
-//        bikeModel.setPosition(1.7,0.8,-3);
-//        getCurrentScene().addChild(bikeModel);
-
     }
 
 
@@ -387,7 +250,6 @@ public class CarScene extends Renderer {
     protected void onRender(long elapsedTime, double deltaTime){
         super.onRender(elapsedTime, deltaTime);
         //添加每帧更新的逻辑
-
 
     }
 
@@ -432,10 +294,6 @@ public class CarScene extends Renderer {
 
 
     public void updateLinesMove(double z){
-        //todo 轨迹是曲线转弯，隐藏直线
-
-
-        //todo 曲线隐藏
 
         for (Plane line: lineList){
             Vector3 v = line.getPosition();
@@ -453,14 +311,6 @@ public class CarScene extends Renderer {
     }
 
     private void updateModelMaterial(Object3D model3D, float[] colorARR){
-        // 设置车辆材质（如果没有纹理，使用默认材质）
-//        Material material = new Material();
-//        material.setColor(colorARR);
-//        material.enableLighting(true);
-//        material.setDiffuseMethod(new DiffuseMethod.Lambert());
-
-
-
         Material material = new Material();
         material.setColor(colorARR);
         material.enableLighting(true);
@@ -468,8 +318,6 @@ public class CarScene extends Renderer {
         material.setAmbientIntensity(0.4,0.4,0.4);
 
         material.setDiffuseMethod(new DiffuseMethod.Lambert());
-
-
 
         if (model3D != null && model3D.getNumChildren() > 0){
             for(int i = 0; i < model3D.getNumChildren(); i++){
@@ -481,78 +329,4 @@ public class CarScene extends Renderer {
         }
     }
 
-
-    /**
-     * 计算 贝塞尔曲线
-     *
-     */
-    float thickness = 8;
-    Stack<Vector3> lStack = new Stack<>();
-    Stack<Vector3> rStack = new Stack<>();
-    private void bezierLines(){
-//        double P0x = 0, P0y = 0.209999993443;
-//        double P1x = -0.0399999991059, P1y = 11.6000003815;
-//        double P2x = -0.129999995232, P2y = 21.3199996948;
-//        double P3x = -0.280000001192, P3y = 29.8099994659;
-        double P0x = -0.0900000035763, P0y = 0.0599999986589;
-        double P1x = -0.550000011921, P1y = 11.6099996567;
-        double P2x = -4.76999998093, P2y = 20.5400009155;
-        double P3x = -11.4799995422, P3y = 24.7000007629;
-
-        if (line3DMaterial == null){
-            line3DMaterial = new Material();
-            line3DMaterial.enableLighting(true);
-            line3DMaterial.setColor(0x00bfff);
-            line3DMaterial.setColorInfluence(1);
-//
-//        Texture texture = new Texture("",R.mipmap.bus);
-//
-//        try {
-//            material.addTexture(texture);
-//        } catch (ATexture.TextureException e) {
-//            throw new RuntimeException(e);
-//        }
-        }
-
-        lStack.clear();
-        rStack.clear();
-        for (float t = 0; t <= 1; t += 0.02){
-            double x = getBezier(P0x,P1x,P2x,P3x,t);
-            double y = getBezier(P0y,P1y,P2y,P3y,t);
-            Vector3 vector3L = new Vector3(x-1.7,0, 0-y);
-            Vector3 vector3R = new Vector3(x+1.7,0, 0-y);
-            lStack.add(vector3L);
-            rStack.add(vector3R);
-        }
-
-        if (leftCurveLine3D != null){
-            getCurrentScene().removeChild(leftCurveLine3D);
-        }
-        if (rightCurveLine3D != null){
-            getCurrentScene().removeChild(rightCurveLine3D);
-        }
-
-        leftCurveLine3D = new Line3D(lStack,thickness);
-        rightCurveLine3D = new Line3D(rStack,thickness);
-        leftCurveLine3D.setMaterial(line3DMaterial);
-        rightCurveLine3D.setMaterial(line3DMaterial);
-        getCurrentScene().addChild(leftCurveLine3D);
-        getCurrentScene().addChild(rightCurveLine3D);
-
-    }
-
-    /**
-     *
-     * @param P0
-     * @param P1
-     * @param P2
-     * @param P3
-     * @param t
-     * @return
-     *
-     * B(t) = (1-t)³P₀ + 3(1-t)²tP₁ + 3(1-t)t²P₂ + t³P₃
-     */
-    private double getBezier(double P0, double P1, double P2, double P3, float t){
-        return Math.pow(1-t, 3.0)*P0 + 3*Math.pow(1-t,2)*t*P1 + 3*(1-t)*Math.pow(t,2)*P2 + Math.pow(t,3)*P3;
-    }
 }

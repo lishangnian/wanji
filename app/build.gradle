@@ -11,7 +11,6 @@ android {
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         ndk {
             abiFilters "armeabi", "armeabi-v7a", "x86"
-//            , "mips", "x86_64", "armeabi-v8a"
         }
     }
     buildTypes {
@@ -32,14 +31,6 @@ android {
             dirs 'libs'
         }
     }
-
-
-//    applicationVariants.all { variant ->
-//        variant.outputs.all {
-//            outputFileName = "${variant.name}-${variant.versionName}.apk"
-//        }
-//    }
-
     applicationVariants.all { variant ->
         variant.outputs.all { output ->
             def project ="智驾终端"
@@ -55,31 +46,13 @@ dependencies {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
 
-//    compile files('libs/AMap_3DMap_V2.4.1.jar')
-//    implementation files('libs/Android_Map3D_SDK_V6.9.0_20190530.jar')
     implementation files('libs/AMap3DMap_10.1.300_AMapSearch_9.7.4_AMapLocation_6.4.9_20250509.jar')
-//    implementation files('libs/AMap_Services_V2.4.0.jar')
-//    implementation  files('libs/Android_Location_V1.3.2.jar')
-//    高德定位服务jar包
-//    compile files('libs/AMap2DMap_5.2.0_AMapLocation_4.7.2_20191009.jar')
-
 //    用于Them.AppCompat
     implementation 'com.android.support:appcompat-v7:24.2.1'
-
-    //引用 constraintLayout
-//    implementation 'com.android.support.constraint:constraint-layout:1.0.2'
-
     implementation 'com.google.code.gson:gson:2.7'
     implementation 'org.zeromq:jeromq:0.3.6'
     testImplementation 'junit:junit:4.12'
-    //    compile files('libs/AMap_3DMap_V4.1.1_20161019.jar')
-    //    compile files('libs/AMap_Location_V3.0.0_20160922.jar')
-    //    compile files('libs/AMap_Search_V3.5.0_20160927.jar')
     implementation files('libs/json-simple-1.1.jar')
     implementation files('libs/java_websocket.jar')
-//    implementation files('libs/eventbus.jar')
-//    implementation files('libs/butterknife-7.0.1.jar')
-
-//    implementation 'org.rajawali3d:rajawali:1.1.970'
     implementation 'org.rajawali3d:rajawali:1.2.1970'
 }

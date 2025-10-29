@@ -4,16 +4,13 @@ import android.util.Log;
 
 import com.enjoy.wanji.entity.TrafficObjClassEnum;
 import com.enjoy.wanji.service.EnjoySocketService;
-
 import org.rajawali3d.Object3D;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
 public class ModelAgent {
     public static List<Object3D> list = new ArrayList<>();
-
 
     public static void updatePosition() {
         if (EnjoySocketService.UpdateUIModelLock.tryLock()) {
@@ -35,10 +32,6 @@ public class ModelAgent {
         updatePositionImp1(ContainerObject3D.Obj3NoVehicleList,ContainerObject3D.ModelActive3NoVehicleQueue,ContainerObject3D.ModelWaite3NoVehicleQueue);
     }
 
-
-    //偏移量
-//    public static double X_OffSet_K = 2.4d;
-    public static double X_OffSet_K = 1d;
 
     /**
      * 0-未知   1--行人   2--机动车

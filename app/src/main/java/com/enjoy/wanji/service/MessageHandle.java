@@ -9,7 +9,6 @@ import com.enjoy.wanji.entity.GearEnum;
 import com.enjoy.wanji.entity.TrafficObjClassEnum;
 import com.enjoy.wanji.vr3D.ContainerObject3D;
 import com.enjoy.wanji.vr3D.TrafficObj;
-
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
@@ -20,7 +19,6 @@ public class MessageHandle {
     public static void handle(String topicName, JSONObject jsonObj) {
         switch (topicName) {
             case TopicAndParams.topicRecvSensorgps:
-//                long rtkStatus = (long) jsonObj.get("status");     //定位状态  4-好；5-一般；0-差
                 double lon = (double) jsonObj.get("lon");
                 double lat = (double) jsonObj.get("lat");
                 String heading = String.valueOf((double) jsonObj.get("heading"));
@@ -28,7 +26,6 @@ public class MessageHandle {
                 DataStorageFromPC.lon = lon;
                 DataStorageFromPC.lat = lat;
                 DataStorageFromPC.heading = heading;
-//                DataStorageFromPC.rtk = rtkStatus;
                 break;
             case TopicAndParams.topicRecvActuator:
                 Log.i(tag, "收到驾驶状态信息" + jsonObj.toString());
@@ -60,7 +57,6 @@ public class MessageHandle {
                     }
                     DataStorageFromPC.driverStatus = driverStatus;
                 }
-
 
                 //档位 0-P  1-R  2-N  3-D
                 DataStorageFromPC.GearInt = gear;
@@ -115,75 +111,20 @@ public class MessageHandle {
                 }
 
                 break;
-            case TopicAndParams.topicRecvLaneLine:
-                 DataStorageFromPC.CurveA = Double.valueOf(jsonObj.get("lon").toString());
-                 DataStorageFromPC.CurveB = Double.valueOf(jsonObj.get("lat").toString());
-                 DataStorageFromPC.CurveC = Double.valueOf(jsonObj.get("heading").toString());
-                 break;
+
             case TopicAndParams.topicRecvLonlatmMappoints:        //轨迹点
                 Log.i(tag, "get map points:" + jsonObj.toString());
-//                lonlatmappoints
-                String mapName = jsonObj.get("mapname").toString();  //轨迹名称 maping1
-                String zoneName = jsonObj.get("zonename").toString();  //园区名称 yuanqu1
                 JSONArray pointsArray = (JSONArray) jsonObj.get("points");  //轨迹点
                 if (pointsArray == null || pointsArray.isEmpty()) {
                     Log.e(tag, "接收轨迹点为空");
                 }
                 DataStorageFromPC.mappingJSON = jsonObj;
 
-                /**
-                 *
-
-                 String zoneName = jsonObj.get("zonename").toString();  //园区名
-                 //                jsonObj.get(" mapname").toString(); //轨迹名
-                 JSONArray pointsArray = (JSONArray) jsonObj.get("points");  //轨迹点
-
-                 if (pointsArray == null || pointsArray.isEmpty()) {
-                 Log.e(tag, "接收轨迹点为空");
-                 }
-                 DataStorageFromPC.roadsMap.put(zoneName, jsonObj);
-
-                 //把同一个园区内的轨迹放在一个list中归类
-                 List<JSONObject> roadsJsonList = DataStorageFromPC.zoneNameJsonListMap.get(zoneName);
-                 if (roadsJsonList == null) {
-                 roadsJsonList = new ArrayList<>();
-                 roadsJsonList.add(jsonObj);
-                 }
-                 DataStorageFromPC.zoneNameJsonListMap.put(zoneName, roadsJsonList);
-                 **/
-
                 break;
-            /**
-             *
-             case TopicAndParams.topicRecvControllon:  //获取障碍物距离
-             double objDis = (double) jsonObj.get("objdis");  //单位米
-             //刹车注意，当actuator发出的自动驾驶状态为1，且acc 由大于零跳变成小于零时触发
-             int brakePedal = Integer.parseInt(jsonObj.get("brakePedal").toString());
-             String objDisStr = String.format("%.1f", objDis);   //保留一位小数
-             if (objDis >= 100) {
-             DataStorageFromPC.objDis = "---m";
-             } else if (objDis < 10) {
-             DataStorageFromPC.objDis = "0" + objDisStr + "m";
-             } else {
-             DataStorageFromPC.objDis = objDisStr + "m";
-             }
-             if (DataStorageFromPC.driverStatus > 0 && DataStorageFromPC.velocity / 3.6 > 1) {  //自驾状态 且速度大于1m/s
 
-             //uint8    brakePedal  当actuator发出的自动驾驶状态为1，且车速大于1m/s，且brakepedal 由等于零跳变成大于零时触发
-             if (DataStorageFromPC.brakePadel == 0 && brakePedal > 0) {
-             DataStorageFromPC.accBrake = 1;  //刹车
-             }
-             }
-             DataStorageFromPC.brakePadel = brakePedal;
-             break;
-             ***/
             case TopicAndParams.topicRecvV2xapp: //V2x  红绿灯和限速
-                //  trafficLight  0:无 1：红灯 2：绿灯 3：黄灯
-//
                 int v2xType = Integer.valueOf(jsonObj.get("v2xtype").toString());  //类型
-//                int trafficLight = Integer.valueOf(jsonObj.get("color").toString()); //0:无 1：红灯 2：绿灯 3：黄灯
                 int speedLimitInt = (int) (Integer.valueOf(jsonObj.get("speedlimit").toString()) * 3.6);  //限速  m/s
-//                DataStorageFromPC.lightColor = trafficLight;
                 DataStorageFromPC.v2xType = v2xType;
                 if (DataStorageFromPC.speedLimit != speedLimitInt){
                     DataStorageFromPC.speedLimit = speedLimitInt;
@@ -201,13 +142,6 @@ public class MessageHandle {
                 DataStorageFromPC.remainingTime = remainingTime;
                 break;
             case TopicAndParams.topicRecvCloudPath:
-                /**
-                 *
-                1. 增加语音提醒：“车辆已进入云支持绿波车速引导模式”，“车辆已退出云支持绿波车速引导模式”
-                2. 增加云端建议车速
-                3. 增加“云支持绿波车速引导”、“云支持自动紧急制动”功能状态显示
-                4. 增加红绿登倒计时读秒（根据云端下发信号情况）
-                 */
 
                 JSONArray pointsArr = (JSONArray) jsonObj.get("points");
                 if (pointsArr != null && pointsArr.size() > 0){
@@ -246,21 +180,6 @@ public class MessageHandle {
             ContainerObject3D.Obj1PedestrianList.add(trafficObj);
         } else if (classification == TrafficObjClassEnum.Vehicle.key){
             ContainerObject3D.Obj2VehicleList.add(trafficObj);
-
-
-            /**
-             * 测试使用
-             * **/
-//            TrafficObj obj = new TrafficObj();
-//            obj.setId(Integer.valueOf(obJson.get("id").toString()));
-//            obj.setClassification(classification);
-//            obj.setX(Float.parseFloat(obJson.get("x").toString()));    //float #横坐标  单位m
-//            obj.setY(Float.parseFloat(obJson.get("y").toString())  - 6 );
-//            obj.setWidth(Float.parseFloat(obJson.get("width").toString()));
-//            obj.setLength(Float.parseFloat(obJson.get("length").toString()));
-//            obj.setAzimuth(Float.parseFloat(obJson.get("azimuth").toString()));
-//            ContainerObject3D.Obj0UnknownList.add(obj);
-//            ContainerObject3D.Obj1PedestrianList.add(obj);
         }else if (classification == TrafficObjClassEnum.NoVehicle.key){  //非机动车
             ContainerObject3D.Obj3NoVehicleList.add(trafficObj);
         }

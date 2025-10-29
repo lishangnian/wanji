@@ -11,18 +11,6 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
 
-        <!--4fbf00cd9f6eddc885655bb71fa6f5c2-->
-        <!--061d93a5becde6e314edaec6a971db38-->
-
-        <!--<activity android:name=".load"-->
-        <!--&gt;-->
-        <!--<intent-filter>-->
-        <!--<action android:name="android.intent.action.MAIN" />-->
-        <!--<category android:name="android.intent.category.LAUNCHER" />-->
-        <!--</intent-filter>-->
-        <!--</activity>-->
-
-
         <activity
             android:name="com.enjoy.wanji.InitActivity"
             android:theme="@android:style/Theme.NoTitleBar.Fullscreen"
@@ -36,12 +24,6 @@
         <activity
             android:name="com.enjoy.wanji.MainActivity1"
             android:launchMode="singleInstance"
-            android:screenOrientation="landscape"
-            android:theme="@android:style/Theme.NoTitleBar.Fullscreen">
-        </activity>
-        <activity
-            android:name="com.enjoy.wanji.CollectRoadsActivity1"
-            android:launchMode="standard"
             android:screenOrientation="landscape"
             android:theme="@android:style/Theme.NoTitleBar.Fullscreen">
         </activity>
@@ -64,24 +46,6 @@
     <uses-permission android:name="android.permission.WAKE_LOCK" />
     <!--<uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>-->
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
-    <!--只能在系统app中配置-->
-    <!--<uses-permission android:name="android.permission.WRITE_SETTINGS" />-->
-    <!--<uses-permission android:name="android.permission.CHANGE_CONFIGURATION" />-->
-
-    <!-- SDCard中创建与删除文件权限 -->
-    <!--<uses-permission android:name="android.permission.MOUNT_UNMOUNT_FILESYSTEMS"/>-->
-    <!-- 向SDCard写入数据权限 -->
-    <!--<uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>-->
-
-    <!--<uses-sdk-->
-    <!--android:minSdkVersion="14"-->
-    <!--/>-->
-
-
-    <!--android:icon="@mipmap/logo"-->
-    <!--android:theme="@style/AppTheme"-->
-    <!--android:theme="@android:style/Theme.Black.NoTitleBar"-->
-
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
 
 </manifest>

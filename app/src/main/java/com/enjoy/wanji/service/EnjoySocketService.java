@@ -6,8 +6,6 @@ import android.os.SystemClock;
 import android.support.annotation.Nullable;
 import android.util.Log;
 
-//import androidx.annotation.Nullable;
-
 import com.enjoy.wanji.EnjoyTrainShipApplication;
 import com.enjoy.wanji.Global;
 import com.enjoy.wanji.data.Common;
@@ -24,11 +22,6 @@ import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 
 import java.net.URI;
-import java.util.concurrent.ArrayBlockingQueue;
-import java.util.concurrent.BlockingQueue;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.ThreadPoolExecutor;
-import java.util.concurrent.TimeUnit;
 import java.util.concurrent.locks.ReentrantLock;
 
 
@@ -120,9 +113,6 @@ public class EnjoySocketService extends IntentService {
                 }
                 if (count % 2 == 0 && DataStorage.page == 1) {  //在页面一，发送实时命令信息 一秒次
                     MyClientUtil.send(client);
-                } else if (DataStorage.page == 2) {  //第二页面，发送采集轨迹命令
-                    MyClientUtil.collectMap(client);
-                    sendCast(Common.COLLECT_RECEIVER_ACTION, Common.ACTION_UPDATE_COLLECT);
                 }
                 count++;
                 if (count > 50) {
@@ -136,10 +126,9 @@ public class EnjoySocketService extends IntentService {
 
 
     JSONParser parser = new JSONParser();
-    static boolean GPS_CAST_SEND = false;
-    static boolean ACTUATOR_UI_SEND = false;
+
     static long actuatorTimestamp = System.currentTimeMillis();
-    static boolean CURVE_LINE_SEND = false;
+
     /**
      * 连接ros服务
      *
@@ -216,12 +205,6 @@ public class EnjoySocketService extends IntentService {
                                 actuatorTimestamp = System.currentTimeMillis();
                                 sendCast(Common.MAIN_RECEIVER_ACTION, Common.ACTION_UI_UPDATE);
                             }
-                        }else if (nameTopic.equals(TopicAndParams.topicRecvLaneLine)){
-                            //曲线绘制放在 ACTION_UI_3D这个 type里了
-//                            if (CURVE_LINE_SEND){
-//                                sendCast(Common.MAIN_RECEIVER_ACTION, Common.ACTION_UI_CURVE_3D);
-//                                CURVE_LINE_SEND = false;
-//                            }else CURVE_LINE_SEND = true;
                         }else if (nameTopic.equals(TopicAndParams.topicRecvCloudPath)){
 //                            sendCast(Common.MAIN_RECEIVER_ACTION ,Common.ACTION_UI_GUIDE_SPEED);
                         }
@@ -275,10 +258,5 @@ public class EnjoySocketService extends IntentService {
         sendBroadcast(intent);
     }
 
-
-    //该线程池用来唤醒语音提示线程的 ,ThreadPoolExecutor.DiscardPolicy() 任务丢弃但不抛异常
-    private static BlockingQueue<Runnable> threadQueue = new ArrayBlockingQueue(1);
-    public static ExecutorService threadMediaPoolService = new ThreadPoolExecutor(1, 1,
-            0L, TimeUnit.MILLISECONDS, threadQueue, new ThreadPoolExecutor.DiscardPolicy());
 
 }

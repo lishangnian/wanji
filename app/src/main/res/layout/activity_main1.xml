@@ -115,7 +115,6 @@
                         android:layout_width="30dp"
                         android:layout_height="30dp"
                         android:id="@+id/connect_flag"
-                        android:src="@drawable/disconnect"
                         />
                 </LinearLayout>
             </LinearLayout>

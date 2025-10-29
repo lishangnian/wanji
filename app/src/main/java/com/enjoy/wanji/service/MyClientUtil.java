@@ -6,10 +6,8 @@ import android.util.Log;
 import com.enjoy.wanji.Global;
 import com.enjoy.wanji.data.TopicAndParams;
 import com.enjoy.wanji.entity.DataStorage;
-import com.enjoy.wanji.entity.DataStorageCollectMap;
 import com.enjoy.wanji.entity.DataStorageToPC;
 import com.enjoy.wanji.util.MyStringUtil;
-
 import org.java_websocket.client.WebSocketClient;
 
 import java.util.LinkedHashMap;
@@ -61,71 +59,6 @@ public class MyClientUtil {
 
     }
 
-    /**
-     * 采集轨迹发送
-     *
-     * @param client
-     */
-    public static void collectMap(WebSocketClient client) {
-        Map<String, Object> dataMap = new LinkedHashMap<>();
-
-        //地图采集结束后，会重新请求园区
-        if (Global.loadRoadsFlag) {  //请求园区
-            int request = 1;
-
-            dataMap.put(TopicAndParams.paramRequestTopicRequestMap, request);  //0：不请求 1：请求全部地图；2：请求指定地图;3: 删除地图;4: 请求泊车点
-            dataMap.put(TopicAndParams.paramMapNameTopicRequestMap, 0);  //指定的地图名
-            dataMap.put(TopicAndParams.timestamp, System.currentTimeMillis());
-            String roadData = MyStringUtil.sendDataStr(TopicAndParams.topicSendRequestMap, dataMap);
-            client.send(roadData);
-            dataMap.clear();
-            Global.loadRoadsFlag = Global.loadRoadsFlag ? false : false;
-            Global.deleteRoadFlag = Global.deleteRoadFlag ? false : false;
-            Log.i(tag, "app request maps " + roadData);
-
-            Global.loadRoadsFlag = false;
-        }
-
-
-        if (DataStorageCollectMap.zoneName == 0 || DataStorageCollectMap.collectMode == 0) {
-            return;
-        }
-
-        //轨迹采集
-        dataMap.put(TopicAndParams.paramMapNameTopicCollectMap, DataStorageCollectMap.mapName);
-        dataMap.put(TopicAndParams.paramZoneNameTopicCollectMap, DataStorageCollectMap.zoneName);
-        dataMap.put(TopicAndParams.paramRoadPropertyTopicCollectMap, DataStorageCollectMap.roadProperty);
-        dataMap.put(TopicAndParams.paramLaneAttrTopicCollectMap, DataStorageCollectMap.laneattr);
-        dataMap.put(TopicAndParams.paramSideRoadWidthTopicCollectMap, DataStorageCollectMap.sideroadwidth);
-        dataMap.put(TopicAndParams.paramCollectMapMergelaneTypeTopicCollectMap, DataStorageCollectMap.mergelanetype);
-        dataMap.put(TopicAndParams.paramLeftSearchdisTopicCollectMap, DataStorageCollectMap.leftsearchdis); //左右安全距离
-        dataMap.put(TopicAndParams.paramRightsearchdisTopicCollectMap, DataStorageCollectMap.rightsearchdis);
-
-        dataMap.put(TopicAndParams.paramExpectSpeedTopicCollectMap, DataStorageCollectMap.exSpeed);
-        dataMap.put(TopicAndParams.paramLeftLaneWidthTopicCollectMap, DataStorageCollectMap.leftWidthDis); //左道路宽
-        dataMap.put(TopicAndParams.paramRightLaneWidthTopicCollectMap, DataStorageCollectMap.rightWidthDis); //右道路宽
-        dataMap.put(TopicAndParams.paramLaneStatusTopicCollectMap, DataStorageCollectMap.laneStatus);  //道路状态
-        dataMap.put(TopicAndParams.paramLaneWidthTopicCollectMap, DataStorageCollectMap.laneWidth);  //道路宽
-
-
-        dataMap.put(TopicAndParams.timestamp, System.currentTimeMillis());
-        String str = MyStringUtil.sendDataStr(TopicAndParams.topicSendCollectMap, dataMap);
-        client.send(str);
-        dataMap.clear();
-        Log.i(tag, "collectMap send " + str);
-
-        //点采集
-        dataMap.put(TopicAndParams.paramZoneNameTopicCollectPoint, DataStorageCollectMap.zoneName);
-        dataMap.put(TopicAndParams.paramIndexTopicCollectPoint, DataStorageCollectMap.index);
-        dataMap.put(TopicAndParams.paramStopTimeTopicCollectPoint, DataStorageCollectMap.stopTime);
-        dataMap.put(TopicAndParams.paramPropertyTopicCollectPoint, DataStorageCollectMap.stopProperty);
-        dataMap.put(TopicAndParams.paramOrientationTopicCollectPoint, DataStorageCollectMap.stopOrientation);
-        str = MyStringUtil.sendDataStr(TopicAndParams.topicSendCollectPoint, dataMap);
-        client.send(str);
-        dataMap.clear();
-        Log.i(tag, "collectPoints send " + str);
-    }
-
 
     public static void subscribe(WebSocketClient client) {
         if (client == null || !Global.connectFlag) {
@@ -148,14 +81,6 @@ public class MyClientUtil {
         client.send(str);
         Log.i(tag, "发送订阅消息" + str);
 
-        str = MyStringUtil.subscribeTopicStr(TopicAndParams.topicRecvLaneLine); //轨迹曲线
-        client.send(str);
-        Log.i(tag, "发送订阅消息" + str);
-
-//        str = MyStringUtil.subscribeTopicStr(TopicAndParams.recvTopicGlobalPlanning); // 轨迹点
-//        client.send(str);
-//        Log.i(tag, "发送订阅消息" + str);
-
         str = MyStringUtil.subscribeTopicStr(TopicAndParams.topicRecvV2xapp); // vtox
         client.send(str);
         Log.i(tag, "发送订阅消息" + str);
@@ -171,7 +96,5 @@ public class MyClientUtil {
         str = MyStringUtil.subscribeTopicStr(TopicAndParams.topicRecvCloudPath); // 云端
         client.send(str);
         Log.i(tag, "发送订阅消息" + str);
-
-
     }
 }
